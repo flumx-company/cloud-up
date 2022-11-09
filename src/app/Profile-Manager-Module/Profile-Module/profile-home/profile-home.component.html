@@ -1,0 +1,199 @@
+<br>
+<h2>Profiles</h2>
+<br>
+<dx-accordion
+    #filterMenu
+    [dataSource]="searchMenu"
+    [animationDuration]="300"
+    [collapsible]="true"
+    [multiple]="false"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <dx-form class="form__dx-form">
+            <dxi-item
+                 [label]="{text: 'Profile Sequence'}"
+                 editorType="dxSelectBox"
+                 [editorOptions]="{
+                      dataSource: sequenceDataSource,
+                      searchEnabled: true,
+                      displayExpr: 'name',
+                      valueExpr: 'name',
+                      placeholder: 'Filter by sequence...',
+                      showClearButton: true,
+                      onValueChanged: setSequenceFilter
+                 }">
+            </dxi-item>
+        </dx-form>
+        <br>
+        <dx-button
+             class="button button--primary button--icon-and-text"
+             icon="search" text="Filter"
+             (onClick)="filterProfiles()">
+        </dx-button>
+    </div>
+</dx-accordion>
+<hr/>
+<dx-data-grid
+    #profileGrid
+    class="datagrid"
+    [dataSource]="profileDataSource"
+    [hoverStateEnabled]="true"
+    [showColumnLines]="false"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    [columnAutoWidth]="true"
+    [showRowLines]="true"
+    [showBorders]="false"
+    [rowAlternationEnabled]="true"
+    (onToolbarPreparing)="onToolbarPreparing($event)"
+    [masterDetail]="{ enabled: true, template: 'detail' }"
+    (onRowExpanding)="onRowExpanding($event)"
+    [customizeColumns]="customizeColumns"
+    (onExporting)="onExporting($event)"
+    (onExported)="onExported($event)">
+
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-export [enabled]="true" fileName="profiles"></dxo-export>
+
+    <dxi-column
+            caption="Name"
+            dataField="profileId.name">
+    </dxi-column>
+    <dxi-column
+            caption="Active"
+            dataField="active"
+            cellTemplate="activeCellTemplate"
+            [width]="150">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'activeCellTemplate'">
+        <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+    </div>
+    <dxi-column
+            caption="Format type"
+            dataField="formatType"
+            [customizeText]="getFormatTypeDisplayName">
+    </dxi-column>
+    <dxi-column
+            [allowHeaderFiltering]="false"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            dataField="profileId"
+            caption=""
+            cellTemplate="commandCellTemplate"
+            [width]="200"
+            [fixed]="true"
+            fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'commandCellTemplate'">
+        <div>
+            <dx-button
+                    class="button button--icon-only button--default"
+                    icon="edit"
+                    (click)="editProfile(cellData.value, $event);">
+            </dx-button>
+            <dx-button
+                    class="button button--icon-only button--default"
+                    icon="trash"
+                    (click)="deleteProfile(cellData.value, $event);">
+            </dx-button>
+            <dx-button
+                    class="button button--icon-only button--default"
+                    icon="info"
+                    (click)="showInfo(cellData.value, $event);">
+            </dx-button>
+            <dx-button
+                    class="button button--icon-only button--default"
+                    icon="fas fa-link"
+                    (click)="showUsageInfo(cellData.value, $event);"
+                    [ngClass]="getButtonBackground(cellData.value)">
+            </dx-button>
+        </div>
+    </div>
+    <div *dxTemplate="let profile of 'detail'">
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    <p>Description</p>
+                </div>
+                <div class="col-5">
+                    <p>{{profile.data.description | replaceUndefined}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    <p>Condition</p>
+                </div>
+                <div class="col">
+                    <dx-data-grid
+                            class="datagrid"
+                            [dataSource]="profile.data.condition.parts"
+                            [showColumnLines]="false"
+                            [showRowLines]="true"
+                            [allowColumnResizing]="true"
+                            [columnAutoWidth]="true"
+                            [showBorders]="true"
+                            [rowAlternationEnabled]="true"
+                            [customizeColumns]="customizeColumns">
+
+                        <dxo-sorting mode="none"></dxo-sorting>
+
+                        <dxi-column
+                                dataField="startingBraces"
+                                caption="Braces"
+                                cellTemplate="startingBracesTemplate">
+                        </dxi-column>
+                        <div *dxTemplate="let cellData of 'startingBracesTemplate'">
+                            {{bracesAsString(cellData.value, true)}}
+                        </div>
+                        <dxi-column
+                                dataField="condition"
+                                caption="Condition">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="matchTable"
+                                caption="Match table"
+                                [customizeText]="getTableDisplayName">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="matchField"
+                                caption="Match field"
+                                [customizeText]="getFieldDisplayName">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="operator"
+                                caption="Operator"
+                                [customizeText]="getOperatorDisplayName">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="minValue"
+                                caption="Min. Value">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="maxValue"
+                                caption="Max. Value">
+                        </dxi-column>
+                        <dxi-column
+                                dataField="endingBraces"
+                                caption="Braces"
+                                cellTemplate="endingBracesTemplate">
+                        </dxi-column>
+                        <div *dxTemplate="let cellData of 'endingBracesTemplate'">
+                            {{bracesAsString(cellData.value, false)}}
+                        </div>
+                        <dxi-column
+                                dataField="operation"
+                                caption="Operation">
+                        </dxi-column>
+                    </dx-data-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</dx-data-grid>
+<br>
+<br>
+<app-info-popup id="infoPopup"></app-info-popup>

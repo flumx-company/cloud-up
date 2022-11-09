@@ -1,0 +1,242 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">{{viewMode | titlecase}} Restriction {{currentRestriction.entityId.name}}</span>
+  </div>
+</div>
+<div [hidden]="viewMode !== 'Edit'">
+  <dx-button class="button button--default" icon="info" (onClick)="showInfo(null);"></dx-button>
+  <dx-button class="button button--default" icon="fas fa-link" (onClick)="showUsageInfo(null);"></dx-button>
+</div>
+<br>
+<form (submit)="save($event)" class="form">
+  <dx-form class="form__dx-form" id="form" [colCount]="1" [formData]="currentRestriction" [showColonAfterLabel]="false" [showValidationSummary]="true"
+    validationGroup="restrictionValidation">
+    <dxi-item itemType="group" caption="General Information" [colCount]="3">
+      <dxi-item dataField="entityId.name" [label]="{text: 'Name'}" [editorOptions]="{placeholder: 'Choose a name', readOnly: viewMode === 'Edit'}">
+        <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="accountingSystemType" [label]="{text: 'Accounting system type'}" editorType="dxSelectBox" [editorOptions]="{ items: accountingSystemTypes, displayExpr: 'displayName', valueExpr: 'technicalName' }">
+        <dxi-validation-rule type="required" message="Accounting system type is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="active" [label]="{text: 'Active'}" editorType="dxSwitch" [editorOptions]="{ value: currentRestriction.status === 'ACTIVE'}"></dxi-item>
+      <dxi-item dataField="description" editorType="dxTextArea" [colSpan]="3" [editorOptions]="{placeholder: 'Describe the Restriction'}"></dxi-item>
+    </dxi-item>
+    <dxi-item itemType="group" caption="Restriction Parts">
+      <dx-data-grid
+        class="datagrid"
+        [dataSource]="currentRestriction.parts"
+        [hoverStateEnabled]="true"
+        [showColumnLines]="false"
+        [showRowLines]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true"
+        [showBorders]="true"
+        [rowAlternationEnabled]="true"
+        (onContentReady)="onContentReady($event)"
+        (onFileSaving)="onFileSaving($event, 'restriction_parts')"
+        (onToolbarPreparing)="onToolbarPreparing($event)"
+        [customizeColumns]="customizeColumns">
+
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxo-export [enabled]="true"></dxo-export>
+        <dxo-sorting mode="none"></dxo-sorting>
+        <dxo-load-panel [enabled]="true"></dxo-load-panel>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxo-export [enabled]="true"></dxo-export>
+        <dxo-sorting mode="none"></dxo-sorting>
+
+        <dxi-column caption="Braces">
+          <dxi-column cellTemplate="startingBracesButtonsCellTemplate" caption=""></dxi-column>
+          <div *dxTemplate="let cellData of 'startingBracesButtonsCellTemplate'">
+            <dx-button class="button button--icon-only button--default" icon="add" (click)="addBraces(cellData.rowIndex, true);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="fas fa-minus" (click)="removeBraces(cellData.rowIndex, true);"></dx-button>
+          </div>
+          <dxi-column dataField="startingBraces" caption="" cellTemplate="startingBracesTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'startingBracesTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'startingBraces')">
+            {{bracesAsString(cellData.value, true)}}
+          </div>
+        </dxi-column>
+        <dxi-column caption="Restriction">
+          <dxi-column caption="Assign" cellTemplate="assignRestrictionButtonsCellTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'assignRestrictionButtonsCellTemplate'">
+            <dx-button class="button button--default" text="Assign" (click)="showAssignRestrictionGrid(cellData.rowIndex);"></dx-button>
+            <dx-button class="button button--default" text="Clear" (click)="clearAssignedRestriction(cellData.rowIndex);"></dx-button>
+          </div>
+          <dxi-column caption="Assigned" dataField="restriction" cellTemplate="assignRestrictionCellTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'assignRestrictionCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'restriction')">
+            {{cellData.text}}
+          </div>
+        </dxi-column>
+        <dxi-column caption="Match field OI" cellTemplate="matchFieldOICellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'matchFieldOICellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'matchFieldOI')">
+          <dx-select-box [dataSource]="matchFieldOIList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.rowIndex, 'matchFieldOI')"
+            (onValueChanged)="changeValue(cellData.rowIndex, $event, 'matchFieldOI')"></dx-select-box>
+        </div>
+        <dxi-column caption="Operator" cellTemplate="operatorCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'operatorCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'operator')">
+          <dx-select-box [dataSource]="operators" valueExpr="technicalName" displayExpr="displayName" [value]="getValue(cellData.rowIndex, 'operator')"
+            (onValueChanged)="changeValue(cellData.rowIndex, $event, 'operator')"></dx-select-box>
+        </div>
+        <dxi-column caption="Match field Payment Information" cellTemplate="matchFieldCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'matchFieldCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'matchField')">
+          <div>
+            <dx-select-box [dataSource]="matchTableList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.rowIndex, 'matchTable')"
+              (onValueChanged)="changeValue(cellData.rowIndex, $event, 'matchTable')"></dx-select-box>
+            <dx-select-box [dataSource]="matchFieldList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.rowIndex, 'matchField')"
+              (onValueChanged)="changeValue(cellData.rowIndex, $event, 'matchField')"></dx-select-box>
+          </div>
+        </div>
+        <dxi-column caption="Min. Value" cellTemplate="minValueCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'minValueCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'minValue')">
+          <dx-text-box [value]="getValue(cellData.rowIndex, 'minValue')" (onValueChanged)="changeValue(cellData.rowIndex, $event, 'minValue')"></dx-text-box>
+        </div>
+        <dxi-column caption="Max. Value" cellTemplate="maxValueCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'maxValueCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'maxValue')">
+          <dx-text-box [value]="getValue(cellData.rowIndex, 'maxValue')" (onValueChanged)="changeValue(cellData.rowIndex, $event, 'maxValue')"></dx-text-box>
+        </div>
+        <dxi-column caption="Filter min. Value" cellTemplate="filterMinValueCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'filterMinValueCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'filterMinValue')">
+          <dx-select-box [dataSource]="fineFilterList" valueExpr="filterId.name" displayExpr="filterId.name" [value]="getValue(cellData.rowIndex, 'filterMinValue')"
+            (onValueChanged)="changeValue(cellData.rowIndex, $event, 'filterMinValue')"></dx-select-box>
+        </div>
+        <dxi-column caption="Filter max. Value" cellTemplate="filterMaxValueCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'filterMaxValueCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'filterMaxValue')">
+          <dx-select-box [dataSource]="fineFilterList" valueExpr="filterId.name" displayExpr="filterId.name" [value]="getValue(cellData.rowIndex, 'filterMaxValue')"
+            (onValueChanged)="changeValue(cellData.rowIndex, $event, 'filterMaxValue')"></dx-select-box>
+        </div>
+        <dxi-column caption="Braces">
+          <dxi-column dataField="endingBraces" caption="" cellTemplate="endingBracesTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'endingBracesTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'endingBraces')">
+            {{bracesAsString(cellData.value, false)}}
+          </div>
+          <dxi-column cellTemplate="endingBracesButtonsCellTemplate" caption=""></dxi-column>
+          <div *dxTemplate="let cellData of 'endingBracesButtonsCellTemplate'">
+            <dx-button class="button button--icon-only button--default" icon="add" (click)="addBraces(cellData.rowIndex, false);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="fas fa-minus" (click)="removeBraces(cellData.rowIndex, false);"></dx-button>
+          </div>
+        </dxi-column>
+        <dxi-column caption="Operation" cellTemplate="operationCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'operationCellTemplate'" [ngClass]="getCssClass(cellData.rowIndex, 'operation')">
+          <dx-select-box [dataSource]="operations" [value]="getValue(cellData.rowIndex, 'operation')" (onValueChanged)="changeValue(cellData.rowIndex, $event, 'operation')"></dx-select-box>
+        </div>
+      </dx-data-grid>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="floppy" validationGroup="restrictionValidation" [useSubmitBehavior]="true"></dx-button>
+  </div>
+  <hr />
+  <div [hidden]="isAssignRestrictionGridHidden">
+    <dx-button class="button button--default" icon="close" (onClick)="hideAssignRestrictionGrid();"></dx-button>
+    <h2 style="padding-top: 5px">Select a Restriction</h2>
+    <br>
+    <dx-data-grid
+      #assignRestrictionGrid
+      class="datagrid"
+      [dataSource]="usableRestrictions"
+      [hoverStateEnabled]="true"
+      [showColumnLines]="false"
+      [showRowLines]="true"
+      [allowColumnResizing]="true"
+      [columnAutoWidth]="true"
+      [showBorders]="false"
+      [rowAlternationEnabled]="true"
+      (onContentReady)="onContentReady($event)"
+      (onFileSaving)="onFileSaving($event, 'usable_restrictions_in')"
+      [masterDetail]="{ enabled: true, template: 'detail' }"
+      [customizeColumns]="customizeColumns">
+
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxo-scrolling mode="infinite"></dxo-scrolling>
+      <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxo-export [enabled]="true"></dxo-export>
+
+      <dxi-column caption="Name" dataField="entityId.name"></dxi-column>
+      <dxi-column caption="Active" dataField="status" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+      <div *dxTemplate="let cellData of 'activeCellTemplate'">
+        <dx-switch [value]="cellData.value === 'ACTIVE'" [readOnly]="true"></dx-switch>
+      </div>
+
+      <dxi-column
+        [allowHeaderFiltering]="false"
+        [allowSorting]="false"
+        [allowFiltering]="false"
+        dataField="entityId.name"
+        caption=""
+        cellTemplate="commandCellTemplate"
+        [width]="150"
+        [fixed]="true"
+        fixedPosition="right">
+      </dxi-column>
+      <div *dxTemplate="let cellData of 'commandCellTemplate'">
+        <div>
+          <dx-button class="button button--icon-only button--default" text="Select" (click)="selectRestriction(cellData.value);"></dx-button>
+          <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value);"></dx-button>
+          <dx-button class="button button--icon-only button--default" icon="fas fa-link" (click)="showUsageInfo(cellData.value);" [ngClass]="getButtonBackground(cellData.value)"></dx-button>
+        </div>
+      </div>
+      <div *dxTemplate="let restriction of 'detail'">
+        <dx-data-grid
+          class="datagrid"
+          [dataSource]="restriction.data.parts"
+          [hoverStateEnabled]="true"
+          [showColumnLines]="false"
+          [showRowLines]="true"
+          [allowColumnResizing]="true"
+          [columnAutoWidth]="true"
+          [showBorders]="false"
+          [rowAlternationEnabled]="true"
+          [customizeColumns]="customizeColumns">
+
+          <dxi-column dataField="startingBraces" caption="Braces" cellTemplate="startingBracesTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'startingBracesTemplate'">
+            {{bracesAsString(cellData.value, true)}}
+          </div>
+          <dxi-column dataField="restriction" caption="Restriction"></dxi-column>
+          <dxi-column dataField="matchFieldOI" caption="Match field (OI)"></dxi-column>
+          <dxi-column dataField="operator" caption="Operator"></dxi-column>
+          <dxi-column dataField="matchTableISAS" caption="Match table (Payment Information)"></dxi-column>
+          <dxi-column dataField="matchFieldISAS" caption="Match field (Payment Information)"></dxi-column>
+          <dxi-column dataField="minValue" caption="Min. Value"></dxi-column>
+          <dxi-column dataField="maxValue" caption="Max. Value"></dxi-column>
+          <dxi-column dataField="filterMinValue" caption="Filter min. value"></dxi-column>
+          <dxi-column dataField="filterMaxValue" caption="Filter max. value"></dxi-column>
+          <dxi-column dataField="endingBraces" caption="Braces" cellTemplate="endingBracesTemplate"></dxi-column>
+          <div *dxTemplate="let cellData of 'endingBracesTemplate'">
+            {{bracesAsString(cellData.value, false)}}
+          </div>
+          <dxi-column dataField="operation" caption="Operation"></dxi-column>
+
+        </dx-data-grid>
+      </div>
+    </dx-data-grid>
+  </div>
+</form>
+<dx-popup class="popup" [width]="300" [height]="250" [showTitle]="true" title="Information" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="infoVisible">
+  <div *dxTemplate="let data of 'content'">
+    <p>
+      Inserted by:
+      <span>{{restrictionInfo.insertMetadata.insertedBy}}</span>
+    </p>
+    <p>
+      Inserted on:
+      <span>{{restrictionInfo.insertMetadata.insertedOn | date:"short"}}</span>
+    </p>
+    <p>
+      Last updated by:
+      <span>{{restrictionInfo.updateMetadata.updatedBy}}</span>
+    </p>
+    <p>
+      Last updated on:
+      <span>{{restrictionInfo.updateMetadata.updatedOn | date:"short"}}</span>
+    </p>
+  </div>
+</dx-popup>

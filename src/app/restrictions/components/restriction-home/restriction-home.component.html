@@ -1,0 +1,120 @@
+<div [hidden]="viewMode !== 'usageInfo'">
+  <app-restriction-usage-info [restrictions]="restrictions"></app-restriction-usage-info>
+</div>
+<div [hidden]="viewMode !== 'Edit' && viewMode !== 'Add'">
+  <app-restriction-detail [restrictions]="restrictions"></app-restriction-detail>
+</div>
+<div [hidden]="viewMode !== ''">
+  <br>
+  <h2>Restrictions Overview</h2>
+  <br>
+  <dx-data-grid
+    class="datagrid"
+    id="restrictionsGrid"
+    class="datagrid"
+    [dataSource]="restrictions"
+    [showRowLines]="true"
+    [showColumnLines]="false"
+    [showBorders]="false"
+    [hoverStateEnabled]="true"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    [columnAutoWidth]="true"
+    [rowAlternationEnabled]="true"
+    (onToolbarPreparing)="onRestrictionsGridToolbarPreparing($event)"
+    (onContentReady)="onContentReady($event)"
+    [masterDetail]="{ enabled: true, template: 'detail' }"
+    [customizeColumns]="customizeColumns">
+
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+    <dxo-scrolling mode="virtual"></dxo-scrolling>
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-export [enabled]="true" fileName="restrictions"></dxo-export>
+
+    <dxi-column caption="Name" dataField="entityId.name"></dxi-column>
+    <dxi-column caption="Active" dataField="status" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+    <div *dxTemplate="let cellData of 'activeCellTemplate'">
+      <dx-switch [value]="cellData.value === 'ACTIVE'" [readOnly]="true"></dx-switch>
+    </div>
+    <dxi-column caption="Accounting system type" dataField="accountingSystemType" [customizeText]="getDisplayName"></dxi-column>
+    <dxi-column
+      [allowHeaderFiltering]="false"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      dataField="entityId.name"
+      caption=""
+      cellTemplate="commandCellTemplate"
+      [width]="200"
+      [fixed]="true"
+      fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'commandCellTemplate'">
+      <div>
+        <dx-button class="button button--icon-only button--default" icon="edit" (click)="editRestriction(cellData.value, $event);"></dx-button>
+        <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeRestriction(cellData.value, $event);"></dx-button>
+        <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+        <dx-button class="button button--icon-only button--default" icon="fas fa-link" (click)="showUsageInfo(cellData.value, $event);" [ngClass]="getButtonBackground(cellData.value)"></dx-button>
+      </div>
+    </div>
+    <div *dxTemplate="let restriction of 'detail'">
+      <dx-data-grid
+        class="datagrid"
+        [dataSource]="restriction.data.parts"
+        [showColumnLines]="false"
+        [showRowLines]="true"
+        [allowColumnResizing]="true"
+        [columnAutoWidth]="true"
+        [showBorders]="false"
+        [rowAlternationEnabled]="true"
+        [customizeColumns]="customizeColumns">
+
+        <dxi-column dataField="startingBraces" caption="Braces" cellTemplate="startingBracesTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'startingBracesTemplate'">
+          {{bracesAsString(cellData.value, true)}}
+        </div>
+        <dxi-column dataField="restriction" caption="Restriction"></dxi-column>
+        <dxi-column dataField="matchFieldOI" caption="Match field (OI)"></dxi-column>
+        <dxi-column dataField="operator" caption="Operator"></dxi-column>
+        <dxi-column dataField="matchTableISAS" caption="Match table (Payment Information)"></dxi-column>
+        <dxi-column dataField="matchFieldISAS" caption="Match field (Payment Information)"></dxi-column>
+        <dxi-column dataField="minValue" caption="Min. Value"></dxi-column>
+        <dxi-column dataField="maxValue" caption="Max. Value"></dxi-column>
+        <dxi-column dataField="filterMinValue" caption="Filter min. value"></dxi-column>
+        <dxi-column dataField="filterMaxValue" caption="Filter max. value"></dxi-column>
+        <dxi-column dataField="endingBraces" caption="Braces" cellTemplate="endingBracesTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'endingBracesTemplate'">
+          {{bracesAsString(cellData.value, false)}}
+        </div>
+        <dxi-column dataField="operation" caption="Operation"></dxi-column>
+
+      </dx-data-grid>
+    </div>
+  </dx-data-grid>
+
+  <dx-popup class="popup" [width]="300" [height]="250" [showTitle]="true" title="Information" [dragEnabled]="false" [closeOnOutsideClick]="true"
+    [(visible)]="infoVisible">
+    <div *dxTemplate="let data of 'content'">
+      <p>
+        Inserted by:
+        <span>{{currentRestriction.insertMetadata.insertedBy}}</span>
+      </p>
+      <p>
+        Inserted on:
+        <span>{{currentRestriction.insertMetadata.insertedOn | date:"short"}}</span>
+      </p>
+      <p>
+        Last updated by:
+        <span>{{currentRestriction.updateMetadata.updatedBy}}</span>
+      </p>
+      <p>
+        Last updated on:
+        <span>{{currentRestriction.updateMetadata.updatedOn | date:"short"}}</span>
+      </p>
+    </div>
+  </dx-popup>
+</div>

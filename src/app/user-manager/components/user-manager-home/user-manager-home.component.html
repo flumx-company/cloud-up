@@ -1,0 +1,123 @@
+<h1>User</h1>
+
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="dataSource"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  [customizeColumns]="customizeColumns"
+  (onInitNewRow)="onInitNewRow($event)"
+  (onEditingStart)="onEditStart($event)"
+  (onRowPrepared)="onRowPrepared($event)">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-search-panel [visible]="true"></dxo-search-panel>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-grouping [autoExpandAll]="true"></dxo-grouping>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="users"></dxo-export>
+  <dxo-editing
+    [allowAdding]="true"
+    [allowUpdating]="true"
+    [allowDeleting]="true"
+    [useIcons]="true"
+    mode="row">
+  </dxo-editing>
+
+  <dxo-paging [pageSize]="15"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 15, 20]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column dataField="firstName">
+    <dxi-validation-rule type="required" message="First name is required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="lastName">
+    <dxi-validation-rule type="required" message="Last name is required"></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="email">
+    <dxi-validation-rule type="email" message="Please use a valid email address."></dxi-validation-rule>
+    <dxi-validation-rule type="required" message="An email address is required."></dxi-validation-rule>
+  </dxi-column>
+  <dxi-column dataField="tenantIds" cellTemplate="tenantTemplate" editCellTemplate="tenantEditTemplate" caption="Tenants"></dxi-column>
+  <div *dxTemplate="let d of 'tenantTemplate'">
+    <dx-tag-box
+      [dataSource]="tenants"
+      [value]="d.data.tenantIds"
+      displayExpr="name"
+      valueExpr="id"
+      placeholder="no tenant assigned"
+      [disabled]="true">
+    </dx-tag-box>
+  </div>
+  <div *dxTemplate="let d of 'tenantEditTemplate'">
+    <dx-tag-box
+      [dataSource]="possibleTenants"
+      [value]="d.data.tenantIds"
+      displayExpr="name"
+      valueExpr="id"
+      placeholder="no tenant assigned"
+      [hideSelectedItems]="true"
+      [disabled]="tenantsDisabled"
+      multiline="false"
+      (onSelectionChanged)="onTenantsChanged($event, d.data)">
+    </dx-tag-box>
+  </div>
+  <dxi-column dataField="roleIds" cellTemplate="roleTemplate" editCellTemplate="roleEditTemplate"></dxi-column>
+  <div *dxTemplate="let d of 'roleTemplate'">
+    <dx-tag-box
+      [dataSource]="possibleRoles"
+      [value]="d.data.roleIds"
+      displayExpr="roleName"
+      valueExpr="id"
+      placeholder="no role assigned"
+      [disabled]="true">
+    </dx-tag-box>
+  </div>
+  <div *dxTemplate="let d of 'roleEditTemplate'">
+    <dx-tag-box
+      [dataSource]="possibleRoles"
+      [value]="d.data.roleIds"
+      displayExpr="roleName"
+      valueExpr="id"
+      placeholder="no role assigned"
+      [hideSelectedItems]="true"
+      [disabled]="false">
+    </dx-tag-box>
+  </div>
+  <dxi-column dataField="locked" [allowHeaderFiltering]="false" [allowSorting]="true" [allowFiltering]="false"
+    cellTemplate="lockedTemplate" [editorOptions]="{disabled: checkBoxesDisabled}">
+  </dxi-column>
+  <div *dxTemplate="let cell of 'lockedTemplate'">
+    <i [appFlagToIcon]="cell.data.locked" type="locked" class="fas"></i>
+  </div>
+  <dxi-column dataField="enabled" [allowHeaderFiltering]="false" [allowSorting]="true" [allowFiltering]="false"
+    cellTemplate="enabledTemplate" [editorOptions]="{disabled: checkBoxesDisabled}">
+  </dxi-column>
+  <div *dxTemplate="let cell of 'enabledTemplate'">
+    <i [appFlagToIcon]="cell.data.enabled" type="enabled" class="fas"></i>
+  </div>
+  <dxi-column dataField="activated" [allowHeaderFiltering]="false" [allowSorting]="false" [allowFiltering]="false"
+      [groupIndex]="0" [sortIndex]="0" sortOrder="desc" groupCellTemplate="groupTemplate">
+  </dxi-column>
+  <div *dxTemplate="let data of 'groupTemplate'">
+    <span>{{data.displayValue ? 'Activated' : 'Not Activated'}}</span>
+  </div>
+  <dxi-column [allowHeaderFiltering]="false" [allowSorting]="false" [allowFiltering]="false"
+      cellTemplate="resetTemplate" [fixed]="true" fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cell of 'resetTemplate'" [hidden]="cell.data.initial">
+    <dx-button class="button button--primary button--icon-and-text" text="Reset" [hidden]="!cell.data.activated"(onClick)="onResetPassword($event, cell.data)"></dx-button>
+    <dx-button class="button button--primary button--icon-and-text" text="Activate" [hidden]="cell.data.activated"(onClick)="onActivateTenant($event, cell.data)"></dx-button>
+  </div>
+</dx-data-grid>

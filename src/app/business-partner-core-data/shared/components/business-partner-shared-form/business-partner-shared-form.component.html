@@ -1,0 +1,44 @@
+<form (submit)="onSubmit($event)" class="form">
+  <dx-form class="form__dx-form"
+      validationGroup="partnerGroup"
+      [(formData)]="partner"
+      [showValidationSummary]="false"
+      [showColonAfterLabel]="false">
+
+    <dxi-item itemType="group" caption="General Information" [colCount]="2">
+      <dxi-item dataField="businessPartner" [label]="{text: 'Business Partner'}" [editorOptions]="{maxLength: '55'}">
+        <dxi-validation-rule type="stringLength" max="55" message="Business Partner cannot exceed 55 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" [reevaluate]="true" [validationCallback]="validateFields" message="One of Business Partner / IBAN / Bank Account Number+Bank Code Number is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="accountingSystem" [label]="{text: 'Accounting System'}" editorType="dxSelectBox" [editorOptions]="{ items: accountingSystems, displayExpr: 'name', valueExpr: 'name' }">
+        <dxi-validation-rule type="required" message="Accounting System is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="bankAccount" [label]="{text: 'Bank Account Number'}" [editorOptions]="{maxLength: '18'}">
+        <dxi-validation-rule type="stringLength" max="18" message="Bank Account cannot exceed 18 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" [reevaluate]="true" [validationCallback]="validateFields" message="One of Business Partner / IBAN / Bank Account Number+Bank Code Number is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="bankCode" [label]="{text: 'Bank Code Number'}" [editorOptions]="{maxLength: '15'}">
+        <dxi-validation-rule type="stringLength" max="15" message="Bank Code cannot exceed 15 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" [reevaluate]="true" [validationCallback]="validateFields" message="One of Business Partner / IBAN / Bank Account Number+Bank Code Number is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="bankCountry" [label]="{text: 'Bank Country'}" [editorOptions]="{maxLength: '3'}">
+        <dxi-validation-rule type="stringLength" max="3" message="Bank Country cannot exceed 3 characters"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="iban" [label]="{text: 'IBAN'}" [editorOptions]="{maxLength: '34'}">
+        <dxi-validation-rule type="stringLength" max="34" message="IBAN cannot exceed 34 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" [reevaluate]="true" [validationCallback]="validateFields" message="One of Business Partner / IBAN / Bank Account Number+Bank Code Number is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="matchField" [label]="{text: 'Match Field'}" editorType="dxSelectBox" [editorOptions]="{ items: matchFieldList, displayExpr: 'displayName', valueExpr: 'technicalName' }">
+        <dxi-validation-rule type="required" message="Match Field is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="matchValue" [label]="{text: 'Match Value'}" [editorOptions]="{maxLength: '30'}">
+        <dxi-validation-rule type="required" message="Match Value is required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" max="30" message="Match Value cannot exceed 30 characters"></dxi-validation-rule>
+      </dxi-item>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="floppy" type="default" validationGroup="partnerGroup" [useSubmitBehavior]="true">
+    </dx-button>
+  </div>
+</form>

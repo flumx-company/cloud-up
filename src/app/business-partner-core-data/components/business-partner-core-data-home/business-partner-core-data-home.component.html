@@ -1,0 +1,61 @@
+<br>
+<h2>{{ title }}</h2>
+<div>
+    <dx-data-grid
+        class="datagrid"
+        [dataSource]="gridDataSource"
+        [hoverStateEnabled]="true"
+        [showColumnLines]="false"
+        [allowColumnResizing]="true"
+        [allowColumnReordering]="true"
+        [columnAutoWidth]="true"
+        [showRowLines]="true"
+        [showBorders]="false"
+        [rowAlternationEnabled]="true"
+        (onToolbarPreparing)="onToolbarPreparing($event)"
+        [customizeColumns]="customizeColumns"
+        (onExporting)="onExporting($event)"
+        (onExported)="onExported($event)">
+
+        <dxo-selection mode="multiple"></dxo-selection>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-sorting mode="multiple"></dxo-sorting>
+        <dxo-column-chooser class="test" [enabled]="true" mode="dragAndDrop">
+        </dxo-column-chooser>
+        <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]" [showNavigationButtons]="true">
+        </dxo-pager>
+        <dxo-export [enabled]="true"></dxo-export>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+
+        <dxi-column caption="Business Partner" dataField="businessPartner"></dxi-column>
+        <dxi-column caption="Accounting System" dataField="accountingSystem"></dxi-column>
+        <dxi-column caption="Bank Account" dataField="bankAccount"></dxi-column>
+        <dxi-column caption="Bank Code" dataField="bankCode"></dxi-column>
+        <dxi-column caption="Bank Country" dataField="bankCountry"></dxi-column>
+        <dxi-column caption="IBAN" dataField="iban"></dxi-column>
+        <dxi-column caption="Match Field" dataField="matchField" cellTemplate="matchFieldCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'matchFieldCellTemplate'">{{getMatchFieldDisplayName(cellData.data)}}</div>
+        <dxi-column caption="Match Value" dataField="matchValue"></dxi-column>
+        <dxi-column
+            [allowHeaderFiltering]="false"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            dataField="businessPartnerId"
+            caption=""
+            cellTemplate="commandCellTemplate"
+            [width]="150"
+            [fixed]="true"
+            fixedPosition="right">
+        </dxi-column>
+        <div *dxTemplate="let cellData of 'commandCellTemplate'">
+            <div>
+              <dx-button class="button button--icon-only button--default" icon="edit" (click)="updatePartner(cellData.value, $event);"></dx-button>
+              <dx-button class="button button--icon-only button--default" icon="trash" (click)="deletePartner(cellData.value, $event);"></dx-button>
+              <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+            </div>
+        </div>
+    </dx-data-grid>
+</div>
+<app-info-popup id="infoPopup"></app-info-popup>

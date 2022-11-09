@@ -1,0 +1,24 @@
+::ng-deep {
+
+  .dx-datagrid .dx-datagrid-headers .dx-datagrid-content.dx-datagrid-content-fixed {
+    z-index: 0;
+  }
+
+  .dx-template-wrapper {
+    overflow-y: hidden;
+  }
+
+  .search .dx-datagrid .dx-texteditor-input {
+    min-height: 15px !important;
+    height: 25px;
+  }
+
+  .dx-first-col.dx-last-col.dx-field-button-item.dx-field-item.dx-col-0 {
+    margin-top: 40px;
+  }
+
+  .mgt-20 {
+    margin-top: 20px;
+  }
+
+}

@@ -1,0 +1,86 @@
+<dx-form class="form__dx-form"
+         id="characteristicForm"
+         [colCount]="2"
+         [formData]="currentCharacteristic"
+         [showColonAfterLabel]="false"
+         [showValidationSummary]="true"
+         validationGroup="characteristicData">
+
+  <dxi-item dataField="name"
+            [label]="{text: 'Name'}"
+            [editorOptions]="{
+              placeholder: 'Choose a name',
+              readOnly: mode === 'Edit',
+              maxLength: 25
+            }">
+    <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+    <dxi-validation-rule type="custom" message="Name is already in use" [reevaluate]="true" [validationCallback]="validate"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item dataField="sourceField"
+            [label]="{text: 'RecordInterface Field'}"
+            editorType="dxSelectBox"
+            [editorOptions]="{
+              items: sourceFieldRelevantFields,
+              displayExpr: 'displayName',
+              valueExpr: 'technicalName',
+              searchEnabled: true
+            }">
+    <dxi-validation-rule type="required" message="RecordInterface Field is required"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item dataField="openItemField"
+            [label]="{text: 'Open Item Field'}"
+            editorType="dxSelectBox"
+            [editorOptions]="{
+              items: allOpenItemFields,
+              displayExpr: 'displayName',
+              valueExpr: 'technicalName',
+              searchEnabled: true }">
+    <dxi-validation-rule type="required" message="Open Item Field is required"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item dataField="regularExpression"
+            [label]="{text: 'Regular Expression'}"
+            [editorOptions]="{maxLength: 255}">
+  </dxi-item>
+
+  <dxi-item dataField="accountingSystem"
+            [label]="{text: 'Accounting System'}"
+            editorType="dxSelectBox"
+            [editorOptions]="{
+              readOnly: !isAccountingSystemSelectable,
+              items: allAccountingSystems,
+              displayExpr: 'name',
+              valueExpr: 'id',
+              showClearButton: isAccountingSystemSelectable,
+              searchEnabled: isAccountingSystemSelectable
+            }"
+
+            [visible]="isAccountingSystemSelectable">
+  </dxi-item>
+
+  <div *ngIf="isAccountingSystemSelectable">
+    <dxi-item itemType="empty"></dxi-item>
+  </div>
+
+  <dxi-item cellTemplate="buttons" [colSpan]="1">
+    <div *dxTemplate="let data of 'buttons'">
+      <br>
+      <br>
+
+      <dx-button class="button button--default"
+                 text="Cancel"
+                 icon="close"
+                 (onClick)="hideCharacteristicForm()">
+      </dx-button>
+
+      <dx-button class="button button--primary button--icon-and-text"
+                 text="Add"
+                 icon="add"
+                 validationGroup="characteristicData"
+                 (onClick)="saveCharacteristic($event)">
+      </dx-button>
+    </div>
+  </dxi-item>
+</dx-form>

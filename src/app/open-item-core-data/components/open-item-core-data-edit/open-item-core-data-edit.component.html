@@ -1,0 +1,89 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">Edit Open Item</span>
+  </div>
+</div>
+<br>
+<form class="form">
+  <dx-form class="form__dx-form" id="form" [(formData)]="currentObject" [showColonAfterLabel]="false">
+    <dxi-item itemType="group" caption="General Information" [colCount]="3">
+      <dxi-item dataField="matched" editorType="dxCheckBox"></dxi-item>
+      <dxi-item dataField="accountingSystemId" [label]="{text: 'Accounting system'}" editorType="dxSelectBox" [editorOptions]="{ items: accountingSystems, displayExpr: 'name', valueExpr: 'name' }"></dxi-item>
+      <dxi-item dataField="systemId" [label]="{text: 'System id'}"></dxi-item>
+      <dxi-item dataField="clientId" [label]="{text: 'Client id'}"></dxi-item>
+      <dxi-item dataField="companyId" [label]="{text: 'Company id'}"></dxi-item>
+      <dxi-item dataField="businessArea" [label]="{text: 'Business area'}"></dxi-item>
+      <dxi-item dataField="accountType" [label]="{text: 'Account type'}"></dxi-item>
+      <dxi-item dataField="account" [label]="{text: 'Account'}"></dxi-item>
+      <dxi-item dataField="name" [label]="{text: 'Name'}"></dxi-item>
+      <dxi-item dataField="fiscalYear" [label]="{text: 'Fiscal year'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="documentNumber" [label]="{text: 'Document number'}"></dxi-item>
+      <dxi-item dataField="lineItem" [label]="{text: 'Line item'}"></dxi-item>
+      <dxi-item dataField="creationDate" [label]="{text: 'Creation date'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="creationTime" [label]="{text: 'Creation time'}" editorType="dxDateBox" [editorOptions]="{type: 'time'}"></dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Document" [colCount]="3">
+      <dxi-item dataField="documentDate" [label]="{text: 'Document date'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="postingDate" [label]="{text: 'Posting date'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="postingPeriod" [label]="{text: 'Posting period'}"></dxi-item>
+      <dxi-item dataField="documentCurrency" [label]="{text: 'Document Currency-Module'}" editorType="dxSelectBox" [editorOptions]="{ items: currencies}"></dxi-item>
+      <dxi-item dataField="localCurrency" [label]="{text: 'Local Currency-Module'}" editorType="dxSelectBox" [editorOptions]="{ items: currencies}"></dxi-item>
+      <dxi-item dataField="saleDocumentNumber" [label]="{text: 'Sale document number'}"></dxi-item>
+      <dxi-item dataField="documentAmount" [label]="{text: 'Document amount'}"></dxi-item>
+      <dxi-item dataField="localAmount" [label]="{text: 'Local amount'}"></dxi-item>
+      <dxi-item dataField="documentAmountEligibleCashDiscount" [label]="{text: 'Document amount eligible cash discount'}"></dxi-item>
+      <dxi-item dataField="documentAmountCashDiscount" [label]="{text: 'Document amount cash discount'}"></dxi-item>
+      <dxi-item dataField="documentHeaderText" [label]="{text: 'Document header text'}"></dxi-item>
+      <dxi-item dataField="positionText" [label]="{text: 'Position text'}"></dxi-item>
+      <dxi-item dataField="reference" [label]="{text: 'Reference'}"></dxi-item>
+      <dxi-item dataField="referenceKey" [label]="{text: 'Reference key'}"></dxi-item>
+      <dxi-item dataField="paymentReference" [label]="{text: 'Payment reference'}"></dxi-item>
+      <dxi-item dataField="documentHeaderReference1" [label]="{text: 'Document header reference 1'}"></dxi-item>
+      <dxi-item dataField="documentHeaderReference2" [label]="{text: 'Document header reference 2'}"></dxi-item>
+      <dxi-item dataField="assignment" [label]="{text: 'Assignment'}"></dxi-item>
+      <dxi-item dataField="reference1" [label]="{text: 'Reference 1'}"></dxi-item>
+      <dxi-item dataField="reference2" [label]="{text: 'Reference 2'}"></dxi-item>
+      <dxi-item dataField="reference3" [label]="{text: 'Reference 3'}"></dxi-item>
+      <dxi-item dataField="billingDocument" [label]="{text: 'Billing document'}"></dxi-item>
+      <dxi-item dataField="orderNumber" [label]="{text: 'Order number'}"></dxi-item>
+      <dxi-item dataField="documentNumberInvoiceReference" [label]="{text: 'Document number invoice reference'}"></dxi-item>
+      <dxi-item dataField="contract" [label]="{text: 'Contract'}"></dxi-item>
+      <dxi-item dataField="contractType" [label]="{text: 'Contract type'}"></dxi-item>
+      <dxi-item dataField="invoiceListNumber" [label]="{text: 'Invoice list number'}"></dxi-item>
+      <dxi-item dataField="paymentBlock" [label]="{text: 'Payment block'}"></dxi-item>
+      <dxi-item dataField="taxCode" [label]="{text: 'Tax code'}"></dxi-item>
+      <dxi-item dataField="postingKey" [label]="{text: 'Posting key'}"></dxi-item>
+      <dxi-item dataField="specialGlIndicator" [label]="{text: 'Special gl indicator'}"></dxi-item>
+      <dxi-item dataField="pspElement" [label]="{text: 'Psp element'}"></dxi-item>
+      <dxi-item dataField="profitCenter" [label]="{text: 'Profit center'}"></dxi-item>
+      <dxi-item dataField="costCenter" [label]="{text: 'Cost center'}"></dxi-item>
+      <dxi-item dataField="ledgerGroup" [label]="{text: 'Ledger group'}"></dxi-item>
+      <dxi-item dataField="ledger" [label]="{text: 'Ledger'}"></dxi-item>
+      <dxi-item dataField="branchAccountNumber" [label]="{text: 'Branch account number'}"></dxi-item>
+      <dxi-item dataField="customerIdOld" [label]="{text: 'Old customer id'}"></dxi-item>
+      <dxi-item dataField="buyingGroup" [label]="{text: 'Buying group'}"></dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Payment Conditions" [colCount]="3">
+      <dxi-item dataField="baselineDate" [label]="{text: 'Baseline date'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="netPaymentDate" [label]="{text: 'Net payment date'}" editorType="dxDateBox"></dxi-item>
+      <dxi-item dataField="fixedPaymentTerms" [label]="{text: 'Fixed payment terms'}"></dxi-item>
+      <dxi-item dataField="cashDiscountDays1" [label]="{text: 'Cash discount days 1'}"></dxi-item>
+      <dxi-item dataField="cashDiscountDays2" [label]="{text: 'Cash discount days 2'}"></dxi-item>
+      <dxi-item dataField="cashDiscountDays3" [label]="{text: 'Cash discount days 3'}"></dxi-item>
+      <dxi-item dataField="cashDiscountPercent1" [label]="{text: 'Cash discount percent 1'}"></dxi-item>
+      <dxi-item dataField="cashDiscountPercent2" [label]="{text: 'Cash discount percent 2'}"></dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Tax" [colCount]="3">
+      <dxi-item dataField="taxNumber1" [label]="{text: 'Tax number 1'}"></dxi-item>
+      <dxi-item dataField="taxNumber2" [label]="{text: 'Tax number 2'}"></dxi-item>
+      <dxi-item dataField="vatRegistrationNumber" [label]="{text: 'Vat registration number'}"></dxi-item>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="save" (onClick)="save($event)"></dx-button>
+  </div>
+</form>

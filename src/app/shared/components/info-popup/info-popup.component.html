@@ -1,0 +1,21 @@
+<dx-popup class="popup" [width]="300" [height]="250" [showTitle]="true" title="Information" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="infoVisible">
+  <div *dxTemplate="let data of 'content'">
+    <p>
+      Inserted by:
+      <span>{{infoObject.insertMetadata.insertedBy}}</span>
+    </p>
+    <p>
+      Inserted on:
+      <span>{{infoObject.insertMetadata.insertedOn | date:"short"}}</span>
+    </p>
+    <p>
+      Last updated by:
+      <span>{{infoObject.updateMetadata.updatedBy}}</span>
+    </p>
+    <p>
+      Last updated on:
+      <span>{{infoObject.updateMetadata.updatedOn | date:"short"}}</span>
+    </p>
+  </div>
+</dx-popup>

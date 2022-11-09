@@ -1,0 +1,140 @@
+services:
+- name: docker:dind
+  command: ["--insecure-registry=hogit.hanseorga-ag.de:8084"]
+
+stages:
+- build-compile
+  #- agent-resolution-unit
+- agent-resolution-e2e
+- build-prod
+- publish_local
+- publish_azure
+- publish_kubernetes
+
+variables:
+  K8_NAMESPACE: "o2c-development"
+  AZURE_RESOURCE_GROUP: "hog-cloud-aks"
+  AZURE_CLUSTER_NAME: "o2c-aks"
+  APP_PORTNAME_KEY: '$CI_PROJECT_NAME.port'
+  APP_REPLICAS: 1
+  APP_PORT: 80
+
+
+  #for activating Health check set Check Empty
+  APP_HEALTH_CHECK: ""
+  APP_HEALTH_PORT: 80
+  APP_HEALTH_PATH: "/"
+
+  APP_RESSOURCE: "#"
+  # for activating custom CPU&MEMORY USAGE
+  APP_RESSOURCE_REQUEST: "#"
+  APP_RESSOURCE_REQUEST_MEMORY: "64Mi"
+  APP_RESSOURCE_REQUEST_CPU: "250m"
+  # for activating custom CPU&MEMORY USAGE
+  APP_RESSOURCE_LIMIT: "#"
+  APP_RESSOURCE_LIMIT_MEMORY: "128Mi"
+  APP_RESSOURCE_LIMIT_CPU: "1"
+  AUTH_HEADER: "PRIVATE-TOKEN:$API_TOKEN_DOWNLOAD"
+
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - echo "convert to lower case"
+  - export CI_PROJECT_NAME_LOWERCASE=$(echo $CI_PROJECT_NAME | tr '[:upper:]' '[:lower:]')
+  - export PACKAGE_NAME=$CI_PROJECT_NAME_LOWERCASE
+  - export DOCKERTAG_DEV=$CI_COMMIT_SHA
+
+
+
+build-compile:
+  stage: build-compile
+  image: node:8.11.4
+  script:
+  - npm install -g @angular/cli@6.0.0
+  - curl -L -H $AUTH_HEADER -o /usr/local/lib/linux-x64-57_binding.node http://hogit.hanseorga-ag.de/api/v4/projects/69/repository/files/frontend%2Flinux-x64-57_binding.node/raw?ref=master
+  - export SASS_BINARY_PATH=/usr/local/lib/linux-x64-57_binding.node
+  - npm install
+  - ng build
+  only:
+  - master
+
+  #agent-resolution-unit:
+  #  stage: agent-resolution-unit
+  #  image: node:latest
+  #  script:
+  #  - npm install -g @angular/cli@6.0.0
+  #  - wget -P /usr/local/lib/ --header=$AUTH_HEADER http://hogit.hanseorga-ag.de/cloud_java_devs/devinternal/GitLabDeployScripts/raw/master/frontend/linux-x64-57_binding.node
+  #  - npm install node-sass --sass-binary-path=/usr/local/lib/linux-x64-57_binding.node
+  #  - npm install
+  #  - ng agent-resolution
+  #  only:
+  #  - master
+
+  #agent-resolution-e2e:
+  #  stage: agent-resolution-e2e
+  #  image: node:latest
+  #  script:
+  #  - npm install -g @angular/cli@6.0.0
+  #  - npm install
+  #  - ng e2e
+  #  only:
+  #  - master
+
+build-prod:
+  stage: build-prod
+  image: node:8.11.4
+  script:
+  - npm install -g @angular/cli@6.0.0
+  - curl -L -H $AUTH_HEADER -o /usr/local/lib/linux-x64-57_binding.node http://hogit.hanseorga-ag.de/api/v4/projects/69/repository/files/frontend%2Flinux-x64-57_binding.node/raw?ref=master
+  - export SASS_BINARY_PATH=/usr/local/lib/linux-x64-57_binding.node
+  - npm install
+  - ng build --prod --aot
+  artifacts:
+    paths:
+    - dist/
+  only:
+  - master
+
+publish_local:
+  stage: publish_local
+  image: docker:latest
+  script:
+    - docker info
+    - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD hogit.hanseorga-ag.de:8084
+    - docker build -t hogit.hanseorga-ag.de:8084/hanseorga/$CI_PROJECT_NAME_LOWERCASE:latest .
+    - docker push hogit.hanseorga-ag.de:8084/hanseorga/$CI_PROJECT_NAME_LOWERCASE:latest
+  only:
+  - master
+
+deploy_toAzureRegistry:
+  stage: publish_azure
+  image: docker:latest
+  script:
+  - docker info
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD hogit.hanseorga-ag.de:8084
+  - docker pull hogit.hanseorga-ag.de:8084/hanseorga/$PACKAGE_NAME:latest
+  - docker login -u $AZURE_DOCKER_USER -p $AZURE_DOCKER_PASSWORD o2cdockerregistry.azurecr.io
+  - docker tag hogit.hanseorga-ag.de:8084/hanseorga/$PACKAGE_NAME:latest o2cdockerregistry.azurecr.io/hanseorga/$PACKAGE_NAME:$DOCKERTAG_DEV
+  - docker push o2cdockerregistry.azurecr.io/hanseorga/$PACKAGE_NAME:$DOCKERTAG_DEV
+  only:
+  - master
+
+deploy_toAzureKubernetes:
+  stage: publish_kubernetes
+  image: o2cdockerregistry.azurecr.io/hanseorga/azk8s-helper:1.0.2
+  script:
+  - export APP_DOCKERIMAGE=o2cdockerregistry.azurecr.io/hanseorga/$PACKAGE_NAME:$DOCKERTAG_DEV
+  - wget -O k8deploytemplate.yml --header=$AUTH_HEADER http://hogit.hanseorga-ag.de/api/v4/projects/69/repository/files/k8deploytemplate.yml/raw?ref=master
+  - wget -O deploy_k8_frontend.sh --header=$AUTH_HEADER http://hogit.hanseorga-ag.de/api/v4/projects/62/repository/files/deploy_k8_frontend.sh/raw?ref=master
+  - chmod +x deploy_k8_frontend.sh
+  - envsubst < k8deploytemplate.yml > kubernetes.yaml
+  - cat kubernetes.yaml
+  - ./deploy_k8_frontend.sh
+  only:
+  - master
+
+
+

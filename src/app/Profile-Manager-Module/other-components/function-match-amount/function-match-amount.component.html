@@ -1,0 +1,81 @@
+<br>
+<dx-form *ngIf="processingFunction.type === FunctionTypeEnum.MATCH_AMOUNT_ALL" class="form__dx-form" [formData]="processingFunction.matchAmountConfiguration" [showColonAfterLabel]="false">
+  <dxi-item itemType="group" caption="Match Settings">
+    <dxi-item dataField="accountingMode" [label]="{text: 'Posting Mode'}" editorType="dxSelectBox" [editorOptions]="{items: accountingModes, displayExpr: 'displayName', valueExpr: 'technicalName', readOnly: readOnly}"></dxi-item>
+    <dxi-item dataField="toleranceGroupId" [label]="{text: 'Tolerance Group'}" editorType="dxSelectBox" [editorOptions]="{items: toleranceGroups, displayExpr: 'name', valueExpr: 'toleranceGroupId', readOnly: readOnly}"></dxi-item>
+    <dxi-item dataField="billingMode" [label]="{text: 'Consideration of credit notes'}" editorType="dxSelectBox" [editorOptions]="{items: billingModes, displayExpr: 'displayName', valueExpr: 'technicalName', readOnly: readOnly}"></dxi-item>
+  </dxi-item>
+</dx-form>
+<dx-form *ngIf="processingFunction.type === FunctionTypeEnum.MATCH_AMOUNT_SUBSETTING" class="form__dx-form" [formData]="processingFunction.matchAmountSubSettingConfiguration" [showColonAfterLabel]="false">
+  <dxi-item itemType="group" caption="Match Settings">
+    <dxi-item dataField="accountingMode" [label]="{text: 'Posting Mode'}" editorType="dxSelectBox" [editorOptions]="{items: accountingModes, displayExpr: 'displayName', valueExpr: 'technicalName', readOnly: readOnly}"></dxi-item>
+    <dxi-item dataField="toleranceGroupId" [label]="{text: 'Tolerance Group'}" editorType="dxSelectBox" [editorOptions]="{items: toleranceGroups, displayExpr: 'name', valueExpr: 'toleranceGroupId', readOnly: readOnly}"></dxi-item>
+    <dxi-item dataField="billingMode" [label]="{text: 'Consideration of credit notes'}" editorType="dxSelectBox" [editorOptions]="{items: billingModes, displayExpr: 'displayName', valueExpr: 'technicalName', readOnly: readOnly}"></dxi-item>
+  </dxi-item>
+  <dxi-item itemType="group" caption="Sub-Set Settings">
+    <dxi-item dataField="matchOnlyExplicitResults" [label]="{text: 'Match only explicit results'}" editorType="dxSwitch" [editorOptions]="{readOnly: readOnly}"></dxi-item>
+    <dxi-item dataField="sortOrder" [label]="{text: 'Sort'}" editorType="dxSelectBox" [editorOptions]="{items: sortModes, displayExpr: 'displayName', valueExpr: 'technicalName', readOnly: readOnly}"></dxi-item>
+    <dxi-item cellTemplate="subSettingTableTemplate">
+      <div *dxTemplate="let data of 'subSettingTableTemplate'">
+        <dx-data-grid
+          class="datagrid"
+          [dataSource]="processingFunction.matchAmountSubSettingConfiguration!.subSettingConfigurations"
+          [hoverStateEnabled]="true"
+          [showColumnLines]="false"
+          [allowColumnResizing]="true"
+          [allowColumnReordering]="true"
+          [columnAutoWidth]="true"
+          [showRowLines]="true"
+          [showBorders]="true"
+          [rowAlternationEnabled]="true"
+          (onInitNewRow)="onInitNewRow($event)"
+          (onCellPrepared)="onCellPrepared($event)"
+          (onEditorPreparing)="onEditorPreparing($event)"
+          (onRowValidating)="rowValidating($event)"
+          [customizeColumns]="customizeColumns"
+          (onRowInserting)="onRowInserting($event)"
+          (onRowUpdating)="onRowUpdating($event)">
+
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-sorting mode="multiple"></dxo-sorting>
+          <dxo-editing mode="row"
+            [allowAdding]="!readOnly"
+            [allowUpdating]="!readOnly"
+            [allowDeleting]="!readOnly">
+          </dxo-editing>
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[5, 10, 20, 50]"
+            [showInfo]="true">
+          </dxo-pager>
+
+          <dxi-column caption="Sort Order" dataField="index"></dxi-column>
+          <dxi-column caption="Open Item Field" dataField="openItemField" [setCellValue]="setOpenItemField" [editorOptions]="{itemTemplate: 'openItemTemplate'}">
+            <dxo-lookup
+              [dataSource]="openItemFields"
+              valueExpr="technicalName"
+              displayExpr="displayName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column caption="Start Date" dataField="startDate">
+            <dxi-validation-rule type="pattern" [pattern]="startDatePattern" message="Please enter the date in this format: dd-MM"></dxi-validation-rule>
+          </dxi-column>
+          <dxi-column caption="Period" dataField="period" [editorOptions]="{showClearButton: true}">
+            <dxo-lookup
+              [dataSource]="periods"
+              valueExpr="technicalName"
+              displayExpr="displayName">
+            </dxo-lookup>
+          </dxi-column>
+          <div *dxTemplate="let item of 'openItemTemplate'">
+            {{item ? item.displayName : 'All'}}
+            <p style="white-space: normal;">({{item ? item.displayName : 'Any field'}})</p>
+          </div>
+        </dx-data-grid>
+      </div>
+    </dxi-item>
+  </dxi-item>
+</dx-form>
+<br>

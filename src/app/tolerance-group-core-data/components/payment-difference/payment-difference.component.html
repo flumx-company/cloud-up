@@ -1,0 +1,69 @@
+<div>
+  <dx-data-grid #dataGrid
+    class="datagrid"
+    [dataSource]="currentToleranceGroup!.paymentDifferences"
+    [hoverStateEnabled]="true"
+    [showColumnLines]="false"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    [columnAutoWidth]="true"
+    [showRowLines]="true"
+    [showBorders]="false"
+    [rowAlternationEnabled]="true"
+    (onCellPrepared)="onCellPrepared($event)"
+    (onExporting)="onExporting($event)"
+    (onExported)="onExported($event)"    
+    [customizeColumns]="customizeColumns">
+
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-export [enabled]="true" fileName="payment_differences"></dxo-export>
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20, 50]"
+      [showInfo]="true">
+    </dxo-pager>
+
+    <dxi-column dataField="currency" caption="Currency" [editorOptions]="{maxLength:'10'}">
+    </dxi-column>
+    <dxi-column dataField="yieldAmount" caption="Yield Amount">
+      <dxi-validation-rule type="required" message="Yield amount is required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="yieldPercent" caption="Yield Percent">
+      <dxi-validation-rule type="required" message="Yield Percent is required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="expensesAmount" caption="Expenses Amount">
+      <dxi-validation-rule type="required" message="Expenses Amount is required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="expensesPercent" caption="Expenses Percent">
+      <dxi-validation-rule type="required" message="Expenses Percent is required"></dxi-validation-rule>
+    </dxi-column>
+
+    <dxi-column
+      dataField="uuid"
+      caption=""
+      [allowHeaderFiltering]="false"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      [allowEditing]="false"
+      cellTemplate="paymentDifferencesCommandTemplate"
+      [width]="60"
+      [fixed]="true"
+      fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'paymentDifferencesCommandTemplate'">
+      <div>
+        <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+      </div>
+    </div>
+
+    <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+  </dx-data-grid>
+</div>
+
+<app-info-popup id="infoPopup"></app-info-popup>

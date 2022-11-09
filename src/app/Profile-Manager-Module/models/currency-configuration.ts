@@ -1,0 +1,20 @@
+import {InsertMetaData} from '../../shared/models/insert-meta-data';
+import {UpdateMetaData} from '../../shared/models/update-meta-data';
+
+export class CurrencyConfiguration {
+  constructor(init?: Partial<CurrencyConfiguration>) {
+    Object.assign(this, init);
+  }
+
+  id?: number;
+  tenant?: number;
+  originId?: string;
+  originGroupId?: string;
+  amountType?: string;
+  regexPrefix?: string;
+  regexCurrency?: string;
+  regexExchangeRate?: string;
+  insertMetadata = new InsertMetaData();
+  updateMetadata = new UpdateMetaData();
+  version?: string;
+}

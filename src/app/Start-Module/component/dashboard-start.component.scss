@@ -1,0 +1,26 @@
+@import './src/assets/custom/sass/variables';
+
+body {
+  background-color: $color-grey-light;
+}
+
+.dashboard__start {
+  .intro {
+    background-image: linear-gradient(247deg, #404040, #000000), linear-gradient(#d8d8d8, #d8d8d8);
+    height: 600px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .background {
+    background-color: $color-grey-light;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 600px;
+  }
+}

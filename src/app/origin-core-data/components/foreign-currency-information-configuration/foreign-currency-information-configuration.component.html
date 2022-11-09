@@ -1,0 +1,22 @@
+<dx-form  id="currencyConfigurationForm"
+          class="form__dx-form"
+          [colCount]="2"
+          [formData]="currentCurrencyConfiguration"
+          [showColonAfterLabel]="false"
+          [showValidationSummary]="true"
+          validationGroup="currencyConfigurationData">
+          
+  <dxi-item dataField="regexPrefix" [label]="{text: 'Regular Expression Prefix'}" [editorOptions]="{maxLength: 255}"></dxi-item>
+  <dxi-item dataField="regexCurrency" [label]="{text: 'Regular Expression Currency'}" [editorOptions]="{maxLength: 255}"></dxi-item>
+  <dxi-item dataField="regexExchangeRate" [label]="{text: 'Regular Expression Exchange Rate'}" [editorOptions]="{maxLength: 255}"></dxi-item>
+
+  <dxi-item itemType="empty"></dxi-item>
+  <dxi-item cellTemplate="buttons">
+    <div *dxTemplate="let data of 'buttons'">
+      <br>
+      <br>
+      <dx-button class="button button--default" text="Cancel" icon="close" (onClick)="hideCurrencyConfigurationForm()"></dx-button>
+      <dx-button class="button button--primary button--icon-and-text" text="Add" icon="add" validationGroup="currencyConfigurationData" (onClick)="saveCurrencyConfiguration($event)"></dx-button>
+    </div>
+  </dxi-item>
+</dx-form>

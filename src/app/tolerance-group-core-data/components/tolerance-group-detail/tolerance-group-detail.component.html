@@ -1,0 +1,34 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">{{viewMode | titlecase}} Tolerance Group {{name}}</span>
+  </div>
+</div>
+<div [hidden]="viewMode !== 'Edit'">
+  <dx-button class="button button--default" icon="info" (onClick)="showInfo();"></dx-button>
+</div>
+<br>
+<form (submit)="save($event)" class="form">
+  <dx-form class="form__dx-form" id="form" [colCount]="1" [formData]="currentToleranceGroup" [showColonAfterLabel]="false" [showValidationSummary]="true"
+    validationGroup="toleranceGroupValidation">
+    <dxi-item itemType="group" caption="General Information" [colCount]="3">
+      <dxi-item dataField="name" [label]="{text: 'Name'}" [editorOptions]="{placeholder: 'Choose a name ...', readOnly: viewMode === 'Edit'}">
+        <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="toleranceDays"  [editorOptions]="{placeholder: 'Set number of tolerance days ...'}"></dxi-item>
+      <dxi-item dataField="active" [label]="{text: 'Active'}" editorType="dxSwitch" [editorOptions]="{ value: currentToleranceGroup.active}"></dxi-item>
+      <dxi-item dataField="description" editorType="dxTextArea" [colSpan]="3" [editorOptions]="{placeholder: 'Write a description ...'}"></dxi-item>
+    </dxi-item>
+    <dxi-item itemType="group" caption="Payment Differences">
+      <dxi-item cellTemplate="paymentDifferencesTemplate"></dxi-item>
+      <div *dxTemplate="let data of 'paymentDifferencesTemplate'">
+        <app-payment-difference [currentToleranceGroup]="currentToleranceGroup"></app-payment-difference>
+      </div>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="floppy" validationGroup="toleranceGroupValidation" [useSubmitBehavior]="true"></dx-button>
+  </div>
+</form>
+
+<app-info-popup id="infoPopup"></app-info-popup>

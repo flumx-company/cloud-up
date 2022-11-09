@@ -1,0 +1,175 @@
+<div class="form__header">
+    <div>
+        <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    </div>
+</div>
+
+<br>
+
+<form class="form" style="width: 1200px">
+    <dx-form
+        class="form__dx-form" id="form"
+        [colCount]="1"
+        [formData]="currentCondition"
+        [showColonAfterLabel]="true"
+        [showValidationSummary]="true"
+        validationGroup="conditionValidation">
+        <dxi-item
+            dataField="CONDITION"
+            [disabled]="true">
+            <dxo-label text="Condition" width="200"></dxo-label>
+        </dxi-item>
+        <br>
+        <br>
+        <dxi-item dataField="DESCRIPTION">
+            <dxo-label text="Description" ></dxo-label>
+        </dxi-item>
+
+        <dxi-item itemType="group" caption="Condition Parts">
+            <dx-data-grid
+                class="datagrid"
+                [dataSource]="currentCondition.CONDITION_PARTS"
+                [hoverStateEnabled]="false"
+                [showColumnLines]="false"
+                [showRowLines]="true"
+                [allowColumnResizing]="true"
+                [columnAutoWidth]="true"
+                [showBorders]="false"
+                [rowAlternationEnabled]="true"
+                (onContentReady)="onContentReady($event)"
+                (onFileSaving)="onFileSaving($event, 'condition_parts')"
+                (onToolbarPreparing)="onToolbarPreparing($event)"
+                [customizeColumns]="customizeColumns">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-sorting mode="none"></dxo-sorting>
+
+                <dxi-column
+                    caption="Braces"
+                    dataField="STARTING_BRACES"
+                    cellTemplate="startingBracesButtonsCellTemplate">
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'startingBracesButtonsCellTemplate'">
+                <dx-button class="button button--icon-only button--default"
+                           icon="add"
+                           (click)="addBraces(cellData.rowIndex, true);">
+                </dx-button>
+                <dx-button class="button button--icon-only button--default"
+                           icon="fas fa-minus"
+                           (click)="removeBraces(cellData.rowIndex, true);">
+                </dx-button>
+                {{bracesAsString(cellData.value, true)}}
+            </div>
+                <dxi-column caption="Match field" cellTemplate="matchFieldCellTemplate"></dxi-column>
+                <div *dxTemplate="let cellData of 'matchFieldCellTemplate'">
+                    <div [ngClass]="getCssClass(cellData, 'MATCH_ENTITY')" style="margin-bottom: 8px">
+                        <dx-select-box
+                            [items]="['HEADER', 'ITEMS']"
+                            [value]="getValue(cellData.rowIndex, 'MATCH_ENTITY')"
+                            [showClearButton]="true" itemTemplate="tableItemTemplate"
+                            (onOpened)="dropDownOpened($event)"
+                            (onValueChanged)="changeValue(cellData, $event, 'MATCH_ENTITY', cellData)"
+                            [ngClass]="getCssClass(cellData, 'MATCH_ENTITY')">
+                            <div *dxTemplate="let data of 'tableItemTemplate'">
+                                {{data}}
+                            </div>
+                        </dx-select-box>
+                    </div>
+                    <div [ngClass]="getCssClass(cellData, 'MATCH_FIELD')">
+                        <dx-select-box
+                           [dataSource]="cellData.data.ITEMS"
+                           [value]="getValue(cellData.rowIndex, 'MATCH_FIELD', matchFieldList)"
+                           (onValueChanged)="changeValue(cellData.rowIndex, $event, 'MATCH_FIELD')"
+                           [showClearButton]="true"
+                           valueExpr="KEY"
+                           displayExpr="LABEL"
+                           (onOpened)="dropDownOpened($event)"
+                           (onContentReady)="dropDownContentReady($event)">
+                        </dx-select-box>
+                    </div>
+                </div>
+                <dxi-column caption="Operator" cellTemplate="operatorCellTemplate"></dxi-column>
+                <div *dxTemplate="let cellData of 'operatorCellTemplate'"
+                     [ngClass]="getCssClass(cellData, 'OPERATOR')">
+                    <dx-select-box
+                         [dataSource]="operators"
+                         valueExpr="technicalName"
+                         displayExpr="displayName"
+                         [value]="getValue(cellData.rowIndex, 'OPERATOR')"
+                         (onValueChanged)="changeValue(cellData.rowIndex, $event, 'OPERATOR')"
+                         [showClearButton]="true">
+                    </dx-select-box>
+                </div>
+                <dxi-column
+                     caption="Value"
+                     cellTemplate="minValueCellTemplate" >
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'minValueCellTemplate'"
+                     [ngClass]="getCssClass(cellData, 'VALUE')">
+                    <dx-text-box
+                         [value]="getValue(cellData.rowIndex, 'VALUE')"
+                         (onValueChanged)="changeValue(cellData.rowIndex, $event, 'VALUE')">
+                    </dx-text-box>
+                </div>
+                <dxi-column
+                    caption="Braces"
+                    dataField="ENDING_BRACES"
+                    cellTemplate="endingBracesTemplate">
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'endingBracesTemplate'">
+                    {{bracesAsString(cellData.value, false)}}
+                    <dx-button
+                         class="button button--icon-only button--default"
+                         icon="add"
+                         (click)="addBraces(cellData.rowIndex, false);">
+                    </dx-button>
+                    <dx-button
+                         class="button button--icon-only button--default"
+                         icon="fas fa-minus"
+                         (click)="removeBraces(cellData.rowIndex, false);">
+                    </dx-button>
+                </div>
+                <dxi-column
+                    caption="Operation"
+                    cellTemplate="operationCellTemplate"
+                    [width]="120">
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'operationCellTemplate'"
+                     [ngClass]="getCssClass(cellData, 'OPERATION')">
+                    <dx-select-box
+                         [dataSource]="operations"
+                         valueExpr="technicalName"
+                         displayExpr="displayName"
+                         [disabled]="isDisabled(cellData)"
+                         [value]="getValue(cellData.rowIndex, 'OPERATION')"
+                         (onValueChanged)="changeValue(cellData.rowIndex, $event, 'OPERATION')"
+                         [showClearButton]="true">
+                    </dx-select-box>
+                </div>
+                <dxi-column
+                    [width]="50"
+                    class="all"
+                    cellTemplate="DETAIL">
+                </dxi-column>
+                <div *dxTemplate="let local of 'DETAIL'" class="all">
+                    <dx-button
+                        class="button button--icon-only button--default"
+                        icon="trash"
+                        (click)="deleteItem(local.rowIndex)">
+                    </dx-button>
+                </div>
+            </dx-data-grid>
+        </dxi-item>
+    </dx-form>
+    <div class="form__footer">
+        <dx-button
+            text="Save"
+            icon="floppy"
+            validationGroup="conditionValidation"
+            (click)="saveCondition()">
+        </dx-button>
+    </div>
+    <hr/>
+</form>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,98 @@
+<br>
+<h2>Tolerance Groups Overview</h2>
+<br>
+<dx-data-grid 
+  class="datagrid"  
+  [dataSource]="toleranceGroupList" 
+  [hoverStateEnabled]="true" 
+  [showColumnLines]="false" 
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  (onExporting)="onExporting($event)"
+  (onExported)="onExported($event)"
+  [customizeColumns]="customizeColumns"
+  [masterDetail]="{enabled: true, template: 'detailTemplate'}">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="tolerance_groups"></dxo-export>
+
+  <dxi-column caption="Name" dataField="name" alignment="center" cssClass="verticalAlignText"></dxi-column>
+  <dxi-column caption="Active" dataField="active" cssClass="verticalAlignText" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="toleranceGroupId"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="150"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editToleranceGroup(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event, true);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="deleteToleranceGroup(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+
+  <div *dxTemplate="let toleranceGroup of 'detailTemplate'">
+    <dx-data-grid
+      class="datagrid"
+      [dataSource]="toleranceGroup.data.paymentDifferences"
+      [hoverStateEnabled]="true"
+      [showColumnLines]="false"
+      [allowColumnResizing]="true"
+      [allowColumnReordering]="true"
+      [columnAutoWidth]="true"
+      [showRowLines]="true"
+      [showBorders]="false"
+      [rowAlternationEnabled]="true"
+      [customizeColumns]="customizeColumns">
+
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+
+      <dxi-column dataField="currency" caption="Currency"></dxi-column>
+      <dxi-column dataField="yieldAmount" caption="Yield Amount"></dxi-column>
+      <dxi-column dataField="yieldPercent" caption="Yield Percent"></dxi-column>
+      <dxi-column dataField="expensesAmount" caption="Expenses Amount"></dxi-column>
+      <dxi-column dataField="expensesPercent" caption="Expenses Percent"></dxi-column>
+
+      <dxi-column
+        dataField="paymentDifferenceId"
+        caption=""
+        [allowHeaderFiltering]="false"
+        [allowSorting]="false"
+        [allowFiltering]="false"
+        cellTemplate="paymentDifferencesCommandTemplate"
+        [width]="150"
+        [fixed]="true"
+        fixedPosition="right">
+      </dxi-column>
+      <div *dxTemplate="let cellData of 'paymentDifferencesCommandTemplate'">
+        <div>
+          <dx-button class="button button--icon-only button--default" icon="info" (click)="showPaymentDifferenceInfo(cellData.value, $event);"></dx-button>
+        </div>
+      </div>
+    </dx-data-grid>
+  </div>
+</dx-data-grid>
+<br>
+<br>
+
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,146 @@
+<div class="dashboard-tab__bg"></div>
+<div class="row">
+    <div class="col-lg-4">
+        <dx-chart id="chart" [dataSource]="populationData" title="Invoice Source &nbsp;&nbsp;&nbsp;&nbsp;"
+                  style="background: aliceblue; margin-top: 4px;">
+            <dxi-series valueField="maleyoung" name="E-mail">
+            </dxi-series>
+            <dxi-series valueField="malemiddle" name="Paper">
+            </dxi-series>
+            <dxi-series valueField="maleolder" name="Scan">
+            </dxi-series>
+            <dxi-series valueField="maleyoung1" name="XML">
+            </dxi-series>
+            <dxi-series valueField="malemiddle2" name="EDI">
+            </dxi-series>
+            <dxi-series valueField="maleolder3" name="Portal">
+            </dxi-series>
+            <!-- <dxi-value-axis>
+              <dxo-title text="Populations, millions"></dxo-title>
+            </dxi-value-axis> -->
+            <dxo-common-series-settings argumentField="state" type="stackedBar">
+            </dxo-common-series-settings>
+            <!-- <dxo-legend horizontalAlignment="right" position="inside">
+              <dxo-border [visible]="true"></dxo-border>
+            </dxo-legend> -->
+            <!-- <dxo-export [enabled]="true"></dxo-export> -->
+            <dxo-tooltip [enabled]="true"></dxo-tooltip>
+        </dx-chart>
+    </div>
+
+    <div class="col-lg-4">
+        <dx-chart id="chart" title="Open Invoices &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" [dataSource]="dataSourceList"
+                  style="background: aliceblue;margin-top: 4px;">
+            <dxi-series argumentField="day" valueField="oranges" name="Status" type="bar" color="#737373">
+            </dxi-series>
+        </dx-chart>
+    </div>
+
+    <div class="col-lg-4">
+        <div id="chart" style="background: aliceblue; margin-top: 4px;">
+            <p class="long-title">Autopost % &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+            <table class="demo-table" border="1">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>81.00%</th>
+                </tr>
+                <tr>
+                    <td>Details</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Value in %</td>
+                </tr>
+                <tr>
+                    <td>First Pass</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">12.00 %</td>
+                </tr>
+                <tr>
+                    <td>Exceptions</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">7.00%</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div id="chart" style="background: aliceblue; margin-top: 4px;">
+            <p class="long-title">Receipt to Post in Days</p>
+            <table class="demo-table" border="1">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>4.56</th>
+                </tr>
+                <tr>
+                    <td>Details</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Value in %</td>
+                </tr>
+                <tr>
+                    <td>&#248; Approval in Days</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">2.45</td>
+                </tr>
+                <tr>
+                    <td>&#248; Exception in Days</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">5.78</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div id="chart" style="background: aliceblue; margin-top: 4px;">
+            <p class="long-title">Number of Duplicates</p>
+            <table class="demo-table" border="1">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>98</th>
+                </tr>
+                <tr>
+                    <td>Details</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">Value in %</td>
+                </tr>
+                <tr>
+                    <td>Volume of Duplicates</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">30,504</td>
+                </tr>
+                <tr>
+                    <td>% of Duplicates</td>
+                    <td></td>
+                    <td></td>
+                    <td style="text-align: right;">4.00%</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <dx-pie-chart id="chart" class="pie" title="Discount Lost/Taken" palette="Soft Pastel" sizeGroup="piesGroup"
+                      [dataSource]="waterLandRatio" style="background: aliceblue; margin-top: 4px;">
+            <dxi-series argumentField="name" valueField="area">
+                <dxo-label [visible]="true" format="percent"></dxo-label>
+            </dxi-series>
+            <dxo-legend verticalAlignment="left" horizontalAlignment="right" itemTextPosition="right" [rowCount]="2">
+            </dxo-legend>
+        </dx-pie-chart>
+        <!-- </div> -->
+    </div>
+</div>

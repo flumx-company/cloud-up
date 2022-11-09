@@ -1,0 +1,112 @@
+<dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+<br>
+<br>
+<h2>Usage info for Restriction {{currentRestriction.entityId.name}}</h2>
+<br>
+<br>
+<h5>Used in the following Restrictions:</h5>
+<dx-data-grid
+  id="usageInfoGrid"
+  class="datagrid"
+  [dataSource]="filteredRestrictions"
+  [showRowLines]="true"
+  [hoverStateEnabled]="true"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [rowAlternationEnabled]="true"
+  (onContentReady)="onContentReady($event)"
+  (onFileSaving)="onFileSaving($event)"
+  (onSelectionChanged)="selectionChanged($event)"
+  [masterDetail]="{ enabled: false, template: 'detail' }"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-load-panel [enabled]="true"></dxo-load-panel>
+  <dxo-scrolling mode="virtual"></dxo-scrolling>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true"></dxo-export>
+
+  <dxi-column caption="Name" dataField="entityId.name"></dxi-column>
+  <dxi-column caption="Active" dataField="status" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value === 'ACTIVE'" [readOnly]="true"></dx-switch>
+  </div>
+
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="entityId.name"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="100"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editRestriction(cellData.value);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+  <div *dxTemplate="let restriction of 'detail'">
+    <dx-data-grid
+      class="datagrid"
+      [dataSource]="restriction.data.parts"
+      [hoverStateEnabled]="true"
+      [showColumnLines]="false"
+      [showRowLines]="true"
+      [allowColumnResizing]="true"
+      [columnAutoWidth]="true"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      [customizeColumns]="customizeColumns">
+
+      <dxi-column dataField="startingBraces" caption="Braces" cellTemplate="startingBracesTemplate"></dxi-column>
+      <div *dxTemplate="let cellData of 'startingBracesTemplate'">
+        {{bracesAsString(cellData.value, true)}}
+      </div>
+      <dxi-column dataField="restriction" caption="Restriction"></dxi-column>
+      <dxi-column dataField="matchFieldOI" caption="Match field (OI)"></dxi-column>
+      <dxi-column dataField="operator" caption="Operator"></dxi-column>
+      <dxi-column dataField="matchTableISAS" caption="Match table (Payment Information)"></dxi-column>
+      <dxi-column dataField="matchFieldISAS" caption="Match field (Payment Information)"></dxi-column>
+      <dxi-column dataField="minValue" caption="Min. Value"></dxi-column>
+      <dxi-column dataField="maxValue" caption="Max. Value"></dxi-column>
+      <dxi-column dataField="filterMinValue" caption="Filter min. value"></dxi-column>
+      <dxi-column dataField="filterMaxValue" caption="Filter max. value"></dxi-column>
+      <dxi-column dataField="endingBraces" caption="Braces" cellTemplate="endingBracesTemplate"></dxi-column>
+      <div *dxTemplate="let cellData of 'endingBracesTemplate'">
+        {{bracesAsString(cellData.value, false)}}
+      </div>
+      <dxi-column dataField="operation" caption="Operation"></dxi-column>
+
+    </dx-data-grid>
+  </div>
+</dx-data-grid>
+<dx-popup class="popup" [width]="300" [height]="250" [showTitle]="true" title="Information" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="infoVisible">
+  <div *dxTemplate="let data of 'content'">
+    <p>
+      Inserted by:
+      <span>{{selectedRestriction.insertMetadata.insertedBy}}</span>
+    </p>
+    <p>
+      Inserted on:
+      <span>{{selectedRestriction.insertMetadata.insertedOn | date:"short"}}</span>
+    </p>
+    <p>
+      Last updated by:
+      <span>{{selectedRestriction.updateMetadata.updatedBy}}</span>
+    </p>
+    <p>
+      Last updated on:
+      <span>{{selectedRestriction.updateMetadata.updatedOn | date:"short"}}</span>
+    </p>
+  </div>
+</dx-popup>

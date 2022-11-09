@@ -1,0 +1,31 @@
+<div class="widget tasks">
+  <div class="widget__header">
+    <div class="widget__title">
+      <span>{{title}}</span>
+    </div>
+    <div class="widget__actions">
+      <ul>
+        <li><i class="material-icons">expand_less</i></li>
+        <li><i class="material-icons">unfold_less</i></li>
+        <li><i class="material-icons">drag_handle</i></li>
+        <li><i class="material-icons">clear</i></li>
+      </ul>
+    </div>
+  </div>
+  <div class="widget__body">
+    <dx-chart palette="violet" [dataSource]="dataSource">
+      <dxi-series *ngFor="let type of dataTypes" [valueField]="type.value" [name]="type.name" [color]="type.color">
+      </dxi-series>
+      <dxo-common-series-settings #seriesSettings argumentField="date" [type]=chartType></dxo-common-series-settings>
+      <dxo-margin [bottom]="20"></dxo-margin>
+      <dxo-argument-axis [valueMarginsEnabled]="false" discreteAxisDivisionMode="crossLabels">
+        <dxo-grid [visible]="true"></dxo-grid>
+      </dxo-argument-axis>
+      <dxo-legend verticalAlignment="bottom" horizontalAlignment="center" itemTextPosition="bottom">
+      </dxo-legend>
+      <dxo-export [enabled]="false"></dxo-export>
+      <dxo-tooltip [enabled]="true" [customizeTooltip]="customizeTooltip">
+      </dxo-tooltip>
+    </dx-chart>
+  </div>
+</div>

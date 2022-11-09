@@ -1,0 +1,47 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="close" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">{{viewMode | titlecase}} Function {{processingFunction.name}}</span>
+  </div>
+</div>
+<br>
+<form (submit)="saveProcessingFunction($event)" class="form">
+  <dx-form #functionForm
+    class="form__dx-form"
+    [formData]="processingFunction"
+    [showColonAfterLabel]="false"
+    [showValidationSummary]="true"
+    validationGroup="functionValidation"
+    (onFieldDataChanged)="fieldDataChanged($event)"
+    (onContentReady)="onContentReady($event)">
+
+    <dxi-item itemType="group" caption="General Settings" [colCount]="3">
+      <dxi-item dataField="name">
+        <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="type" [label]="{text: 'Type'}" editorType="dxSelectBox" [editorOptions]="{items: functionTypes, displayExpr: 'displayName', valueExpr: 'technicalName'}">
+        <dxi-validation-rule type="required" message="Type is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="active" [label]="{text: 'Active'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.active}"></dxi-item>
+      <dxi-item dataField="description" editorType="dxTextArea" [colSpan]="3" [editorOptions]="{placeholder: 'Add a description', maxLength: 60}"></dxi-item>
+    </dxi-item>
+  </dx-form>
+  <app-function-select-open-item
+    *ngIf="processingFunction.type === SELECT_OPEN_ITEMS"
+    [processingFunction]="processingFunction"
+    [tenant]="tenant"
+    [readOnly]="false"
+    [accountingSystems]="accountingSystems"
+    [restrictions]="restrictions"
+    [filters]="filters">
+  </app-function-select-open-item>
+  <!--Not implemented yet <app-function-match-advice *ngIf="processingFunction.type === 'adviceMatching'" [processingFunction]="processingFunction"></app-function-match-advice>-->
+  <app-function-match-amount
+    *ngIf="processingFunction.type === MATCH_AMOUNT_ALL || processingFunction.type === MATCH_AMOUNT_SUBSETTING"
+    [processingFunction]="processingFunction"
+    [readOnly]="false">
+  </app-function-match-amount>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Add" icon="floppy" validationGroup="functionValidation" [useSubmitBehavior]="true"></dx-button>
+  </div>
+</form>

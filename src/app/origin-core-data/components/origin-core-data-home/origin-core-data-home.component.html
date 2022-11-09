@@ -1,0 +1,164 @@
+<dx-accordion [dataSource]="menus" [animationDuration]="300" [collapsible]="true" [multiple]="true" selectedIndex="0" itemTemplate="item">
+  <div *dxTemplate="let menu of 'title'">
+    <h3>{{menu}}</h3>
+  </div>
+  <div *dxTemplate="let menuItem of 'item'" style="padding:5px">
+    <br>
+    <div *ngIf="menuItem==='Origins'">
+      <dx-data-grid
+        class="datagrid"
+        [dataSource]="origins"
+        [hoverStateEnabled]="true"
+        [showColumnLines]="false"
+        [allowColumnResizing]="true"
+        [allowColumnReordering]="true"
+        [columnAutoWidth]="true"
+        [showRowLines]="true"
+        [showBorders]="false"
+        [rowAlternationEnabled]="true"
+        (onToolbarPreparing)="onOriginToolbarPreparing($event)"
+        (onExporting)="onExporting($event)"
+        (onExported)="onExported($event)"
+        [customizeColumns]="customizeColumns">
+
+        <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-sorting mode="multiple"></dxo-sorting>
+        <dxo-export [enabled]="true" fileName="origins"></dxo-export>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[5, 10, 20, 50]"
+          [showInfo]="true">
+        </dxo-pager>
+
+        <dxi-column caption="Name" dataField="id.id"></dxi-column>
+        <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+        <div *dxTemplate="let cellData of 'activeCellTemplate'">
+          <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+        </div>
+        <dxi-column caption="Currency" dataField="currency" [visible]="false"></dxi-column>
+        <dxi-column caption="Format" dataField="format" [customizeText]="getFormatDisplayName"></dxi-column>
+        <dxi-column caption="Format Type" dataField="formattype" cellTemplate="formatTypeCellTemplate"></dxi-column>
+        <div *dxTemplate="let cellData of 'formatTypeCellTemplate'">
+          <span>{{getFormatTypeDisplayName(cellData.data['format'])}}</span>
+        </div>
+
+        <dxi-column caption="IBAN" dataField="iban" [visible]="false"></dxi-column>
+        <dxi-column caption="BIC" dataField="bic" [visible]="false"></dxi-column>
+        <dxi-column caption="Bank Country" dataField="bankCountry" [visible]="false"></dxi-column>
+        <dxi-column caption="Bank Id" dataField="bankId" [visible]="false"></dxi-column>
+        <dxi-column caption="Account Id" dataField="accountId" [visible]="false"></dxi-column>
+        <dxi-column caption="Characteristics Setting" dataField="characteristicsSetting" [customizeText]="getOriginCharacteristicDisplayName"
+           [visible]="false"></dxi-column>
+        <dxi-column caption="Profile Sequence" dataField="sequenceClatchProcess"></dxi-column>
+        <dxi-column caption="Description" dataField="description" [visible]="false"></dxi-column>
+        <dxi-column caption="Origin Group" dataField="originGroupId" [visible]="false"></dxi-column>
+
+        <dxi-column
+          [allowHeaderFiltering]="false"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          dataField="id.id"
+          caption=""
+          cellTemplate="commandCellTemplate"
+          [width]="150"
+          [fixed]="true"
+          fixedPosition="right">
+        </dxi-column>
+        <div *dxTemplate="let cellData of 'commandCellTemplate'">
+          <div>
+            <dx-button class="button button--icon-only button--default" icon="edit" (click)="editOrigin(cellData.value, $event);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeOrigin(cellData.value, $event);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event, true);"></dx-button>
+          </div>
+        </div>
+      </dx-data-grid>
+    </div>
+    <div *ngIf="menuItem==='Origin Groups'">
+      <dx-data-grid
+        class="datagrid"
+        [dataSource]="originGroups"
+        [hoverStateEnabled]="true"
+        [showColumnLines]="false"
+        [allowColumnResizing]="true"
+        [allowColumnReordering]="true"
+        [columnAutoWidth]="true"
+        [showRowLines]="true"
+        [showBorders]="false"
+        [rowAlternationEnabled]="true"
+        (onToolbarPreparing)="onOriginGroupToolbarPreparing($event)"
+        (onExporting)="onExporting($event)"
+        (onExported)="onExported($event)"
+        [customizeColumns]="customizeColumns">
+
+        <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-sorting mode="multiple"></dxo-sorting>
+        <dxo-export [enabled]="true" fileName="origingroups"></dxo-export>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager
+          [showPageSizeSelector]="true"
+          [allowedPageSizes]="[5, 10, 20, 50]"
+          [showInfo]="true">
+        </dxo-pager>
+
+        <dxi-column caption="Name" dataField="id.id"></dxi-column>
+        <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+        <div *dxTemplate="let cellData of 'activeCellTemplate'">
+          <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+        </div>
+        <dxi-column caption="Description" dataField="description" [visible]="false"></dxi-column>
+        <dxi-column caption="Characteristics Setting" dataField="characteristicsSetting" [customizeText]="getOriginGroupCharacteristicDisplayName"
+           [visible]="false"></dxi-column>
+        <dxi-column caption="Profile Sequence" dataField="sequenceClatchProcess"></dxi-column>
+
+        <dxi-column
+          [allowHeaderFiltering]="false"
+          [allowSorting]="false"
+          [allowFiltering]="false"
+          dataField="id.id"
+          caption=""
+          cellTemplate="commandCellTemplate"
+          [width]="150"
+          [fixed]="true"
+          fixedPosition="right">
+        </dxi-column>
+        <div *dxTemplate="let cellData of 'commandCellTemplate'">
+          <div>
+            <dx-button class="button button--icon-only button--default" icon="edit" (click)="editOriginGroup(cellData.value, $event);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeOriginGroup(cellData.value, $event);"></dx-button>
+            <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event, false);"></dx-button>
+          </div>
+        </div>
+      </dx-data-grid>
+    </div>
+  </div>
+</dx-accordion>
+<dx-popup class="popup" [width]="300" [height]="250" [showTitle]="true" title="Information" [dragEnabled]="false" [closeOnOutsideClick]="true"
+  [(visible)]="infoVisible">
+  <div *dxTemplate="let data of 'content'">
+    <p>
+      Inserted by:
+      <span>{{infoObject.insertMetadata.insertedBy}}</span>
+    </p>
+    <p>
+      Inserted on:
+      <span>{{infoObject.insertMetadata.insertedOn | date:"short"}}</span>
+    </p>
+    <p>
+      Last updated by:
+      <span>{{infoObject.updateMetadata.updatedBy}}</span>
+    </p>
+    <p>
+      Last updated on:
+      <span>{{infoObject.updateMetadata.updatedOn | date:"short"}}</span>
+    </p>
+  </div>
+</dx-popup>

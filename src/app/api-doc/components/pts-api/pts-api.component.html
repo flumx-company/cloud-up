@@ -1,0 +1,171 @@
+<br>
+<h2>PTS Api</h2>
+<br>
+<br>
+<dx-accordion [dataSource]="accordionList" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <div class="dx-field">
+      <dx-button type="default" text="GET" (onClick)="fetchData($event)" width="100%"></dx-button>
+    </div>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionRECNO" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="conditionCon" placeholder="RECNO" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="GET" (onClick)="fetchDataCon($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionHist" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="conditionHist" placeholder="RECNO" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="GET" (onClick)="fetchDataHist($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionAppro" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="conditionAppro" placeholder="RECNO" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="GET" (onClick)="fetchDataAppro($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionStatus" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-drop-down-box [(value)]="selectedStatus" [(opened)]="isDropDownBoxOpened" [dataSource]="ptsStatus">
+          <div *dxTemplate="let contentData of 'content'">
+            <dx-list [dataSource]="ptsStatus" selectionMode="single" (onSelectionChanged)="changeDropDownBoxValue($event)">
+            </dx-list>
+          </div>
+        </dx-drop-down-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="GET" (onClick)="fetchDataStatus($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionValid" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="conditionVal" placeholder="RECNO" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="GET" (onClick)="fetchDataVali($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionPost" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-area [(value)]="keyValue" placeholder="Json required" [height]="90" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="Json data is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-area>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="POST" (onClick)="pushData($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionPut" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="updateValue" placeholder="RECNO to Update" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+          <dx-text-area [(value)]="putValue" placeholder="Json required" [height]="90" width="100%">
+            <dx-validator>
+              <dxi-validation-rule type="required" message="Json data is required"></dxi-validation-rule>
+            </dx-validator>
+          </dx-text-area>
+        </div>
+      <div class="dx-field">
+        <dx-button type="default" text="PUT" (onClick)="putData($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionDelete" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+  selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <dx-validation-group>
+      <div class="dx-field">
+        <dx-text-box [(value)]="deleteKeyValue" placeholder="RECNO" width="100%">
+          <dx-validator>
+            <dxi-validation-rule type="required" message="RECNO is required"></dxi-validation-rule>
+          </dx-validator>
+        </dx-text-box>
+      </div>
+      <div class="dx-field">
+        <dx-button type="default" text="Delete" (onClick)="deleteData($event)" width="100%"></dx-button>
+      </div>
+    </dx-validation-group>
+  </div>
+</dx-accordion>
+
+<dx-popup title="Popup Title" [(visible)]="isPopupVisible" [width]="300" [height]="250">
+  <div *dxTemplate="let data of 'content'">
+    <p>Message</p>
+    {{message | json}}
+  </div>
+</dx-popup>

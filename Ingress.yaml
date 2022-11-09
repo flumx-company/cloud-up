@@ -1,0 +1,149 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: o2c-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+spec:
+  tls:
+  - hosts:
+    - o2c.westeurope.cloudapp.azure.com
+    secretName: ca-ingress-ssl
+  rules:
+  - host: cashapp.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cloudfrontend
+          servicePort: 80
+      - path: /backend/usermanager
+        backend:
+          serviceName: usermanager
+          servicePort: 80
+      - path: /backend/ISAS_Service
+        backend:
+          serviceName: isas
+          servicePort: 8090
+      - path: /backend/accountingSystem
+        backend:
+          serviceName: accountingsystemcoredata
+          servicePort: 8092
+      - path: /backend/openItemCoredata
+        backend:
+          serviceName: openitemcoredata
+          servicePort: 8082
+      - path: /backend/OriginCoreData
+        backend:
+          serviceName: origincoredata
+          servicePort: 8088
+      - path: /backend/cec
+        backend:
+          serviceName: cec
+          servicePort: 8085
+      - path: /backend/fileservice
+        backend:
+          serviceName: fileservice
+          servicePort: 8088
+      - path: /backend/fileinterface
+        backend:
+          serviceName: fileinterface
+          servicePort: 8093
+      - path: /backend/filesplitter
+        backend:
+          serviceName: filesplitter
+          servicePort: 8089
+      - path: /backend/openitemimport
+        backend:
+          serviceName: openitemimport
+          servicePort: 8085
+      - path: /backend/originidentification
+        backend:
+          serviceName: originidentification
+          servicePort: 8078
+      - path: /backend/Conditions-module
+        backend:
+          serviceName: Conditions-module
+          servicePort: 8091
+      - path: /backend/restrictions
+        backend:
+          serviceName: restrictions
+          servicePort: 8092
+      - path: /backend/profilemanager
+        backend:
+          serviceName: profilemanager
+          servicePort: 8086
+      - path: /backend/finefilters
+        backend:
+          serviceName: finefilters
+          servicePort: 8093
+      - path: /backend/businesspartner
+        backend:
+          serviceName: businesspartner
+          servicePort: 8092
+      - path: /backend/toleranceGroup
+        backend:
+          serviceName: tolerancegroup
+          servicePort: 8094
+      - path: /backend/characteristicsidentification
+        backend:
+          serviceName: characteristicsidentification
+          servicePort: 8093
+      - path: /backend/batch
+        backend:
+          serviceName: batch
+          servicePort: 8050
+      - path: /backend/amounttype
+        backend:
+          serviceName: amounttype
+          servicePort: 8096
+      - path: /backend/replacement
+        backend:
+          serviceName: replacement
+          servicePort: 8082
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: o2c-nginx-oauth
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/uaa"
+spec:
+  tls:
+  - hosts:
+    - o2c.westeurope.cloudapp.azure.com
+    secretName: ca-ingress-ssl
+  rules:
+  - host: cashapp.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /uaa
+        backend:
+          serviceName: oauthserver
+          servicePort: 8080
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: o2c-nginx-gdprwebsocket
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: "/gdprpersonaldata/ws"
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/session-cookie-hash: md5
+    nginx.ingress.kubernetes.io/session-cookie-name: personaldatawebsocket
+spec:
+  tls:
+  - hosts:
+    - o2c.westeurope.cloudapp.azure.com
+    secretName: ca-ingress-ssl
+  rules:
+  - host: cashapp.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /gdprpersonaldata/ws
+        backend:
+          serviceName: gdprpersonaldata
+          servicePort: 8082

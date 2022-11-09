@@ -1,0 +1,17 @@
+.addData {
+    max-width: 940px;
+    height: 50%;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 2px 2px 3px 3px grey;
+    border-radius: 5px;
+  }
+
+   ::ng-deep {
+       .custom-group {
+           .custom-label > label.dx-field-item-label.dx-field-item-label-location-left {
+               width: 153px !important;
+           }
+       }
+   }
+

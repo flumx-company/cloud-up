@@ -1,0 +1,13 @@
+@import './assets/fonts/material-icons/material-icons.css';
+@import '../node_modules/devextreme/dist/css/dx.common.css';
+@import '../node_modules/devextreme/dist/css/dx.light.css';
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../fonts/fontawesome.min';
+@import 'variables';
+@import 'mixins';
+@import 'devextreme/devextreme';
+@import 'overrides';
+@import 'basics';
+@import 'header';
+@import 'widgets';
+@import 'dashboard';

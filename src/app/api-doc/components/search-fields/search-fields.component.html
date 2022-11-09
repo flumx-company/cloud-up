@@ -1,0 +1,65 @@
+<br>
+<h2>Search Fields</h2>
+<br>
+<br>
+<dx-accordion [dataSource]="accordionFilter" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <div class="dx-field">
+            <dx-button type="default" text="GET" (onClick)="fetchData()" width="100%"></dx-button>
+        </div>
+    </div>
+
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionPost" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <dx-validation-group>
+            <div class="dx-field">
+                <dx-text-area [(value)]="keyValue" placeholder="Json required" [height]="90" width="100%">
+                    <dx-validator>
+                        <dxi-validation-rule type="required" message="Json data is required"></dxi-validation-rule>
+                    </dx-validator>
+                </dx-text-area>
+            </div>
+            <div class="dx-field">
+                <dx-button type="default" text="POST" (onClick)="pushData($event)" width="100%"></dx-button>
+            </div>
+        </dx-validation-group>
+    </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionPut" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <dx-validation-group>
+            <div class="dx-field">
+                <dx-text-area [(value)]="updateValue" placeholder="Json required" [height]="90" width="100%">
+                    <dx-validator>
+                        <dxi-validation-rule type="required" message="Json data is required"></dxi-validation-rule>
+                    </dx-validator>
+                </dx-text-area>
+            </div>
+            <div class="dx-field">
+                <dx-button type="default" text="PUT" (onClick)="putData($event)" width="100%"></dx-button>
+            </div>
+        </dx-validation-group>
+    </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionDelete" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <div class="dx-field">
+            <dx-button type="default" text="Delete" (onClick)="deleteData($event)" width="100%"></dx-button>
+        </div>
+    </div>
+</dx-accordion>
+
+<dx-popup title="Popup Title" [(visible)]="isPopupVisible" [width]="300" [height]="250">
+    <div *dxTemplate="let data of 'content'">
+        <p>Message</p>
+        {{message | json}}
+    </div>
+</dx-popup>

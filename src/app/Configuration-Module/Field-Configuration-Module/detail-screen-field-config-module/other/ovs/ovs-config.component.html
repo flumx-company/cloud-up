@@ -1,0 +1,277 @@
+<div *ngIf="ovsIsActive">
+    <dx-popup
+            class="popup"
+            [showTitle]="true"
+            title="Information"
+            [dragEnabled]="false"
+            width="1430"
+            [(visible)]="ovsIsActive">
+        <div *dxTemplate="let data of 'content'">
+            <dx-scroll-view
+                    [height]="'100%'"
+                    [width]="'100%'"
+                    direction="both">
+                <form class="form mgt-20" (submit)="saveOvs()">
+                    <dx-form [formData]="newOvsData">
+                        <dxi-item dataField="API">
+                            <dxi-validation-rule
+                                    type="required"
+                                    message="TOOLTIP is required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="KEY_FIELD">
+                            <dxo-label text="Key Field"></dxo-label>
+                            <dxi-validation-rule
+                                    type="required"
+                                    message="KEY FIELD is required">
+                            </dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item>
+                            <div style="margin-top:40px; display: flex; justify-content: space-between">
+                                <div>
+                                    <h4>RESULT COLUMN</h4>
+                                    <div class="description">
+                                        <dx-data-grid
+                                            #dataSourceTitleREF
+                                            class="datagrid"
+                                            [dataSource]="dataSource"
+                                            [hoverStateEnabled]="true"
+                                            [showColumnLines]="false"
+                                            [allowColumnResizing]="true"
+                                            [columnAutoWidth]="true"
+                                            [showRowLines]="true"
+                                            [showBorders]="true"
+                                            [width]="618"
+                                            [masterDetail]="{ enabled: true, template: 'dd' }"
+                                            [rowAlternationEnabled]="true"
+                                            (onToolbarPreparing)="onToolbarPreparingCustom($event, 'dataSourceTitleREF')">
+                                            <dxo-editing
+                                                    mode="form"
+                                                    [useIcons]="true">
+                                                <dxo-form width="100%"
+                                                          [colCount]="1">
+                                                    <dxi-item
+                                                            dataField="MAPPING"
+                                                            caption="Mapping">
+                                                    </dxi-item>
+                                                </dxo-form>
+                                            </dxo-editing>
+
+                                            <dxi-column
+                                                    dataField="MAPPING"
+                                                    caption="Mapping">
+                                            </dxi-column>
+                                            <dxi-column
+                                                    [allowHeaderFiltering]="false"
+                                                    [allowSorting]="false"
+                                                    [allowFiltering]="false"
+                                                    cellTemplate="lockboxCommandCellTemplate"
+                                                    [fixed]="true"
+                                                    fixedPosition="right">
+                                            </dxi-column>
+                                            <div *dxTemplate="let cellData of 'lockboxCommandCellTemplate'">
+                                                <div>
+                                                    <dx-button
+                                                            class="button button--icon-only button--default"
+                                                            icon="trash"
+                                                            (click)="click_in_Icon(cellData, 'delete', 'dataSourceTitleREF');">
+                                                    </dx-button>
+                                                    <dx-button
+                                                            class="button button--icon-only button--default"
+                                                            icon="edit"
+                                                            (click)="click_in_Icon(cellData, 'edit', 'dataSourceTitleREF');">
+                                                    </dx-button>
+                                                </div>
+                                            </div>
+                                            <div *dxTemplate="let detailDescription of 'dd'">
+                                                <div class="description">
+                                                    <dx-data-grid
+                                                            class="datagrid"
+                                                            [dataSource]="detailDescription.data.LABELS_TRANSLATE"
+                                                            [hoverStateEnabled]="true"
+                                                            [showColumnLines]="false"
+                                                            [allowColumnResizing]="true"
+                                                            [columnAutoWidth]="true"
+                                                            [showRowLines]="true"
+                                                            [showBorders]="true"
+                                                            [width]="550"
+                                                            [rowAlternationEnabled]="true"
+                                                            (onToolbarPreparing)="onToolbarPreparingCustom($event,
+                                                    detailDescription.data.id, false)">
+
+                                                        <dxo-sorting mode="none"></dxo-sorting>
+
+                                                        <dxi-column
+                                                                dataField="LANG"
+                                                                class="all"
+                                                                caption="LANG"
+                                                                cellTemplate="LANG">
+                                                        </dxi-column>
+                                                        <div *dxTemplate="let local of 'LANG'" class="all">
+                                                            <dx-form [formData]="local.data"
+                                                                     (onFieldDataChanged)="changeDataNested($event,
+                                                             detailDescription.data, local.data, 'LANG')">
+                                                                <dxi-item dataField="LANG">
+                                                                    <dxo-label [visible]="false"></dxo-label>
+                                                                </dxi-item>
+                                                            </dx-form>
+                                                        </div>
+
+                                                        <dxi-column dataField="LABEL"
+                                                                    caption="LABEL"
+                                                                    cellTemplate="LABEL">
+                                                        </dxi-column>
+                                                        <div *dxTemplate="let local of 'LABEL'">
+                                                            <dx-form [formData]="local.data.VALUES"
+                                                                     (onFieldDataChanged)="changeDataNested($event,
+                                                             detailDescription.data, local.data, 'LABEL')">
+                                                                <dxi-item dataField="LABEL">
+                                                                    <dxo-label [visible]="false"></dxo-label>
+                                                                </dxi-item>
+                                                            </dx-form>
+                                                        </div>
+
+                                                        <dxi-column
+                                                                [width]="50"
+                                                                class="all"
+                                                                cellTemplate="DETAIL">
+                                                        </dxi-column>
+                                                        <div *dxTemplate="let local of 'DETAIL'" class="all">
+                                                            <dx-button
+                                                                    class="button button--icon-only button--default"
+                                                                    icon="trash"
+                                                                    (click)="deleteNestedItem(detailDescription.data, local.data)">
+                                                            </dx-button>
+                                                        </div>
+
+                                                    </dx-data-grid>
+                                                </div>
+                                            </div>
+                                        </dx-data-grid>
+                                    </div>
+                                </div>
+                                <div class="search">
+                                    <h4>SEARCH BOX TITLE</h4>
+                                    <div class="description">
+                                        <dx-data-grid
+                                            #dataSourceREF
+                                            class="datagrid"
+                                            [dataSource]="dataSourceTitle"
+                                            [hoverStateEnabled]="true"
+                                            [showColumnLines]="false"
+                                            [allowColumnResizing]="true"
+                                            [columnAutoWidth]="true"
+                                            [showRowLines]="true"
+                                            [showBorders]="true"
+                                            [width]="618"
+                                            [rowAlternationEnabled]="true"
+                                            (onToolbarPreparing)="onToolbarPreparingCustom($event, 'dataSourceREF')">
+
+                                            <dxo-editing
+                                                    mode="form"
+                                                    [useIcons]="true">
+                                                <dxo-form [colCount]="1">
+                                                    <dxi-item
+                                                            dataField="LANG"
+                                                            caption="Language">
+                                                    </dxi-item>
+                                                    <dxi-item
+                                                            dataField="LABEL"
+                                                            caption="Label">
+                                                    </dxi-item>
+                                                </dxo-form>
+                                            </dxo-editing>
+
+                                            <dxi-column
+                                                    dataField="LANG"
+                                                    class="all"
+                                                    caption="Description"
+                                                    cellTemplate="LANG">
+                                            </dxi-column>
+                                            <div *dxTemplate="let local of 'LANG'" class="all">
+                                                <dx-form [formData]="local.data"
+                                                         (onFieldDataChanged)="changeData($event,local.data, 'LANG')">
+                                                    <dxi-item dataField="LANG">
+                                                        <dxo-label [visible]="false"></dxo-label>
+                                                    </dxi-item>
+                                                </dx-form>
+                                            </div>
+
+                                            <dxi-column dataField="LABEL"
+                                                        caption="Label"
+                                                        cellTemplate="LABEL">
+                                            </dxi-column>
+                                            <div *dxTemplate="let local of 'LABEL'">
+                                                <dx-form [formData]="local.data"
+                                                         (onFieldDataChanged)="changeData($event,local.data, 'VALUES')">
+                                                    <dxi-item dataField="VALUES.LABEL">
+                                                        <dxo-label [visible]="false"></dxo-label>
+                                                    </dxi-item>
+                                                </dx-form>
+                                            </div>
+
+                                            <dxi-column
+                                                    [width]="50"
+                                                    class="all"
+                                                    cellTemplate="DETAIL">
+                                            </dxi-column>
+                                            <div *dxTemplate="let local of 'DETAIL'" class="all">
+                                                <dx-button
+                                                        class="button button--icon-only button--default"
+                                                        icon="trash"
+                                                        (click)="click_in_Icon(local, 'delete', 'dataSourceREF');">
+                                                </dx-button>
+                                            </div>
+                                        </dx-data-grid>
+                                    </div>
+                                </div>
+                            </div>
+                        </dxi-item>
+                        <dxi-item
+                                [style]="{'margin-top' : '40px'}"
+                                itemType="button"
+                                validationGroup="myValGrp"
+                                alignment="center"
+                                [buttonOptions]="buttonOptions">
+                        </dxi-item>
+                    </dx-form>
+                </form>
+            </dx-scroll-view>
+        </div>
+    </dx-popup>
+</div>
+<div *ngIf="popupLang">
+    <dx-popup
+            class="popup"
+            [showTitle]="true"
+            title="Information"
+            [width]="300"
+            [height]="300"
+            [dragEnabled]="false"
+            [closeOnOutsideClick]="true"
+            (onHiding)="popupHiding()"
+            [visible]="popupLang">
+        <div *dxTemplate="let data of 'content'">
+            <form class="form" (submit)="CreateRowInLangTable($event)">
+                <dx-form [formData]="popupDataLang"
+                         >
+                    <dxi-item dataField="LANG" (onValueChanged)="changeDataPopub($event)" >
+                        <dxi-validation-rule type="required" message="Field is required"></dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item dataField="VALUES.LABEL" caption="LABEL">
+                        <dxi-validation-rule type="required" message="Field is required"></dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item
+                            itemType="button"
+                            alignment="center"
+                            validationGroup="myValGrp"
+                            [buttonOptions]="buttonOptionsLang">
+                    </dxi-item>
+                </dx-form>
+            </form>
+        </div>
+    </dx-popup>
+</div>
+
+

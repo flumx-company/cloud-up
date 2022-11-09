@@ -1,0 +1,74 @@
+// body
+body,
+html {
+  height: 100%;
+}
+
+body {
+  color: $color-grey-medium-dark;
+  font-family: Arial;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+// main content area
+.content {
+  padding-top: $header-height;
+}
+
+// icons
+.icon {
+  box-sizing: content-box;
+  height: 38px;
+  width: 38px;
+
+  &--border-light-round {
+    border: 1px solid $white;
+    border-radius: 50%;
+  }
+
+  &__image {
+    font-size: 26px;
+    margin-left: 6px;
+    margin-top: 6px;
+
+    &--light {
+      color: $white;
+    }
+  }
+
+  &__link:before {
+    content: 'link';
+  }
+
+  &__add:before {
+    content: 'add';
+  }
+
+  &__remove:before {
+    content: 'remove';
+  }
+
+  &__keyboard_arrow_up:before {
+    content: 'keyboard_arrow_up';
+  }
+
+  &__keyboard_arrow_down:before {
+    content: 'keyboard_arrow_down';
+  }
+
+  &__arrow_downward:before {
+    content: 'arrow_downward';
+  }
+
+  &__arrow_upward:before {
+    content: 'arrow_upward';
+  }
+}
+
+// custom error border
+.errorCell {
+  border-style: solid;
+  border-width: thin;
+  border-color: red;
+}

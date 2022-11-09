@@ -1,0 +1,62 @@
+<br>
+<dx-form class="form__dx-form" [formData]="processingFunction.matchAdviceConfiguration" [showColonAfterLabel]="false" [showValidationSummary]="true">
+  <dxi-item itemType="group" caption="Match Settings">
+    <dxi-item dataField="toleranceGroup" [label]="{text: 'Tolerance Group'}" editorType="dxSelectBox" [editorOptions]="{items: toleranceGroups, displayExpr: 'name', valueExpr: 'name'}"></dxi-item>
+    <dxi-item cellTemplate="placeholderTemplate">
+      <div *dxTemplate="let data of 'placeholderTemplate'">
+        <hr />
+      </div>
+    </dxi-item>
+    <dxi-item dataField="matchWithAmount" [label]="{text: 'Match with amount'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.matchWithAmount}"></dxi-item>
+    <dxi-item cellTemplate="placeholderTemplate">
+      <div *dxTemplate="let data of 'placeholderTemplate'">
+        <hr />
+      </div>
+    </dxi-item>
+    
+    <dxi-item dataField="matchWithCustomerOrSupplierInformation" [label]="{text: 'Match with customer / supplier information'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.matchWithCustomerOrSupplierInformation}"></dxi-item>
+    <dxi-item itemType="group" [visible]="processingFunction.matchAdviceConfiguration!.matchWithCustomerOrSupplierInformation">
+      <dxi-item cellTemplate="matchWithCustomerOrSupplierInformationTemplate">
+        <div *dxTemplate="let data of 'matchWithCustomerOrSupplierInformationTemplate'">
+          <app-remote-configuration [columns]="['accountingSystemId', 'filterType', 'filterName']"></app-remote-configuration>
+        </div>
+      </dxi-item>
+      <dxi-item cellTemplate="alternativeTemplate">
+        <div *dxTemplate="let data of 'alternativeTemplate'">
+          <span class="dx-field-item-label-text">Alternative match with amount if:</span>
+        </div>
+      </dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.noCustomerOrSupplier" [label]="{text: alternativeToCustomerOrSupplier[0]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.noCustomerOrSupplier}"></dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.exactlyOneCustomerOrSupplierButUnableToLinkAdvice" [label]="{text: alternativeToCustomerOrSupplier[1]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.exactlyOneCustomerOrSupplierButUnableToLinkAdvice}"></dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.severalCustomersOrSuppliersButUnableToLinkAdvice" [label]="{text: alternativeToCustomerOrSupplier[2]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.severalCustomersOrSuppliersButUnableToLinkAdvice}"></dxi-item>
+      <dxi-item cellTemplate="placeholderTemplate">
+        <div *dxTemplate="let data of 'placeholderTemplate'">
+          <hr />
+        </div>
+      </dxi-item>
+    </dxi-item>
+    
+    <dxi-item dataField="matchWithOther" [label]="{text: 'Match with other'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.matchWithOther}"></dxi-item>
+    <dxi-item itemType="group" [visible]="processingFunction.matchAdviceConfiguration!.matchWithOther">
+      <dxi-item cellTemplate="matchWithOtherTemplate">
+        <div *dxTemplate="let data of 'matchWithOtherTemplate'">
+          <app-remote-configuration [columns]="['filterName']"></app-remote-configuration>
+        </div>
+      </dxi-item>
+      <dxi-item cellTemplate="alternativeTemplate">
+        <div *dxTemplate="let data of 'alternativeTemplate'">
+          <span class="dx-field-item-label-text">Alternative match with amount if:</span>
+        </div>
+      </dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.noTerm" [label]="{text: alternativeToOtherTerms[0]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.noTerm}"></dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.exactlyOneTermButUnableToLinkAdvice" [label]="{text: alternativeToOtherTerms[1]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.exactlyOneTermButUnableToLinkAdvice}"></dxi-item>
+      <dxi-item dataField="alternativeMatchWithAmountConfiguration.severalTermsButUnableToLinkAdvice" [label]="{text: alternativeToOtherTerms[2]}" editorType="dxCheckBox" [editorOptions]="{ value: processingFunction.alternativeMatchWithAmountConfiguration.severalTermsButUnableToLinkAdvice}"></dxi-item>
+      <dxi-item cellTemplate="placeholderTemplate">
+        <div *dxTemplate="let data of 'placeholderTemplate'">
+          <hr />
+        </div>
+      </dxi-item>
+    </dxi-item>
+  </dxi-item>
+</dx-form>
+<br>

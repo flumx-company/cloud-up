@@ -1,0 +1,204 @@
+<div class="form__header">
+    <div>
+        <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    </div>
+</div>
+
+<form class="form" style="width: 1200px" (submit)="saveValid($event)">
+    <dx-form
+            class="form__dx-form" id="form"
+            [colCount]="1"
+            [formData]="currentValidation"
+            [showColonAfterLabel]="true"
+            [showValidationSummary]="true"
+            validationGroup="conditionValidation">
+        <dxi-item
+                width="200"
+                editorType="dxSelectBox"
+                [editorOptions]="{
+                        dataSource: record ,
+                        showClearButton: true
+                    }"
+                dataField="REC_TYPE">
+            <dxo-label text="Record type" width="200"></dxo-label>
+            <dxi-validation-rule type="required" message="Currency Key required"></dxi-validation-rule>
+        </dxi-item>
+        <br>
+        <br>
+        <dxi-item
+                dataField="CLIENT_TYPE">
+            <dxo-label text="Client type" ></dxo-label>
+            <dxi-validation-rule type="required" message="Client type required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item itemType="group" caption="Validations Rules">
+            <dx-data-grid
+                    class="datagrid"
+                    [dataSource]="value"
+                    [hoverStateEnabled]="false"
+                    [showColumnLines]="false"
+                    [showRowLines]="true"
+                    [allowColumnResizing]="true"
+                    [columnAutoWidth]="true"
+                    [showBorders]="false"
+                    [rowAlternationEnabled]="true"
+                    (onToolbarPreparing)="onToolbarPreparingCustom($event)"
+                    [customizeColumns]="customizeColumns">
+                <dxo-editing
+                    mode="form"
+                    [useIcons]="true">
+                    <dxo-form [(formData)]="data">
+                        <dxi-item dataField="SEQ" caption="Sequence">
+                            <dxi-validation-rule
+                                type="pattern"
+                                pattern="[0-9]"
+                                message="Must be number">
+                            </dxi-validation-rule>
+                            <dxi-validation-rule type="required" message="Sequence required"></dxi-validation-rule>
+                        </dxi-item>
+                        <dxi-item dataField="CHECK_TYPE">
+                            <div *dxTemplate>
+                                <dx-select-box
+                                        [items]="rulesList"
+                                        [(value)]="data.CHECK_TYPE"
+                                        [showClearButton]="true"
+                                        valueExpr="technicalName"
+                                        displayExpr="displayName">
+                                </dx-select-box>
+                            </div>
+                            <dxi-validation-rule type="required" message="FIELD_TYPE is required"></dxi-validation-rule>
+                        </dxi-item>
+
+                        <dxi-item dataField="WEBHOOK">
+                            <dxo-label text="Webhook"></dxo-label>
+                        </dxi-item>
+                        <dxi-item dataField="ABORT_POST" editorType="dxCheckBox" >
+                            <dxo-label text="Abort post"></dxo-label>
+                            <div *dxTemplate>
+                                <dx-switch
+                                     [(value)]="data.ABORT_POST"
+                                     switchedOnText="YES"
+                                     switchedOffText="NO">
+                                </dx-switch>
+                            </div>
+                        </dxi-item>
+                        <dxi-item dataField="GOON" editorType="dxCheckBox" >
+                            <dxo-label text="Go on"></dxo-label>
+                            <div *dxTemplate>
+                                <dx-switch
+                                    [(value)]="data.GOON"
+                                    switchedOnText="YES"
+                                    switchedOffText="NO">
+                                </dx-switch>
+                            </div>
+                        </dxi-item>
+                    </dxo-form>
+                </dxo-editing>
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-scrolling mode="virtual"></dxo-scrolling>
+                <dxo-export [enabled]="true"></dxo-export>
+                <dxo-sorting mode="none"></dxo-sorting>
+                <dxi-column
+                        [allowHeaderFiltering]="false"
+                        [allowSorting]="false"
+                        [allowFiltering]="false"
+                        [width]="100">
+                </dxi-column>
+                <dxi-column dataField="SEQ"  caption="Sequence" cellTemplate="SEQ"></dxi-column>
+                <div *dxTemplate="let condition of 'SEQ'" class="all">
+                    <dx-form [formData]="condition.data"
+                             (onFieldDataChanged)="changeData($event,condition.data, 'SEQ')">
+                        <dxi-item dataField="SEQ">
+                            <dxo-label [visible]="false"></dxo-label>
+                            <dxi-validation-rule
+                                    type="pattern"
+                                    pattern="[0-9]"
+                                    message="Must be number">
+                            </dxi-validation-rule>
+                            <dxi-validation-rule type="required" message="Sequence required"></dxi-validation-rule>
+                        </dxi-item>
+                    </dx-form>
+                </div>
+
+
+                <dxi-column dataField="CHECK_TYPE" caption="Check Type" cellTemplate="CHECK_TYPE"></dxi-column>
+                <div *dxTemplate="let condition of 'CHECK_TYPE'" class="all">
+                    <dx-select-box
+                            [items]="rulesList"
+                            (onValueChanged)="changeData($event,condition.data, 'CHECK_TYPE')"
+                            [(value)]="condition.data.CHECK_TYPE"
+                            [showClearButton]="true"
+                            valueExpr="technicalName"
+                            displayExpr="displayName">
+                    </dx-select-box>
+                </div>
+
+                <dxi-column dataField="ABORT_POST" cellTemplate="cellTemplate" caption="Abort post" ></dxi-column>
+                <div *dxTemplate="let cell of 'cellTemplate'" >
+                    <dx-switch
+                         [(value)]="cell.value"
+                         (onValueChanged)="changeData($event,cell.data, 'ABORT_POST')"
+                         switchedOnText="YES"
+                         switchedOffText="NO">
+                    </dx-switch>
+                </div>
+
+                <dxi-column dataField="GOON" caption="Go On" cellTemplate="cellTemplate2"></dxi-column>
+                <div *dxTemplate="let cell of 'cellTemplate2'" >
+                    <dx-switch
+                         [(value)]="cell.value"
+                         (onValueChanged)="changeData($event,cell.data, 'GOON')"
+                         switchedOnText="YES"
+                         switchedOffText="NO">
+                    </dx-switch>
+                </div>
+
+                <dxi-column dataField="WEBHOOK" caption="Webhook" cellTemplate="cellTemplate1"></dxi-column>
+                <div *dxTemplate="let cell of 'cellTemplate1'" >
+                    <dx-form [formData]="cell.data"
+                             (onFieldDataChanged)="changeData($event, cell.data, 'WEBHOOK')">
+                        <dxi-item dataField="WEBHOOK">
+                            <dxo-label [visible]="false"></dxo-label>
+                        </dxi-item>
+                    </dx-form>
+                </div>
+                <dxi-column
+                        [allowHeaderFiltering]="false"
+                        [allowSorting]="false"
+                        [allowFiltering]="false"
+                        [width]="300"
+                        cellTemplate="CommandCellTemplate"
+                        [fixed]="true"
+                        fixedPosition="right">
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'CommandCellTemplate'">
+                    <div>
+                        <dx-button
+                             *ngIf="buttonAdd(cellData)"
+                             class="button button--icon-only button--default"
+                             icon="trash"
+                             (click)="click_in_Icon(cellData, 'delete');">
+                        </dx-button>
+                        <div class="dx-field">
+                            <div class="dx-field-label">Index number</div>
+                            <div class="dx-field-value">
+                                <dx-select-box
+                                    [items]="cellData.key.indexes"
+                                    [value]="cellData.rowIndex + 1"
+                                    [showClearButton]="true"
+                                    (onValueChanged)="changePosition($event,cellData.key)">
+                                </dx-select-box>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </dx-data-grid>
+        </dxi-item>
+        <dxi-item
+             itemType="button"
+             horizontalAlignment="right"
+             [buttonOptions]="buttonOptions">
+        </dxi-item>
+    </dx-form>
+    <hr/>
+</form>
+<app-info-popup id="infoPopup"></app-info-popup>

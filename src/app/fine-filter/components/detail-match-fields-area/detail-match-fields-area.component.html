@@ -1,0 +1,68 @@
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="currentFilter!.matchFields"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="match_fields_area"></dxo-export>
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column caption="Match field" dataField="uuid" cellTemplate="matchFieldCellTemplate"></dxi-column>
+  <div *dxTemplate="let cellData of 'matchFieldCellTemplate'">
+    <dx-select-box [dataSource]="getMatchFieldList()" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'matchField')"
+      (onValueChanged)="changeValue(cellData.value, $event, 'matchField')"itemTemplate="matchFieldItemTemplate" [hint]="getMatchFieldDescription(cellData.value)">
+      <div *dxTemplate="let data of 'matchFieldItemTemplate'">
+        {{data.displayName}}
+        <p style="white-space: normal;">({{data.description}})</p>
+      </div>
+    </dx-select-box>
+  </div>
+
+  <dxi-column caption="Selected" dataField="uuid" cellTemplate="selectedCellTemplate" [visible]="currentFilter!.filterType === 'MATCHING' || currentFilter!.filterType === 'REMITTANCE_ADVICE'"></dxi-column>
+  <div *dxTemplate="let cellData of 'selectedCellTemplate'">
+    <dx-switch [value]="getValue(cellData.value, 'selected')" (onValueChanged)="changeValue(cellData.value, $event, 'selected')"></dx-switch>
+  </div>
+
+  <dxi-column caption="Single match only" dataField="uuid" cellTemplate="singleMatchOnlyCellTemplate" [visible]="currentFilter!.filterType === 'BUSINESSPARTNER'"></dxi-column>
+  <div *dxTemplate="let cellData of 'singleMatchOnlyCellTemplate'">
+    <dx-switch [value]="getValue(cellData.value, 'singleMatchOnly')" (onValueChanged)="changeValue(cellData.value, $event, 'singleMatchOnly')"></dx-switch>
+  </div>
+
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="uuid"
+    caption=""
+    cellTemplate="matchCommandCellTemplate"
+    [width]="100"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'matchCommandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeMatchField(cellData.value)"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value);"></dx-button>
+    </div>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,54 @@
+<h1>{{ title }}</h1>
+<div class="">
+  <dx-data-grid
+      [dataSource]="dataSource"
+      [hoverStateEnabled]="true"
+      [showColumnLines]="false"
+      [allowColumnResizing]="true"
+      [allowColumnReordering]="true"
+      [columnAutoWidth]="true"
+      [showRowLines]="true"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      (onToolbarPreparing)="onToolbarPreparing($event)"
+      [customizeColumns]="customizeColumns"
+      (onCellPrepared)="onCellPrepared($event)"
+      (onInitNewRow)="initNewRow($event)"
+      (onRowInserting)="onInsert($event)"
+      (onRowUpdating)="onUpdate($event)"
+      (onRowRemoving)="onRemove($event)"
+      [editing]="{useIcons: true}">
+    <dxo-editing
+        mode="form"
+        [allowUpdating]="true"
+        [allowDeleting]="true"
+        [allowAdding]="true">
+      <dxo-form>
+        <dxi-item dataField="amountTypeIdentifier"></dxi-item>
+        <dxi-item dataField="description"></dxi-item>
+        <dxi-item dataField="amountTypeClass" [editorOptions]="{readOnly: true}"></dxi-item>
+      </dxo-form>
+    </dxo-editing>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-column-chooser [enabled]="true" mode="dragAndDrop">
+    </dxo-column-chooser>
+    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 20, 50]" [showNavigationButtons]="true">
+    </dxo-pager>
+    <dxo-export [enabled]="true"></dxo-export>
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxi-column dataField="amountTypeIdentifier">
+      <dxi-validation-rule type="required"></dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="amountTypeClass" [editorOptions]="{readOnly: true}"></dxi-column>
+    <dxi-column dataField="predefinedType" caption="Predefined Type" cellTemplate="predefinedTypeCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'predefinedTypeCellTemplate'">
+      <dx-switch [value]="cellData.value" [readOnly]="true" [onText]="'Yes'" [offText]="'No'"></dx-switch>
+    </div>
+
+    <dxi-column dataField="description"></dxi-column>
+  </dx-data-grid>
+</div>
+<app-info-popup id="infoPopup"></app-info-popup>

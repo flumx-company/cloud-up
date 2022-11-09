@@ -1,0 +1,106 @@
+<div class="form__header">
+    <div>
+        <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    </div>
+</div>
+<h1>Source code</h1>
+<form>
+    <dx-form
+            class="form__dx-form" id="form"
+            [colCount]="1"
+            [formData]="currencyOneStatic"
+            [showColonAfterLabel]="true"
+
+            [showValidationSummary]="true">
+        <dxi-item dataField="VALUE">
+            <dxo-label text="Source code" width="200"></dxo-label>
+        </dxi-item>
+        <br>
+    </dx-form>
+
+    <hr/>
+
+        <br>
+
+        <h1>Description</h1>
+
+        <dx-data-grid
+            #assignCondition
+            class="datagrid"
+            [dataSource]="currency"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [showRowLines]="true"
+            [allowColumnResizing]="true"
+            [columnAutoWidth]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            (onToolbarPreparing)="onToolbarPreparingCustom($event)"
+            [customizeColumns]="customizeColumns">
+            <dxo-editing
+                    mode="form"
+                    [useIcons]="true">
+                <dxo-form>
+                    <dxi-item
+                            dataField="LANG"
+                            caption="Language">
+                             <dxi-validation-rule type="required" message="Field is required"></dxi-validation-rule>
+                    </dxi-item>
+                    <dxi-item
+                            dataField="DESCRIPTION"
+                            caption="Text">
+                             <dxi-validation-rule type="required" message="Field is required"></dxi-validation-rule>
+                    </dxi-item>
+                </dxo-form>
+            </dxo-editing>
+            <dxo-selection mode="none"></dxo-selection>
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-group-panel [visible]="true"></dxo-group-panel>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+            <dxo-export [enabled]="true"></dxo-export>
+
+            <dxi-column
+                    dataField="LANG"
+                    caption="Language">
+            </dxi-column>
+            <dxi-column
+                    dataField="DESCRIPTION"
+                    caption="Text">
+            </dxi-column>
+            <dxi-column
+                    [allowHeaderFiltering]="false"
+                    [allowSorting]="false"
+                    [allowFiltering]="false"
+                    dataField="entityId"
+                    caption=""
+                    cellTemplate="commandCellTemplate"
+                    [width]="200"
+                    [fixed]="true"
+                    fixedPosition="right">
+            </dxi-column>
+            <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                     <dx-button
+                        class="button button--icon-only button--default"
+                        icon="trash"
+                        (click)="click_in_Icon(cellData, 'delete');">
+                    </dx-button>
+                    <dx-button
+                            class="button button--icon-only button--default"
+                            icon="edit"
+                            (click)="click_in_Icon(cellData, 'edit');">
+                    </dx-button>
+                </div>
+            </div>
+        </dx-data-grid>
+        <div class="form__footer">
+        <dx-button
+                text="Save"
+                icon="floppy"
+                validationGroup="conditionValidation"
+                (click)="saveCondition()">
+        </dx-button>
+    </div>
+</form>

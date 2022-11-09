@@ -1,0 +1,11 @@
+.dx-field-value:not(.dx-widget) > .dx-button, .dx-field-value:not(.dx-widget) > .dx-checkbox, .dx-field-value:not(.dx-widget) > .dx-switch {
+    float:left;
+}
+
+.check-box-parent-div {
+    display:flex;
+}
+
+.custom-check-box {
+    text-align:left;
+}

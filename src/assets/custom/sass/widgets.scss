@@ -1,0 +1,45 @@
+.widget {
+  background-color: $white;
+  // margin-bottom: 30px;
+  padding: 0 25px 30px;
+
+  &__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 45px;
+    padding-top: 15px;
+  }
+
+  &__body {
+    margin-bottom: 36px;
+  }
+
+  &__title {
+    font-size: 16px;
+  }
+
+  &__actions {
+    ul {
+      height: 32px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: inline-block;
+      margin-left: 26px;
+    }
+
+    i {
+      height: 22px;
+      line-height: 32px;
+      width: 22px;
+    }
+  }
+
+  &--space-bottom {
+    margin-bottom: 30px;
+  }
+}

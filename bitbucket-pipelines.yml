@@ -1,0 +1,64 @@
+image: docker:stable
+
+options:
+  docker: true
+
+pipelines:
+  custom:
+    deploy-test:
+      - step:
+          size: 2x
+          name: Deploy test
+          script:
+            - export IMAGE_NAME=alevate-ap-web
+            - docker build -t $IMAGE_NAME:test -f Dockerfile.test .
+            - docker tag $IMAGE_NAME:test serralacontainerregistry.azurecr.io/$IMAGE_NAME:test
+            - docker login serralacontainerregistry.azurecr.io -u $ACR_USERNAME -p $ACR_PASSWORD
+            - docker push serralacontainerregistry.azurecr.io/$IMAGE_NAME
+    deploy-prod:
+      - step:
+          size: 2x
+          name: Deploy Prod
+          script:
+            - export IMAGE_NAME=alevate-ap-web
+            - docker build -t $IMAGE_NAME:production .
+            - docker tag $IMAGE_NAME:production serralacontainerregistry.azurecr.io/$IMAGE_NAME:production
+            - docker login serralacontainerregistry.azurecr.io -u $ACR_USERNAME -p $ACR_PASSWORD
+            - docker push serralacontainerregistry.azurecr.io/$IMAGE_NAME
+    deploy-demo:
+      - step:
+          size: 2x
+          name: Deploy Demo
+          script:
+            - export IMAGE_NAME=alevate-ap-web
+            - docker build -t $IMAGE_NAME:demo -f Dockerfile.demo .
+            - docker tag $IMAGE_NAME:demo serralacontainerregistry.azurecr.io/$IMAGE_NAME:demo
+            - docker login serralacontainerregistry.azurecr.io -u $ACR_USERNAME -p $ACR_PASSWORD
+            - docker push serralacontainerregistry.azurecr.io/$IMAGE_NAME
+  branches:
+    test:
+      - step:
+          size: 2x
+          name: Deploy test
+          deployment: staging
+          script:
+            - export IMAGE_NAME=alevate-ap-web
+            - docker build -t $IMAGE_NAME:test -f Dockerfile.test .
+            - docker tag $IMAGE_NAME:test serralacontainerregistry.azurecr.io/$IMAGE_NAME:test
+            - docker login serralacontainerregistry.azurecr.io -u $ACR_USERNAME -p $ACR_PASSWORD
+            - docker push serralacontainerregistry.azurecr.io/$IMAGE_NAME
+    development:
+      - step:
+          size: 2x
+          name: Deploy development env
+          deployment: staging
+          script:
+            - export IMAGE_NAME=alevate-ap-web
+            - docker build -t $IMAGE_NAME:dev -f Dockerfile.dev .
+            - docker tag $IMAGE_NAME:dev serralacontainerregistry.azurecr.io/$IMAGE_NAME:dev
+            - docker login serralacontainerregistry.azurecr.io -u $ACR_USERNAME -p $ACR_PASSWORD
+            - docker push serralacontainerregistry.azurecr.io/$IMAGE_NAME
+definitions:
+  services:
+    docker:
+      memory: 4096

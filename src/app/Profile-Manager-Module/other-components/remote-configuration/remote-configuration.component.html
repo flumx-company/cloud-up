@@ -1,0 +1,63 @@
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="remoteConfigurations"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onCellPrepared)="onCellPrepared($event)"
+  (onInitNewRow)="onInitNewRow($event)"
+  [customizeColumns]="customizeColumns"
+  (onEditorPreparing)="onEditorPreparing($event)"
+  (onRowInserting)="onRowInserting($event)"
+  (onRowUpdating)="onRowUpdating($event)">
+
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-editing mode="row"
+    [allowAdding]="!readOnly"
+    [allowUpdating]="!readOnly"
+    [allowDeleting]="!readOnly">
+  </dxo-editing>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column caption="Accounting System" dataField="accountingSystemId" [visible]="isVisible('accountingSystemId')">
+    <dxo-lookup
+      [dataSource]="accountingSystems"
+      valueExpr="id"
+      displayExpr="name">
+    </dxo-lookup>
+  </dxi-column>
+  <dxi-column caption="Filter Type" dataField="filterType" [customizeText]="getFilterTypeDisplayName" [visible]="isVisible('filterType')" [setCellValue]="setFilterType">
+    <dxo-lookup
+      [dataSource]="filterTypes"
+      valueExpr="technicalName"
+      displayExpr="displayName">
+    </dxo-lookup>
+  </dxi-column>
+  <dxi-column caption="Filter" dataField="filterName" [visible]="isVisible('filterName')">
+    <dxo-lookup
+      #filterLookup
+      [dataSource]="getFilters"
+      valueExpr="filterId.name"
+      displayExpr="filterId.name">
+    </dxo-lookup>
+  </dxi-column>
+  <dxi-column caption="Restriction" dataField="restrictionName" [visible]="isVisible('restrictionName')">
+    <dxo-lookup
+      [dataSource]="restrictions"
+      valueExpr="entityId.name"
+      displayExpr="entityId.name">
+    </dxo-lookup>
+  </dxi-column>
+</dx-data-grid>

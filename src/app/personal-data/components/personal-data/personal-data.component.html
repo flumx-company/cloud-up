@@ -1,0 +1,103 @@
+<br>
+<h2>Personal Data</h2>
+<br>
+<dx-accordion #filterMenu [dataSource]="searchMenu" [animationDuration]="300" [collapsible]="true" [multiple]="false"
+              selectedIndex="-1">
+  <div *dxTemplate="let item of 'item'">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div style="padding-bottom: 1rem">
+            <span>Filter by:</span>
+            <dx-select-box [dataSource]="filterParams" (onValueChanged)="updateInputField($event)"
+                           placeholder="Select filter..."
+            ></dx-select-box>
+          </div>
+        </div>
+        <div class="col">
+          <div style="padding-bottom: 1rem">
+            <span id="input1">Surname</span>
+            <dx-text-box #textBox1 placeholder="Type a text here..."></dx-text-box>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div style="padding-bottom: 1rem">
+
+          </div>
+        </div>
+        <div class="col">
+          <div id="inputField2" style="padding-bottom: 1rem">
+            <span id="input2">First name</span>
+            <dx-text-box #textBox2 placeholder="Type a text here..."></dx-text-box>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <dx-button class="button button--primary button--icon-and-text" type="success" icon="search" text="Filter"
+                     (onClick)="filterPersonalData()"></dx-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</dx-accordion>
+<hr/>
+<dx-data-grid
+  id="masterGrid"
+  class="datagrid"
+  [dataSource]="personalData"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  [masterDetail]="{ enabled: true, template: 'detail' }">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="personal_data"></dxo-export>
+
+  <dxi-column caption="Service" dataField="serviceName"></dxi-column>
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="serviceName"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="200"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-link"></dx-button>
+    </div>
+  </div>
+  <div *dxTemplate="let sequence of 'detail'">
+    <dx-data-grid
+      class="datagrid"
+      [dataSource]="sequence.data.personalData"
+      [showColumnLines]="false"
+      [showRowLines]="true"
+      [allowColumnResizing]="true"
+      [columnAutoWidth]="true"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      keyExpr="index"
+      [customizeColumns]="customizeColumns">
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxi-column caption="Position" dataField="index" width="100"></dxi-column>
+      <dxi-column caption="Field" dataField="fieldName"></dxi-column>
+      <dxi-column caption="Value" dataField="fieldValue"></dxi-column>
+    </dx-data-grid>
+  </div>
+</dx-data-grid>

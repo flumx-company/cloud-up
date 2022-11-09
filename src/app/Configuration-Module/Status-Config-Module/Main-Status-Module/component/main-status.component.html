@@ -1,0 +1,47 @@
+<h2>Main Status</h2>
+<dx-data-grid id="gridContainer" [showRowLines]="true" [showColumnLines]="false" [dataSource]="dataSource" [allowColumnReordering]="true" height="450"
+    [remoteOperations]="true" [showBorders]="true" (onEditingStart)="editLog($event)"
+    (onRowInserting)="pushData($event)" (onRowInserted)="true"
+    (onRowUpdating)="onRowUpdating($event)" (onRowUpdated)="putData($event)" (onRowRemoving)="deleteData($event)"
+    (onRowRemoved)="true" (onToolbarPreparing)="onToolbarPreparing($event)">
+
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-export [enabled]="true" [customizeExcelCell]="customizeExcelCell"></dxo-export>
+    <dxo-paging [pageSize]="100" [enabled]="true"></dxo-paging>
+    <dxo-editing mode="form" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+    </dxo-editing>
+
+
+    <dxi-column dataField="STATUS" caption="Status" [width]="110">
+        <dxi-validation-rule type="required" message="Status is required">
+        </dxi-validation-rule>
+    </dxi-column>
+    <dxi-column dataField="UI_MODE" caption="Mode"></dxi-column>
+    <dxi-column dataField="MYACTIONLIST" caption="My Action List" cellTemplate="cellTemplateStatus"></dxi-column>
+    <dxi-column dataField="DESCRIPTION" caption="Description"></dxi-column>
+
+    <dxi-column type="buttons" [width]="110">
+        <!-- <dxi-button name="edit"></dxi-button>
+        <dxi-button name="delete"></dxi-button> -->
+        <dxi-button hint="Clone" icon="info" [onClick]="cloneIconClick"></dxi-button>
+        <dxi-button name="edit"></dxi-button>
+        <dxi-button name="delete"></dxi-button>
+    </dxi-column>
+
+    <div *dxTemplate="let item of 'cellTemplateStatus'">
+        <dx-switch [value]="item.value" disabled="true"></dx-switch>
+    </div>
+
+
+</dx-data-grid>
+
+
+
+<!-- <dx-popup title="Popup Title" [(visible)]="isPopupVisible" [width]="300" [height]="250">
+    <div *dxTemplate="let data of 'content'">
+        <p>Message</p>
+        {{message | json}}
+    </div>
+</dx-popup> -->

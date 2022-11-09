@@ -1,0 +1,76 @@
+<div class="form__header">
+    <div>
+        <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    </div>
+</div>
+
+<br>
+<h2>Company Code detail</h2>
+
+<form class="form" style="width: 1200px" (submit)="save()">
+    <dx-form
+            class="form__dx-form" id="form"
+            [formData]="companyCode"
+            [showColonAfterLabel]="true"
+            [showValidationSummary]="true"
+            [colCount]="2">
+        <dxi-item itemType="group">
+            <dxi-item dataField="MASTER.AWSYS"
+                      width="200"
+                      editorType="dxSelectBox"
+                      [editorOptions]="{ dataSource: logSystems ,
+                      showClearButton: true, tabIndex:10
+                       }">
+                <dxo-label text="Logical System" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Logical System required"></dxi-validation-rule>
+            </dxi-item>
+
+            <dxi-item dataField="MASTER.BUTXT" [editorOptions]="{ tabIndex:30 }" >
+                <dxo-label text="Name of Company Code" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Name of Company Code required"></dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="MASTER.ORT01" [editorOptions]="{ tabIndex:50 }">
+                <dxo-label text="City" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="City required"></dxi-validation-rule>
+            </dxi-item>
+            <dxi-item
+                    width="200"
+                    editorType="dxSelectBox"
+                    [editorOptions]="{
+                        dataSource: currencyAll ,
+                        showClearButton: true,
+                        value: getValueCurrency(),
+                       valueExpr: 'VALUE',
+                       tabIndex:70,
+                       displayExpr: 'LABEL'}"
+
+
+                    dataField="MASTER.WAERS">
+                <dxo-label text="Currency Key" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Currency Key required"></dxi-validation-rule>
+            </dxi-item>
+        </dxi-item>
+
+        <dxi-item itemType="group" >
+            <dxi-item dataField="MASTER.BUKRS" [editorOptions]="{ tabIndex:20 }"
+            [disabled]="mode == 'add'? false :true">
+                <dxo-label text="Company Code" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Company Code required"></dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="MASTER.LAND1" [editorOptions]="{ tabIndex:40 }">
+                <dxo-label text="Country Key" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Country Key required"></dxi-validation-rule>
+            </dxi-item>
+            <dxi-item dataField="MASTER.SPRAS" [editorOptions]="{ tabIndex:60 }">
+                <dxo-label text="Language Key" width="200"></dxo-label>
+                <dxi-validation-rule type="required" message="Language Key required"></dxi-validation-rule>
+            </dxi-item>
+        </dxi-item>
+            <dxi-item
+                itemType="button"
+                horizontalAlignment="right"
+                [buttonOptions]="buttonOptions">
+            </dxi-item>
+
+    </dx-form>
+</form>

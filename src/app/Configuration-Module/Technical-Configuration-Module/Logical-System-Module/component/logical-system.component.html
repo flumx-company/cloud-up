@@ -1,0 +1,102 @@
+<h2>Logical System</h2>
+<dx-data-grid id="gridContainer" [dataSource]="dataSource" [allowColumnReordering]="true" height="450"
+    [remoteOperations]="true" [showBorders]="true" (onEditingStart)="editLog($event)"
+    (onInitNewRow)="onInitNewRow($event)" (onRowInserting)="pushData($event)" (onRowInserted)="true"
+    (onRowUpdating)="onRowUpdating($event)" (onRowUpdated)="putData($event)" (onRowRemoving)="deleteData($event)"
+    (onRowRemoved)="true" [masterDetail]="{ enabled: false, template: 'detail' }"
+    (onToolbarPreparing)="onToolbarPreparing($event)">
+
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-load-panel [enabled]="true"></dxo-load-panel>
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-export [enabled]="true" [customizeExcelCell]="customizeExcelCell"></dxo-export>
+    <dxo-paging [pageSize]="10" [enabled]="true"></dxo-paging>
+    <dxo-editing mode="popup" [allowUpdating]="true" [allowDeleting]="true" [allowAdding]="true" [useIcons]="true">
+        <dxo-popup title="Logical System" [showTitle]="true" [width]="800" [height]="525"
+            [position]="{ my: 'center', at: 'center', of: window }">
+        </dxo-popup>
+        <dxo-form [colCount]="1">
+
+            <dxi-item itemType="group" [colCount]="3">
+
+                <dxi-item dataField="ACTIVE" [label]="{text:'Active'}" [colSpan]="1"></dxi-item>
+
+                <dxi-item dataField="LOGICAL_SYSTEM" [label]="{text:'Logical System'}" [colSpan]="1">
+                    <dxi-validation-rule type="required" message="Logical System is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+
+                <dxi-item dataField="SYSTEM_TYPE" [label]="{text:'System Type'}" [colSpan]="1"></dxi-item>
+            </dxi-item>
+
+            <dxi-item dataField="URL" editorType="dxCalendar" [editorOptions]="{ width: 648}" [label]="{text:'URL'}">
+            </dxi-item>
+
+            <dxi-item itemType="group" [colCount]="2" cssClass="custom-group">
+                <dxi-item dataField="UNAME" cssClass="custom-label">
+                    <dxo-label text="User Name"></dxo-label>
+                </dxi-item>
+
+                <dxi-item dataField="PASSWD" cssClass="custom-label">
+                    <dxo-label text="Password"></dxo-label>
+                </dxi-item>
+            </dxi-item>
+
+
+            <dxi-item dataField="API_KEY" [label]="{text:'Api Key'}" [editorOptions]="{ width: 648}"></dxi-item>
+
+            <dxi-item [label]="{text:'Description'}" dataField="DESCRIPTION" [editorOptions]="{width: 648}">
+            </dxi-item>
+
+
+        </dxo-form>
+    </dxo-editing>
+
+
+    <dxi-column dataField="ACTIVE" caption="Active" [width]="100" cellTemplate="cellTemplateStatus"></dxi-column>
+    <dxi-column dataField="LOGICAL_SYSTEM" caption="Logical System" [allowEditing]="!addRows"></dxi-column>
+    <dxi-column dataField="SYSTEM_TYPE" caption="System Type"></dxi-column>
+    <dxi-column dataField="URL" caption="URL" [visible]="false"></dxi-column>
+    <dxi-column dataField="UNAME" caption="User Name" [visible]="false"></dxi-column>
+    <dxi-column dataField="PASSWD" caption="Password" [visible]="false"></dxi-column>
+    <dxi-column dataField="API_KEY" caption="Api Key" [visible]="false"></dxi-column>
+    <dxi-column dataField="DESCRIPTION" caption="Description"></dxi-column>
+    <!-- <dxi-column dataField="SYSTEM.VDESC" caption="VDESC"></dxi-column>
+    <dxi-column dataField="SYSTEM.FLAG" caption="FLAG" cellTemplate="cellTemplateStatus" [width]="80"></dxi-column> -->
+
+    <dxi-column type="buttons" [width]="110">
+        <dxi-button name="edit"></dxi-button>
+        <dxi-button name="delete"></dxi-button>
+        <!-- <dxi-button hint="Clone" icon="info" [onClick]="cloneIconClick"></dxi-button> -->
+    </dxi-column>
+    <div *dxTemplate="let item of 'cellTemplateStatus'">
+        <dx-switch [value]="item.value" disabled="true"></dx-switch>
+    </div>
+
+    <!-- <div *dxTemplate="let order of 'detail'">
+        <dx-data-grid [dataSource]="[order.data]" showBorders="true">
+            <dxi-column dataField="SYSTEM.LOGICAL_SYSTEM" caption="LOGICAL_SYSTEM"></dxi-column>
+            <dxi-column dataField="SYSTEM.SYSTEM_TYPE" caption="SYSTEM_TYPE"></dxi-column>
+            <dxi-column dataField="SYSTEM.CREP" caption="CREP"></dxi-column>
+        </dx-data-grid>
+    </div> -->
+</dx-data-grid>
+
+<!--
+<div class="addData" *ngIf="!addRows">
+    <dx-button icon="back" (onClick)="backToGrid()">
+    </dx-button>
+    <br />
+    <br />
+    <dx-form id="form" [colCount]="2" [formData]="employee" (onFieldDataChanged)="form_fieldDataChanged($event)">
+        <dxi-item dataField="LOGICAL_SYSTEM" [label]="{text: 'Logical System'}"></dxi-item>
+        <dxi-item dataField="SYSTEM_TYPE" [label]="{text: 'System Type'}"></dxi-item>
+        <dxi-item dataField="URL"></dxi-item>
+        <dxi-item dataField="UNAME" [label]="{text: 'User Name'}"></dxi-item>
+        <dxi-item dataField="PASSWD" [label]="{text: 'Password'}"></dxi-item>
+        <dxi-item dataField="DESCRIPTION_TRANSLATE[0].VALUES[0].DESCRIPTION" [label]="{text: 'Description'}"></dxi-item>
+        <dxi-item dataField="ACTIVE" [label]="{text: 'Active'}"></dxi-item>
+    </dx-form>
+    <br />
+    <dx-button type="default" text="SAVE" (onClick)="pushData($event)" width="20%"></dx-button>
+</div> -->

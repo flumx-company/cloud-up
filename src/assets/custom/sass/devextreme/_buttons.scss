@@ -1,0 +1,113 @@
+.button {
+  background: none;
+
+  &--default {
+    border-color: $color-grey-medium-dark;
+    color: $color-grey-medium-dark;
+
+    i {
+      color: inherit !important;
+    }
+  }
+
+  &--default.dx-state-hover {
+    background: inherit;
+    border-color: $color-ruby;
+    color: $color-ruby;
+
+    i {
+      color: inherit;
+    }
+  }
+
+  &--primary {
+    background: $color-ruby;
+    border-color: $color-ruby;
+    border-radius: 2px;
+
+    &:hover {
+      background: $color-red-orange;
+      border-color: $color-red-orange;
+    }
+  }
+
+  &--secondary {
+    background: $color-grey-light;
+    border-color: $color-grey-light;
+    border-radius: 2px;
+    color: $color-grey-medium-dark;
+
+    i {
+      color: inherit !important;
+    }
+
+    &:hover {
+      background: $color-grey-medium-dark;
+      border-color: $color-grey-medium-dark;
+      color: $white;
+
+      i {
+        color: inherit;
+      }
+    }
+  }
+
+  &--icon-only {
+    border: 0;
+  }
+
+  &--icon-and-text {
+    color: $white;
+    font-size: 16px;
+  }
+}
+
+.dx-toolbar-button {
+  .dx-button {
+    background-color: transparent;
+    border: 0;
+
+    .dx-icon {
+      color: $color-grey-medium-dark;
+    }
+
+    &.dx-state-hover {
+      background: none;
+
+      .dx-icon {
+        color: $color-ruby;
+      }
+    }
+  }
+}
+
+.dx-button-has-icon .dx-icon {
+  color: white;
+  font-size: 15px;
+  // width: 10px;
+  height: auto;
+  line-height: normal;
+}
+
+.dx-toolbar-text-auto-hide .dx-button .dx-icon{
+  // background-size: 18px 18px;
+  // height: auto;
+  // width: auto;
+  font-size: 16px;
+}
+
+// .dx-button-has-icon:not(.dx-button-has-text) .dx-icon{
+//   color: #ff0d5e;
+// }
+
+// .dx-button-has-icon:not(.dx-button-has-text) .dx-icon{
+//   color: #676767;
+// }
+
+.dx-toolbar-text-auto-hide .dx-button .dx-button-content{
+  padding: 1px;
+}
+
+.dx-button-mode-contained .dx-icon{
+  color: #ff0d5e;
+}

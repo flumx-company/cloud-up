@@ -1,0 +1,78 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">{{viewMode | titlecase}} Filter {{name}}</span>
+  </div>
+</div>
+<div [hidden]="viewMode !== 'Edit'">
+  <dx-button class="button button--default" icon="info" (onClick)="showFilterInfo();"></dx-button>
+  <dx-button class="button button--default" icon="fas fa-link" (onClick)="showUsageInfo();" [ngClass]="isFilterUsed"></dx-button>
+</div>
+<br>
+<form (submit)="save($event)" class="form">
+  <dx-form class="form__dx-form" id="form" [colCount]="1" [formData]="currentFilter" [showColonAfterLabel]="false" [showValidationSummary]="true"
+    validationGroup="filterValidation">
+    <dxi-item itemType="group" caption="General Information" [colCount]="3">
+      <dxi-item dataField="filterId.name" [label]="{text: 'Name'}" [editorOptions]="{placeholder: 'Choose a name', readOnly: viewMode === 'Edit'}">
+        <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" max="25" message="Name cannot exceed 25 characters"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="filterType" [label]="{text: 'Filter type'}" editorType="dxSelectBox" [editorOptions]="{ items: filterTypeList, displayExpr: 'displayName', valueExpr: 'technicalName' }">
+        <dxi-validation-rule type="required" message="Filter type is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="active" [label]="{text: 'Active'}" editorType="dxSwitch" [editorOptions]="{ value: currentFilter.active}"></dxi-item>
+      <dxi-item dataField="description" editorType="dxTextArea" [colSpan]="3" [editorOptions]="{placeholder: 'Write a description...'}">
+        <dxi-validation-rule type="stringLength" max="60" message="Description cannot exceed 60 characters"></dxi-validation-rule>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Settings" [visible]="isFilterTypeSet()">
+      <dxi-item dataField="formatType" [label]="{text: 'Format type'}" editorType="dxSelectBox" [editorOptions]="{ items: getFormatTypeList(), displayExpr: 'displayName', valueExpr: 'technicalName' }"
+        [visible]="isFormItemVisible('formatType')" [visibleIndex]="1" cssClass="form__item">
+        <dxi-validation-rule type="required" message="Format type is required"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="accountingSystemType" [label]="{text: 'Accounting system type'}" editorType="dxSelectBox" [editorOptions]="{ items: accountingSystemTypeList, displayExpr: 'displayName', valueExpr: 'technicalName' }"
+        [visible]="isFormItemVisible('accountingSystemType')" [visibleIndex]="2" cssClass="form__item">
+        <dxi-validation-rule type="required" message="Accounting system type is required"></dxi-validation-rule>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Search Area" [visible]="isFilterTypeSet() && currentFilter.filterType !== 'BUSINESSPARTNER'">
+      <dxi-item cellTemplate="searchAreaTemplate">
+        <div *dxTemplate="let searchArea of 'searchAreaTemplate'">
+          <app-detail-search-area [currentFilter]="currentFilter" [formatType]="currentFilter.formatType" [invalidRegEx]="invalidRegExList"></app-detail-search-area>
+        </div>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Match Fields Area" [visible]="isFilterTypeSet() && currentFilter.filterType !== 'EXTRACTION'">
+      <dxi-item cellTemplate="matchFieldsAreaTemplate">
+        <div *dxTemplate="let matchFieldsArea of 'matchFieldsAreaTemplate'">
+          <app-detail-match-fields-area [currentFilter]="currentFilter"></app-detail-match-fields-area>
+        </div>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item itemType="group" caption="Validation Area" [visible]="isFilterTypeSet()">
+      <dxi-item dataField="validationUpperLimit" [label]="{text: 'Upper Limit'}" cssClass="form__item">
+        <dxi-validation-rule type="stringLength" max="25" message="Upper Limit cannot exceed 25 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="numeric" message="Limit value must be numeric"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" message="Upper limit value must be higher than lower limit value" [reevaluate]="true" [validationCallback]="validateLimitsFunc"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="validationLowerLimit" [label]="{text: 'Lower Limit'}" cssClass="form__item">
+        <dxi-validation-rule type="stringLength" max="25" message="Lower Limit cannot exceed 25 characters"></dxi-validation-rule>
+        <dxi-validation-rule type="numeric" message="Limit value must be numeric"></dxi-validation-rule>
+        <dxi-validation-rule type="custom" message="Upper limit value must be higher than lower limit value" [reevaluate]="true" [validationCallback]="validateLimitsFunc"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item cellTemplate="validationAreaTemplate">
+        <div *dxTemplate="let validationArea of 'validationAreaTemplate'">
+          <app-detail-validation-area [currentFilter]="currentFilter"></app-detail-validation-area>
+        </div>
+      </dxi-item>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="floppy" validationGroup="filterValidation" [useSubmitBehavior]="true"></dx-button>
+  </div>
+</form>
+<app-info-popup id="infoPopup"></app-info-popup>

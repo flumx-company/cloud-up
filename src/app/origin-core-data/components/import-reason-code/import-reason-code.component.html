@@ -1,0 +1,38 @@
+<dx-form  class="form__dx-form"
+          id="importReasonCodeForm"
+          [colCount]="2"
+          [formData]="currentImportReasonCode"
+          [showColonAfterLabel]="false"
+          [showValidationSummary]="true"
+          validationGroup="importReasonCodeData">
+          
+  <dxi-item dataField="externalReason"
+            [label]="{text: 'External Reason'}"
+            [editorOptions]="{maxLength: 30}">
+    <dxi-validation-rule type="required" message="External Reason is required"></dxi-validation-rule>
+    <dxi-validation-rule type="custom" message="External Reason is already in use" [reevaluate]="true" [validationCallback]="validate"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item dataField="amountTypeClass"
+            [label]="{text: 'Amount Type Class'}"
+            editorType="dxSelectBox"
+            [editorOptions]="{items: amountTypesForReasonCodes, displayExpr: 'displayName', valueExpr: 'technicalName', onValueChanged: amountTypeClassValueChanged }">
+    <dxi-validation-rule type="required" message="Amount Type Class is required"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item dataField="amountTypeIdentifier" editorType="dxSelectBox"
+            [label]="{text: 'Amount Type Identifier'}"
+            [editorOptions]="{ items: filteredAmountTypes, displayExpr: 'amountTypeIdentifier', valueExpr: 'amountTypeIdentifier', disabled: readOnlyFlag}">
+    <dxi-validation-rule type="required" message="Amount Type Identifier is required"></dxi-validation-rule>
+  </dxi-item>
+
+  <dxi-item itemType="empty"></dxi-item>
+  <dxi-item cellTemplate="buttons" [colSpan]="1">
+    <div *dxTemplate="let data of 'buttons'">
+      <br>
+      <br>
+      <dx-button class="button button--default" text="Cancel" icon="close" (onClick)="hideImportReasonCodeForm()"></dx-button>
+      <dx-button class="button button--primary button--icon-and-text" text="Add" icon="add" validationGroup="importReasonCodeData" (onClick)="saveImportReasonCode($event)"></dx-button>
+    </div>
+  </dxi-item>
+</dx-form>

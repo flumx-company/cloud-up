@@ -1,0 +1,65 @@
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="currentFilter!.validationFunctionConfigurations"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  [customizeColumns]="customizeColumns">
+  
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="validation_area"></dxo-export>
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+  
+  <dxi-column caption="Position" dataField="index" [sortIndex]="0" sortOrder="asc" width="120" [customizeText]="customizeIndex"></dxi-column>
+  
+  <dxi-column caption="Validation function" dataField="index" cellTemplate="functionCellTemplate"></dxi-column>
+  <div *dxTemplate="let cellData of 'functionCellTemplate'">
+    <dx-select-box [dataSource]="validationFunctionList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'validationFunction')"
+      (onValueChanged)="changeValue(cellData.value, $event, 'validationFunction')"></dx-select-box>
+  </div>
+  
+  <dxi-column caption="Validation type" dataField="index" cellTemplate="typeCellTemplate"></dxi-column>
+  <div *dxTemplate="let cellData of 'typeCellTemplate'">
+    <dx-select-box [dataSource]="validationTypeList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'validationType')"
+      (onValueChanged)="changeValue(cellData.value, $event, 'validationType')"></dx-select-box>
+  </div>
+  
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="index"
+    caption=""
+    cellTemplate="validationCommandCellTemplate"
+    [width]="300"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'validationCommandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-angle-double-up" (click)="moveToStart(cellData.value);" [disabled]="cellData.rowIndex === 0"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-angle-up" (click)="moveOneUp(cellData.value);" [disabled]="cellData.rowIndex === 0"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-angle-down" (click)="moveOneDown(cellData.value);" [disabled]="cellData.rowIndex >= currentFilter!.validationFunctionConfigurations.length -1"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-angle-double-down" (click)="moveToEnd(cellData.value);" [disabled]="currentFilter!.validationFunctionConfigurations && cellData.rowIndex >= currentFilter!.validationFunctionConfigurations.length -1"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeValidationFunction(cellData.value);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (onClick)="showInfo(cellData.value);"></dx-button>
+    </div>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

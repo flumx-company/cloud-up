@@ -1,0 +1,620 @@
+<br>
+<dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+<br>
+<br>
+<h2>Usage info for Profile Sequence {{currentSequence.sequenceId.name}}</h2>
+<dx-button class="button button--default" icon="info" (click)="showProfileSequenceInfo($event)"></dx-button>
+<br>
+<br>
+<h5>Used in the following Origin Groups:</h5>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="originGroupList"
+  [hoverStateEnabled]="false"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  (onExporting)="onExporting($event)"
+  (onExported)="onExported($event)"
+  (onFileSaving)="onFileSaving($event, false)"
+  [masterDetail]="{ enabled: true, template: 'detail' }"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true"></dxo-export>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column caption="Name" dataField="id.id"></dxi-column>
+  <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column caption="Characteristics Setting" dataField="characteristicsSetting" [customizeText]="getOriginGroupCharacteristicDisplayName" [visible]="false"></dxi-column>
+  <dxi-column caption="Description" dataField="description"></dxi-column>
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="id"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="100"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editOriginGroup(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showOriginGroupInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+  <div *dxTemplate="let originGroup of 'detail'">
+    <dx-form
+      [formData]="originGroup.data"
+      [colCount]="1"
+      [showColonAfterLabel]="false">
+
+      <dxi-item itemType="group" caption="Characteristics">
+        <dxi-item dataField="characteristicsSetting" [label]="{text: 'Characteristics Setting'}"
+          [editorOptions]="{readOnly: 'true', value: getOriginCharacteristicDisplayName({value: originGroup.data.characteristicsSetting})}">
+        </dxi-item>
+        <dxi-item cellTemplate="_characteristicTemplate">
+          <div *dxTemplate="let data of '_characteristicTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="originGroup.data.characteristics"
+              [hoverStateEnabled]="false"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="false"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingCharacteristics($event, originGroup.data)"
+              [customizeColumns]="customizeColumns"
+              (onExporting)="onExporting($event)"
+              (onExported)="onExported($event)">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Name" dataField="name"></dxi-column>
+              <dxi-column caption="RecordInterface Field" dataField="sourceField"></dxi-column>
+              <dxi-column caption="Open Item Field" dataField="openItemField"></dxi-column>
+              <dxi-column caption="Regular Expression" dataField="regularExpression"></dxi-column>
+              <dxi-column caption="Success Rate" dataField="successRate" [customizeText]="addPercentSign"></dxi-column>
+              <dxi-column caption="Accounting System" dataField="accountingSystem" [customizeText]="getAccountingSystemNameById"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoCharacteristic(cellData.value, $event, originGroup.data);"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Foreign Currency Information Configurations">
+        <dxi-item cellTemplate="_currencyConfigurationsTemplate">
+          <div *dxTemplate="let data of '_currencyConfigurationsTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="originGroup.data.foreignCurrencyConfigurations"
+              [hoverStateEnabled]="false"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="false"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingCurrencyConfigurations($event, originGroup.data)"
+              [customizeColumns]="customizeColumns"
+              (onExporting)="onExporting($event)"
+              (onExported)="onExported($event)">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Amount Type" dataField="amountType" [customizeText]="getAmountTypeDisplayName"></dxi-column>
+              <dxi-column caption="Regular Expression Prefix" dataField="regexPrefix"></dxi-column>
+              <dxi-column caption="Regular Expression Currency" dataField="regexCurrency"></dxi-column>
+              <dxi-column caption="Regular Expression Exchange Rate" dataField="regexExchangeRate"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoCurrencyConfiguration(cellData.value, $event, originGroup.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Import Reason Codes">
+        <dxi-item cellTemplate="_importReasonCodesTemplate">
+          <div *dxTemplate="let data of '_importReasonCodesTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="originGroup.data.importReasonCodes"
+              [hoverStateEnabled]="false"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="false"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingImportReasonCodes($event, originGroup.data)"
+              [customizeColumns]="customizeColumns"
+              (onExporting)="onExporting($event)"
+              (onExported)="onExported($event)">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="External Reason" dataField="externalReason"></dxi-column>
+              <dxi-column caption="Amount Type Class" dataField="amountTypeClass" [customizeText]="getAmountTypeDisplayName"></dxi-column>
+              <dxi-column caption="Amount Type Identifier" dataField="amountTypeIdentifier"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoImportReasonCode(cellData.value, $event, originGroup.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Optimization Configurations">
+        <dxi-item cellTemplate="_optimizationConfigurationsTemplate">
+          <div *dxTemplate="let data of '_optimizationConfigurationsTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="originGroup.data.optimizationConfigurations"
+              [hoverStateEnabled]="false"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="false"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingOptimizationConfigurations($event, originGroup.data)"
+              [customizeColumns]="customizeColumns"
+              (onExporting)="onExporting($event)"
+              (onExported)="onExported($event)">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Name" dataField="name"></dxi-column>
+              <dxi-column caption="Search Mode" dataField="optimizationSearchMode" [customizeText]="getSearchModeDisplayName"></dxi-column>
+              <dxi-column caption="Delimiter" dataField="delimiter"></dxi-column>
+              <dxi-column caption="Regular Expression" dataField="regularExpression"></dxi-column>
+              <dxi-column caption="Open Item Field" dataField="openItemField"></dxi-column>
+              <dxi-column caption="PrefixLength" dataField="prefixLength" [editorOptions]="{format: '#'}"></dxi-column>
+              <dxi-column caption="Accounting System" dataField="accountingSystem" [customizeText]="getAccountingSystemNameById"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoOptimizationConfiguration(cellData.value, $event, originGroup.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+  </div>
+</dx-data-grid>
+<br>
+<hr />
+<br>
+<h5>Used in the following Origins:</h5>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="originList"
+  [hoverStateEnabled]="false"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  (onFileSaving)="onFileSaving($event, true)"
+  [masterDetail]="{ enabled: true, template: 'detail' }"
+  [customizeColumns]="customizeColumns"
+  (onExporting)="onExporting($event)"
+  (onExported)="onExported($event)">
+
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true"></dxo-export>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column caption="Name" dataField="id.id"></dxi-column>
+  <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column caption="Format" dataField="format" [customizeText]="getFormatDisplayName"></dxi-column>
+  <dxi-column caption="Format Type" dataField="formatType" [customizeText]="getFormatTypeDisplayName"></dxi-column>
+  <dxi-column caption="Profile Sequence" dataField="sequenceClatchProcess"></dxi-column>
+
+  <dxi-column caption="Currency" dataField="currency" [visible]="false"></dxi-column>
+  <dxi-column caption="IBAN" dataField="iban" [visible]="false"></dxi-column>
+  <dxi-column caption="BIC" dataField="bic" [visible]="false"></dxi-column>
+  <dxi-column caption="Bank Country" dataField="bankCountry" [visible]="false"></dxi-column>
+  <dxi-column caption="Bank Id" dataField="bankId" [visible]="false"></dxi-column>
+  <dxi-column caption="Account Id" dataField="accountId" [visible]="false"></dxi-column>
+  <dxi-column caption="Characteristics Setting" dataField="characteristicsSetting" [customizeText]="getOriginCharacteristicDisplayName"
+     [visible]="false"></dxi-column>
+  <dxi-column caption="Description" dataField="description" [visible]="false"></dxi-column>
+  <dxi-column caption="Origin Group" dataField="originGroupId" [visible]="false"></dxi-column>
+
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="id"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="100"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editOrigin(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showOriginInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+  <div *dxTemplate="let origin of 'detail'">
+    <dx-form
+      [formData]="origin.data"
+      [colCount]="1"
+      [showColonAfterLabel]="false">
+
+      <dxi-item itemType="group" caption="Details">
+        <dxi-item dataField="id.id" [label]="{text: 'Name'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="active" [label]="{text: 'Active'}" editorType="dxSwitch" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="format" [label]="{text: 'Format'}" [editorOptions]="{readOnly: 'true', value: getFormatDisplayName({value: origin.data.format})}"></dxi-item>
+        <dxi-item dataField="formatType" [label]="{text: 'Format Type'}" [editorOptions]="{readOnly: 'true', value: getFormatTypeDisplayName({value: origin.data.formatType})}"></dxi-item>
+        <dxi-item dataField="sequenceClatchProcess" [label]="{text: 'Profile Sequence'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="currency" [label]="{text: 'Currency'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="iban" [label]="{text: 'IBAN'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="bic" [label]="{text: 'BIC'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="bankCountry" [label]="{text: 'Bank Country'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="bankId" [label]="{text: 'Bank Id'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="accountId" [label]="{text: 'Account Id'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="description" [label]="{text: 'Description'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+        <dxi-item dataField="originGroupId" [label]="{text: 'Origin Group'}" [editorOptions]="{readOnly: 'true'}"></dxi-item>
+      </dxi-item>
+
+      <dxi-item itemType="group" caption="Characteristics" [visible]="isCharacteristicSectionVisible(origin.data)">
+        <dxi-item dataField="characteristicsSetting" [label]="{text: 'Characteristics Setting'}"
+          [editorOptions]="{readOnly: 'true', value: getOriginCharacteristicDisplayName({value: origin.data.characteristicsSetting})}">
+        </dxi-item>
+        <dxi-item cellTemplate="characteristicTemplate">
+          <div *dxTemplate="let data of 'characteristicTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="origin.data.characteristics"
+              [hoverStateEnabled]="true"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingCharacteristics($event, origin.data)"
+              [customizeColumns]="customizeColumns">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Name" dataField="name"></dxi-column>
+              <dxi-column caption="RecordInterface Field" dataField="sourceField"></dxi-column>
+              <dxi-column caption="Open Item Field" dataField="openItemField"></dxi-column>
+              <dxi-column caption="Regular Expression" dataField="regularExpression"></dxi-column>
+              <dxi-column caption="Success Rate" dataField="successRate" [customizeText]="addPercentSign"></dxi-column>
+              <dxi-column caption="Accounting System" dataField="accountingSystem" [customizeText]="getAccountingSystemNameById"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoCharacteristic(cellData.value, $event, origin.data);"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Foreign Currency Information Configurations" [visible]="isCurrencyConfigurationSectionVisible(origin.data)">
+        <dxi-item cellTemplate="currencyConfigurationsTemplate">
+          <div *dxTemplate="let data of 'currencyConfigurationsTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="origin.data.foreignCurrencyConfigurations"
+              [hoverStateEnabled]="true"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingCurrencyConfigurations($event, origin.data)"
+              [customizeColumns]="customizeColumns">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Amount Type" dataField="amountType" [customizeText]="getAmountTypeDisplayName"></dxi-column>
+              <dxi-column caption="Regular Expression Prefix" dataField="regexPrefix"></dxi-column>
+              <dxi-column caption="Regular Expression Currency" dataField="regexCurrency"></dxi-column>
+              <dxi-column caption="Regular Expression Exchange Rate" dataField="regexExchangeRate"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoCurrencyConfiguration(cellData.value, $event, origin.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Import Reason Codes">
+        <dxi-item cellTemplate="importReasonCodesTemplate">
+          <div *dxTemplate="let data of 'importReasonCodesTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="origin.data.importReasonCodes"
+              [hoverStateEnabled]="true"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingImportReasonCodes($event, origin.data)"
+              [customizeColumns]="customizeColumns">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="External Reason" dataField="externalReason"></dxi-column>
+              <dxi-column caption="Amount Type Class" dataField="amountTypeClass" [customizeText]="getAmountTypeDisplayName"></dxi-column>
+              <dxi-column caption="Amount Type Identifier" dataField="amountTypeIdentifier"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoImportReasonCode(cellData.value, $event, origin.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Optimization Configurations" [visible]="isOptimizationConfigurationSectionVisible(origin.data)">
+        <dxi-item cellTemplate="optimizationConfigurationsTemplate">
+          <div *dxTemplate="let data of 'optimizationConfigurationsTemplate'">
+            <dx-data-grid
+              class="datagrid"
+              [dataSource]="origin.data.optimizationConfigurations"
+              [hoverStateEnabled]="true"
+              [showColumnLines]="false"
+              [allowColumnResizing]="true"
+              [columnAutoWidth]="true"
+              [showRowLines]="true"
+              [showBorders]="true"
+              [rowAlternationEnabled]="true"
+              (onFileSaving)="onFileSavingOptimizationConfigurations($event, origin.data)"
+              [customizeColumns]="customizeColumns">
+
+              <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+              <dxo-group-panel [visible]="true"></dxo-group-panel>
+              <dxo-filter-row [visible]="true"></dxo-filter-row>
+              <dxo-header-filter [visible]="true"></dxo-header-filter>
+              <dxo-sorting mode="multiple"></dxo-sorting>
+              <dxo-export [enabled]="true"></dxo-export>
+              <dxo-paging [pageSize]="10"></dxo-paging>
+              <dxo-pager
+                [showPageSizeSelector]="true"
+                [allowedPageSizes]="[5, 10, 20, 50]"
+                [showInfo]="true">
+              </dxo-pager>
+
+              <dxi-column caption="Name" dataField="name"></dxi-column>
+              <dxi-column caption="Search Mode" dataField="optimizationSearchMode" [customizeText]="getSearchModeDisplayName"></dxi-column>
+              <dxi-column caption="Delimiter" dataField="delimiter"></dxi-column>
+              <dxi-column caption="Regular Expression" dataField="regularExpression"></dxi-column>
+              <dxi-column caption="Open Item Field" dataField="openItemField"></dxi-column>
+              <dxi-column caption="PrefixLength" dataField="prefixLength" [editorOptions]="{format: '#'}"></dxi-column>
+              <dxi-column caption="Accounting System" dataField="accountingSystem" [customizeText]="getAccountingSystemNameById"></dxi-column>
+              <dxi-column
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                dataField="id"
+                caption=""
+                cellTemplate="commandCellTemplate"
+                [width]="150"
+                [fixed]="true"
+                fixedPosition="right">
+              </dxi-column>
+              <div *dxTemplate="let cellData of 'commandCellTemplate'">
+                <div>
+                  <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfoOptimizationConfiguration(cellData.value, $event, origin.data)"></dx-button>
+                </div>
+              </div>
+            </dx-data-grid>
+          </div>
+        </dxi-item>
+      </dxi-item>
+    </dx-form>
+  </div>
+</dx-data-grid>
+<br>
+<br>
+<app-info-popup id="infoPopup"></app-info-popup>

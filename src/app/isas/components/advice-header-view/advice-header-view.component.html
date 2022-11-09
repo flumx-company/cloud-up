@@ -1,0 +1,273 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">Remittance Advice: {{ID}}</span>
+  </div>
+</div>
+<dx-button class="button button--default" icon="info" (click)="showAdviceInfo();"></dx-button>
+<br>
+<dx-form class="form__dx-form" [formData]="isasData" [showColonAfterLabel]="false">
+  <dxi-item itemType="group">
+    <dxi-item dataField="status" [label]="{text: 'Status'}"></dxi-item>
+    <dxi-item dataField="formatOrigin" [label]="{text: 'Format Origin'}"></dxi-item>
+    <dxi-item dataField="formatType" [label]="{text: 'Format Type'}"></dxi-item>
+    <dxi-item dataField="origin" [label]="{text: 'Origin'}"></dxi-item>
+    <dxi-item dataField="originGroup" [label]="{text: 'Origin Group'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_IDEXT" [label]="{text: 'REMADV_IDEXT'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.PAYER" [label]="{text: 'PAYER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.ALTERNATE_PAYER" [label]="{text: 'ALTERNATE_PAYER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_SENDER" [label]="{text: 'REMADV_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_RECEIVER" [label]="{text: 'REMADV_RECEIVER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.SETTLM_DATE" [label]="{text: 'SETTLM_DATE'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_1" [label]="{text: 'REMADV_REF_1'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_2" [label]="{text: 'REMADV_REF_2'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_3" [label]="{text: 'REMADV_REF_3'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_4" [label]="{text: 'REMADV_REF_4'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_5" [label]="{text: 'REMADV_REF_5'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_6" [label]="{text: 'REMADV_REF_6'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.REMADV_REF_7" [label]="{text: 'REMADV_REF_7'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.PAYM_CURR" [label]="{text: 'PAYM_CURR'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.CDTDBT_INDICATOR" [label]="{text: 'CDTDBT_INDICATOR'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.PAYM_AMOUNT" [label]="{text: 'PAYM_AMOUNT'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.ARC_ID" [label]="{text: 'ARC_ID'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.EMAIL_SENDER" [label]="{text: 'EMAIL_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.EMAIL_SENDER_AVS" [label]="{text: 'EMAIL_SENDER_AVS'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.EMAIL_RECEIVER" [label]="{text: 'EMAIL_RECEIVER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.PAYM_DATE" [label]="{text: 'PAYM_DATE'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.EMAIL_SUBJECT" [label]="{text: 'EMAIL_SUBJECT'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.FILENAME" [label]="{text: 'FILENAME'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.CREATE_DATE" [label]="{text: 'CREATE_DATE'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.CREATE_TIME" [label]="{text: 'CREATE_TIME'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.CUST_ACCOUNT" [label]="{text: 'CUST_ACCOUNT'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.NAME1_SENDER" [label]="{text: 'NAME1_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.NAME2_SENDER" [label]="{text: 'NAME2_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.STREET_SENDER" [label]="{text: 'STREET_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.CITY_SENDER" [label]="{text: 'CITY_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.POSTCODE_SENDER" [label]="{text: 'POSTCODE_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.POBOX_SENDER" [label]="{text: 'POBOX_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.TELNO_SENDER" [label]="{text: 'TELNO_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.FAX_SENDER" [label]="{text: 'FAX_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.TAXNO_SENDER" [label]="{text: 'TAXNO_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.SALESTAXNO_SENDER" [label]="{text: 'SALESTAXNO_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.TRADEREGISTERNO_SENDER" [label]="{text: 'TRADEREGISTERNO_SENDER'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.BANK_BIC" [label]="{text: 'BANK_BIC'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.BANK_IBAN" [label]="{text: 'BANK_IBAN'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.BANK_BCNO" [label]="{text: 'BANK_BCNO'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.BANK_BANO" [label]="{text: 'BANK_BANO'}"></dxi-item>
+    <dxi-item dataField="bankStatementHeader.BANKSTMT_POSITION[0].bankStatementPositionRemittanceAdviceHeaders[0].remittanceAdviceHeader.ACCOUNT_HOLDER" [label]="{text: 'ACCOUNT_HOLDER'}"></dxi-item>
+  </dxi-item>
+</dx-form>
+<br>
+<div class="form__header-title">Remittance Advice Header Amounts</div>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="amounts"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+
+  <dxi-column dataField="AMOUNT" caption="Amount" alignment="right"></dxi-column>
+  <dxi-column dataField="AMT_CURR" caption="Amount currency"></dxi-column>
+  <dxi-column dataField="AMT_TYPE" caption="Amount type"></dxi-column>
+  <dxi-column dataField="AMT_TYPE_EXT" caption="External amount type"></dxi-column>
+  <dxi-column dataField="CDTDBT_INDICATOR" caption="Credit/Debit"></dxi-column>
+  <dxi-column dataField="FXRATE"></dxi-column>
+
+</dx-data-grid>
+<br>
+<div class="form__header-title">Remittance Advice Positions</div>
+<dx-data-grid
+  class="datagrid"
+  id="positions-grid"
+  class="datagrid"
+  [dataSource]="positions"
+  keyExpr="entityId"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  [masterDetail]="{enabled: false, template: 'positionDetail'}"
+  (onSelectionChanged)=onSelectionChanged($event)
+  [customizeColumns]="customizeColumns">
+
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+
+  <dxi-column dataField="INVOICE_REF_1"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_2"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_3"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_4"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_5"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_6"></dxi-column>
+  <dxi-column dataField="INVOICE_REF_7"></dxi-column>
+  <dxi-column dataField="INVOICE_DATE"></dxi-column>
+  <dxi-column dataField="PAYM_CURR"></dxi-column>
+  <dxi-column dataField="CDTDBT_INDICATOR"></dxi-column>
+  <dxi-column dataField="PAYM_AMOUNT" alignment="right"></dxi-column>
+  <dxi-column
+    dataField="entityId"
+    caption=""
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    cellTemplate="positionCommandCellTemplate"
+    [width]="60"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'positionCommandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showPositionInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+
+  <div *dxTemplate="let position of 'positionDetail'">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <dx-data-grid
+            class="datagrid"
+            [dataSource]="position.data.REMADV_AMOUNT"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="true"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-group-panel [visible]="true"></dxo-group-panel>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+
+            <dxi-column dataField="AMOUNT" caption="Amount" alignment="right"></dxi-column>
+            <dxi-column dataField="AMT_CURR" caption="Amount currency"></dxi-column>
+            <dxi-column dataField="AMT_TYPE" caption="Amount type"></dxi-column>
+            <dxi-column dataField="AMT_TYPE_EXT" caption="External amount type"></dxi-column>
+            <dxi-column dataField="CDTDBT_INDICATOR" caption="Credit/Debit"></dxi-column>
+            <dxi-column dataField="FXRATE"></dxi-column>
+
+          </dx-data-grid>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <dx-data-grid
+            class="datagrid"
+            [dataSource]="position.data.REMADV_UNSTRUCTLINE"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+
+            <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+            <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+            <dxo-group-panel [visible]="true"></dxo-group-panel>
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-header-filter [visible]="true"></dxo-header-filter>
+            <dxo-sorting mode="multiple"></dxo-sorting>
+
+            <dxi-column dataField="RUL_ID"></dxi-column>
+            <dxi-column dataField="RUL_INFO"></dxi-column>
+
+          </dx-data-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</dx-data-grid>
+<br>
+<div class="form__header-title">Linked Bank Statements</div>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="linkedBankStatementsDataSource"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+  <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+
+  <dxi-column dataField="bankStatementHeader.ID" caption="Id"></dxi-column>
+  <dxi-column dataField="status" caption="Status"></dxi-column>
+  <dxi-column dataField="origin" caption="Origin"></dxi-column>
+  <dxi-column dataField="originGroup" caption="Origin Group"></dxi-column>
+  <dxi-column dataField="formatOrigin" caption="Format Origin"></dxi-column>
+  <dxi-column dataField="formatType" caption="Format Type"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.ACCT_TYPE" caption="Account Type"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.CREATE_DATE" caption="Creation Date"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.CREATE_TIME" caption="Creation Time"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.ACCT_CURR" caption="Account Currency"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.BANK_IBAN" caption="Bank IBAN"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.BANK_BIC" caption="Bank BIC"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.BANK_BANO" caption="Bank Account Number"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.BANK_BCNO" caption="Bank Code Number"></dxi-column>
+  <dxi-column dataField="bankStatementHeader.SEQNO" caption="Sequence Number"></dxi-column>
+  <dxi-column
+    dataField="entityId"
+    caption=""
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    cellTemplate="statementCommandCellTemplate"
+    [width]="100"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'statementCommandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="showStatementView(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showStatementInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,87 @@
+<header class="header">
+  <div class="header__navigation">
+    <nav class="navbar navbar-expand-lg header-navbar">
+      <a class="navbar-brand header-navbar__brand" href="https://www.alevate.cloud/">
+        <img src="assets/images/serrala-alevate-white.png" class="header-navbar__logo" alt="">
+      </a>
+      <div class="collapse navbar-collapse header-navbar__block header-navbar__block--left">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Alevate
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="http://ho1900117.hanseorga-ag.de/">Cash Application</a>
+              <a class="dropdown-item" href="https://alevate-pay.cloud/alevate/">Payments</a>
+              <a class="dropdown-item" href="#">TMS</a>
+              <a class="dropdown-item" href="https://alevate-ap-web.azurewebsites.net/">Accounts Payable</a>
+              <a class="dropdown-item" href="https://dev-cdn-web.azurewebsites.net">Corestone</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="collapse navbar-collapse header-navbar__block">
+        <ul class="nav nav-tabs header-tabs" role="tablist">
+          <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link active" id="home" routerLink='/' [class.active]="isActive('home')"
+              (click)="setTabActive($event)">Home</a>
+          </li>
+          <!-- <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="monitoring" routerLink='monitoring' [class.active]="isActive('monitoring')" (click)="setTabActive($event)">Monitoring</a>
+          </li> -->
+
+          <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="transactions" routerLink='transactions'
+              [class.active]="isActive('transactions')" (click)="setTabActive($event)">Transactions</a>
+          </li>
+          <!-- <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="rulebook" routerLink='rulebook' [class.active]="isActive('rulebook')" (click)="setTabActive($event)">Rulebook</a>
+          </li> -->
+          <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="master-data" routerLink='master-data'
+              [class.active]="isActive('master-data')" (click)="setTabActive($event)">Master Data</a>
+          </li>
+          <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="reporting" routerLink='reporting'
+              [class.active]="isActive('Reporting-module')" (click)="setTabActive($event)">Reporting</a>
+          </li>
+          <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="configuration" routerLink='configuration'
+              [class.active]="isActive('configuration')" (click)="setTabActive($event)">Configuration</a>
+          </li>
+          <!-- <li class="nav-item header-tabs__item">
+            <a class="nav-link header-tabs__link" id="settings" routerLink='settings' [class.active]="isActive('settings')" (click)="setTabActive($event)">Settings</a>
+          </li> -->
+        </ul>
+      </div>
+      <div class="collapse navbar-collapse header-navbar__right header-navbar__block--right">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <div class="icon icon--border-light-round profile" (click)="onProfileClick($event)"
+              [ngClass]="isLoggedIn()">
+              <i class="material-icons icon__image icon__image--light profile__icon">person_outline</i>
+            </div>
+          </li>
+        </ul>
+        <div class="profile__modal" *ngIf="showModal">
+          <ul class="modal__list">
+            <li class="modal__item" routerLink="/profile-manager">Profile manager</li>
+<!--            <li class="modal__item">{{getUser()}}</li>-->
+            <li class="modal__item modal__item--button" (click)="onLogoutClick()">Logout</li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="header__hl">
+
+  </div>
+  <div class="header__bookmarks">
+    <ul class="bookmarks__list">
+      <li style="display:flex;">
+        <i class="material-icons">bookmark_border</i>
+      </li>
+    </ul>
+  </div>
+</header>

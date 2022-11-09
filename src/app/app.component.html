@@ -1,0 +1,47 @@
+<div *ngIf="loggedIn">
+	<div class="fixed-top">
+		<app-header></app-header>
+	</div>
+	<div class="content container">
+		<router-outlet></router-outlet>
+	</div>
+</div>
+<div class="main__container" id="body" *ngIf="!loggedIn" (keydown)="keyDownFunction($event)">
+	<div class="login__container">
+		<div class="logo__container">
+			<img src="../assets/images/logo.svg" alt="Serrala" class="logo">
+		</div>
+		<div class="form__container">
+			<div class="form__wrapper">
+				<h2>Login Form</h2>
+				<div class="containerLogin">
+					<label for="uname"><b>Username</b></label>
+					<input [(ngModel)]="uname" type="text" placeholder="Enter Username" required />
+
+					<label for="psw"><b>Password</b></label>
+					<input [(ngModel)]="psw" type="password" placeholder="Enter Password" required />
+
+					<button type="submit" (click)="checkUser()">Login</button>
+					<!-- <label>
+						<input type="checkbox" checked="checked" name="remember"> Remember me
+					</label> -->
+				<p *ngIf="invalidUser" class="errormsg">You have entered an invalid username or password</p>
+				<p *ngIf="inputRequire" class="errormsg">UserName or Password cannot be empty</p>
+
+				</div>
+
+				<!-- <div class="container" style="background-color:#f1f1f1">
+					<button type="button" class="cancelbtn">Cancel</button>
+					<span class="psw">Forgot <a href="#">password?</a></span>
+				</div> -->
+			</div>
+		</div>
+	</div>
+	<!-- optional message container
+	<div class="messages_container">
+	  <div class="message__box">
+		<span>Test</span>
+	  </div>
+	</div>
+	-->
+</div>

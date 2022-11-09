@@ -1,0 +1,102 @@
+<h2>Accounting Systems</h2>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="dataSource"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  (onExporting)="onExporting($event)"
+  (onExported)="onExported($event)"
+  [customizeColumns]="customizeColumns"
+  [masterDetail]="{enabled: true, template: 'detailTemplate'}">
+
+  <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="accounting_systems"></dxo-export>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column dataField="name" caption="Name"></dxi-column>
+  <dxi-column dataField="type" caption="Type"></dxi-column>
+  <dxi-column dataField="keyField1" caption="Key field 1"></dxi-column>
+  <dxi-column dataField="keyField1Value" caption="Key field 1 value"></dxi-column>
+  <dxi-column dataField="keyField2" caption="Key field 2"></dxi-column>
+  <dxi-column dataField="keyField2Value" caption="Key field 2 value"></dxi-column>
+  <dxi-column dataField="active" caption="Active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column
+    dataField="id"
+    caption=""
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    cellTemplate="commandCellTemplate"
+    [width]="150"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="openEditView(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="delete(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+    </div>
+  </div>
+
+  <div *dxTemplate="let accountingSystem of 'detailTemplate'">
+    <dx-data-grid
+      class="datagrid"
+      [dataSource]="accountingSystem.data.exportReasonCodes"
+      [hoverStateEnabled]="true"
+      [showColumnLines]="false"
+      [allowColumnResizing]="true"
+      [allowColumnReordering]="true"
+      [columnAutoWidth]="true"
+      [showRowLines]="true"
+      [showBorders]="false"
+      [rowAlternationEnabled]="true"
+      [customizeColumns]="customizeColumns">
+
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-sorting mode="multiple"></dxo-sorting>
+
+      <dxi-column dataField="amountTypeClass" caption="Amount Type Class" [customizeText]="getDisplayName"></dxi-column>
+      <dxi-column dataField="amountTypeIdentifier" caption="Amount Type Identifier"></dxi-column>
+      <dxi-column dataField="externalReason" caption="External Reason"></dxi-column>
+      <dxi-column
+        dataField="uuid"
+        caption=""
+        [allowHeaderFiltering]="false"
+        [allowSorting]="false"
+        [allowFiltering]="false"
+        cellTemplate="reasonCodesCommandTemplate"
+        [width]="60"
+        [fixed]="true"
+        fixedPosition="right">
+      </dxi-column>
+      <div *dxTemplate="let cellData of 'reasonCodesCommandTemplate'">
+        <div>
+          <dx-button class="button button--icon-only button--default" icon="info" (click)="showReasonCodeInfo(cellData.value, $event);"></dx-button>
+        </div>
+      </div>
+    </dx-data-grid>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

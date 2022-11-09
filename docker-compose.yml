@@ -1,0 +1,8 @@
+version: '3.6'
+
+services:
+  cap-ng:
+    build: .
+    command: npm start
+    ports:
+      - '4200:4200'

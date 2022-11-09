@@ -1,0 +1,96 @@
+<br>
+<dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+<br>
+<br>
+<h2>Usage info for Profile {{currentProfile.profileId.name}}</h2>
+<dx-button class="button button--default" icon="info" (click)="showInfo(null, null, $event);"></dx-button>
+<br>
+<br>
+<h5>Used in the following Profile Sequences:</h5>
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="sequenceList"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onFileSaving)="onFileSaving($event)"
+  [masterDetail]="{ enabled: true, template: 'detail' }"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true"></dxo-export>
+
+  <dxi-column caption="Name" dataField="sequenceId.name"></dxi-column>
+  <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="sequenceId.name"
+    caption=""
+    cellTemplate="commandCellTemplate"
+    [width]="150"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+  <div *dxTemplate="let cellData of 'commandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editSequence(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, null, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-link" (click)="showUsageInfo(cellData.value, $event);" [ngClass]="getButtonBackground(cellData.value)"></dx-button>
+    </div>
+  </div>
+  <div *dxTemplate="let sequence of 'detail'">
+    <dx-data-grid
+      class="datagrid"
+      [dataSource]="sequence.data.processingProfileList"
+      [showColumnLines]="false"
+      [showRowLines]="true"
+      [allowColumnResizing]="true"
+      [columnAutoWidth]="true"
+      [showBorders]="true"
+      [rowAlternationEnabled]="true"
+      keyExpr="index"
+      [customizeColumns]="customizeColumns">
+
+      <dxo-sorting mode="multiple"></dxo-sorting>
+      <dxi-column caption="Position" dataField="index" width="100"></dxi-column>
+      <dxi-column caption="Name" dataField="profileId.name"></dxi-column>
+      <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+      <div *dxTemplate="let cellData of 'activeCellTemplate'">
+        <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+      </div>
+      <dxi-column caption="Format type" dataField="formatType" [customizeText]="getFormatTypeDisplayName"></dxi-column>
+      <dxi-column
+        [allowHeaderFiltering]="false"
+        [allowSorting]="false"
+        [allowFiltering]="false"
+        dataField="profileId.name"
+        caption=""
+        cellTemplate="commandCellTemplate"
+        [width]="100"
+        [fixed]="true"
+        fixedPosition="right">
+      </dxi-column>
+      <div *dxTemplate="let cellData of 'commandCellTemplate'">
+        <div>
+          <dx-button class="button button--icon-only button--default" icon="edit" (click)="editProfile(cellData.value);"></dx-button>
+          <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, sequence.data.sequenceId.name, $event);"></dx-button>
+        </div>
+      </div>
+    </dx-data-grid>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

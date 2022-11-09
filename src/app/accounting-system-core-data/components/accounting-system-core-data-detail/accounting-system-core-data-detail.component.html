@@ -1,0 +1,120 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">{{mode | titlecase}} Accounting System {{accountingSystem.name}}</span>
+  </div>
+</div>
+<form (submit)="onSubmit($event)" class="form">
+  <dx-form
+    class="form__dx-form"
+    [(formData)]="accountingSystem"
+    validationGroup="accountingSystemGroup"
+    [colCount]="1"
+    [showValidationSummary]="true"
+    [showColonAfterLabel]="false">
+
+    <dxi-item itemType="group" caption="General Information" [colCount]="2">
+      <dxi-item dataField="name" [editorOptions]="{maxLength:'10'}">
+        <dxi-validation-rule type="required" message="Name is required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" max="10" message="Name cannot exceed 10 characters"></dxi-validation-rule>
+      </dxi-item>
+      <dxi-item dataField="type" [editorOptions]="{readOnly: true}"></dxi-item>
+
+      <dxi-item dataField="keyField1" [label]="{text: 'Key field 1'}" [editorOptions]="{readOnly: true}"></dxi-item>
+      <dxi-item dataField="keyField1Value" [label]="{text: 'Key field 1 value'}" [editorOptions]="{maxLength:'10'}">
+        <dxi-validation-rule type="required" message="Key field 1 value is required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" max="10" message="Key field 1 value cannot exceed 10 characters"></dxi-validation-rule>
+      </dxi-item>
+
+      <dxi-item dataField="keyField2" [label]="{text: 'Key field 2'}" [editorOptions]="{readOnly: true}"></dxi-item>
+      <dxi-item dataField="keyField2Value" [label]="{text: 'Key field value'}" [editorOptions]="{maxLength:'10'}">
+        <dxi-validation-rule type="required" message="Key field 2 value is required"></dxi-validation-rule>
+        <dxi-validation-rule type="stringLength" max="10" message="Key field 2 value cannot exceed 10 characters"></dxi-validation-rule>
+      </dxi-item>
+
+      <dxi-item dataField="active" editorType="dxSwitch" [editorOptions]="{ value: accountingSystem.active}"></dxi-item>
+    </dxi-item>
+    <dxi-item itemType="group" caption="Export Reason Codes">
+      <dxi-item dataField="" cellTemplate="exportReasonCodesTemplate"></dxi-item>
+      <div *dxTemplate="let data of 'exportReasonCodesTemplate'">
+        <dx-data-grid
+          class="datagrid"
+          [dataSource]="accountingSystem.exportReasonCodes"
+          [hoverStateEnabled]="true"
+          [showColumnLines]="false"
+          [allowColumnResizing]="true"
+          [allowColumnReordering]="true"
+          [columnAutoWidth]="true"
+          [showRowLines]="true"
+          [showBorders]="false"
+          [rowAlternationEnabled]="true"
+          (onCellPrepared)="onCellPrepared($event)"
+          (onInitNewRow)="insertedNewRow($event)"
+          (onFileSaving)="onFileSaving($event)"
+          (onToolbarPreparing)="prepareToolbar($event)"
+          (onRowValidating)="rowValidating($event)"
+          (onEditorPreparing)="onEditorPreparing($event)"
+          (onExporting)="onExporting($event)"
+          (onExported)="onExported($event)"
+          [customizeColumns]="customizeColumns">
+      
+          <dxo-selection mode="multiple"></dxo-selection>
+          <dxo-filter-row [visible]="true"></dxo-filter-row>
+          <dxo-header-filter [visible]="true"></dxo-header-filter>
+          <dxo-sorting mode="multiple"></dxo-sorting>
+          <dxo-export [enabled]="true"></dxo-export>
+          <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+          <dxo-paging [pageSize]="10"></dxo-paging>
+          <dxo-pager 
+            [showPageSizeSelector]="true" 
+            [allowedPageSizes]="[5, 10, 20, 50]" 
+            [showInfo]="true">
+          </dxo-pager>
+      
+          <dxi-column dataField="amountTypeClass" caption="Amount Type Class" [setCellValue]="setAmountTypeClass">
+            <dxi-validation-rule type="required" message="Amount Type Class is required"></dxi-validation-rule>
+            <dxo-lookup
+              [dataSource]="amountTypeClassList"
+              valueExpr="technicalName"
+              displayExpr="displayName">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="amountTypeIdentifier" caption="Amount Type Identifier">
+            <dxi-validation-rule type="required" message="Amount Type Identifier is required"></dxi-validation-rule>
+            <dxo-lookup
+              [dataSource]="getFilteredAmountTypeIdentifier"
+              valueExpr="amountTypeIdentifier"
+              displayExpr="amountTypeIdentifier">
+            </dxo-lookup>
+          </dxi-column>
+          <dxi-column dataField="externalReason" caption="External Reason">
+            <dxi-validation-rule type="required" message="External Reason is required"></dxi-validation-rule>
+            <dxi-validation-rule type="stringLength" max="30" message="External Reason cannot exceed 30 characters"></dxi-validation-rule>
+          </dxi-column>
+          <dxi-column
+            dataField="uuid"
+            caption=""
+            [allowHeaderFiltering]="false"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            [allowEditing]="false"
+            cellTemplate="reasonCodesCommandTemplate"
+            [width]="60"
+            [fixed]="true"
+            fixedPosition="right">
+          </dxi-column>
+          <div *dxTemplate="let cellData of 'reasonCodesCommandTemplate'">
+            <div>
+              <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+            </div>
+          </div>
+        </dx-data-grid>
+      </div>
+    </dxi-item>
+  </dx-form>
+  <div class="form__footer">
+    <dx-button class="button button--primary button--icon-and-text" text="Save" icon="floppy" validationGroup="accountingSystemGroup" [useSubmitBehavior]="true">
+    </dx-button>
+  </div>
+</form>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,10 @@
+<div class="form__header">
+  <div>
+    <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    <span class="form__header-title">Edit Business Partner {{businessPartner.businessPartner}}</span>
+  </div>
+</div>
+<dx-button class="button button--default" icon="info" (onClick)="showInfo()"></dx-button>
+<br>
+<app-business-partner-shared-form [partner]=businessPartner [accountingSystems]="accountingSystemList" (submitForm)="onSubmitForm($event)"></app-business-partner-shared-form>
+<app-info-popup id="infoPopup"></app-info-popup>

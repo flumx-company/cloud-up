@@ -1,0 +1,64 @@
+<div class="form__header">
+    <div>
+        <dx-button class="button button--default" icon="back" (onClick)="navBack()"></dx-button>
+    </div>
+</div>
+
+<form class="form" style="width: 1200px" (submit)="saveValid($event)">
+    <dx-form [(formData)]="data">
+        <dxi-item dataField="SEQ" caption="Sequence">
+            <dxi-validation-rule
+                    type="pattern"
+                    pattern="[0-9]"
+                    message="Must be number">
+            </dxi-validation-rule>
+            <dxi-validation-rule type="required" message="Sequence required"></dxi-validation-rule>
+        </dxi-item>
+        <dxi-item dataField="CHECK_TYPE">
+            <div *dxTemplate>
+                <dx-select-box
+                        [items]="rulesList"
+                        [(value)]="data.CHECK_TYPE"
+                        [showClearButton]="true"
+                        valueExpr="technicalName"
+                        displayExpr="displayName">
+                </dx-select-box>
+            </div>
+            <dxi-validation-rule type="required" message="FIELD_TYPE is required"></dxi-validation-rule>
+        </dxi-item>
+
+        <dxi-item dataField="WEBHOOK">
+            <dxo-label text="Webhook"></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="MESSAGE">
+            <dxo-label text="Message"></dxo-label>
+        </dxi-item>
+        <dxi-item dataField="ABORT_POST" editorType="dxCheckBox" >
+            <dxo-label text="Abort post"></dxo-label>
+            <div *dxTemplate>
+                <dx-switch
+                        [(value)]="data.ABORT_POST"
+                        switchedOnText="YES"
+                        switchedOffText="NO">
+                </dx-switch>
+            </div>
+        </dxi-item>
+        <dxi-item dataField="GOON" editorType="dxCheckBox" >
+            <dxo-label text="Go on"></dxo-label>
+            <div *dxTemplate>
+                <dx-switch
+                        [(value)]="data.GOON"
+                        switchedOnText="YES"
+                        switchedOffText="NO">
+                </dx-switch>
+            </div>
+        </dxi-item>
+        <dxi-item
+                itemType="button"
+                horizontalAlignment="right"
+                [buttonOptions]="buttonOptions">
+        </dxi-item>
+    </dx-form>
+    <hr/>
+</form>
+<app-info-popup id="infoPopup"></app-info-popup>

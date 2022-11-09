@@ -1,0 +1,224 @@
+<br>
+<h2>Hitlist Fields</h2>
+
+<dx-popup
+        class="popup"
+        [showTitle]="true"
+        title="Information"
+        [dragEnabled]="false"
+        [closeOnOutsideClick]="true"
+        [(visible)]="popupVisible">
+    <div *dxTemplate="let data of 'content'">
+        <form class="form" style="width: 1200px" (submit)="create('create')">
+            <dx-form [formData]="popupData">
+                <dxi-item dataField="ACTIVE" editorType="dxCheckBox" >
+                </dxi-item>
+                <dxi-item dataField="KEY">
+                    <dx-select-box
+                            [items]="this.KEY.HEADER_PTS_MODEL"
+                            [(value)]="popupData.KEY"
+                            [showClearButton]="true">
+                        <dxi-validation-rule
+                                type="required"
+                                message="Field is required">
+                        </dxi-validation-rule>
+                    </dx-select-box>
+                    <dxi-validation-rule
+                            type="required"
+                            message="Field is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="SEQUENCE">
+                    <dxi-validation-rule
+                            type="required"
+                            message="LABELS_TRANSLATE is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="FIELD_TYPE">
+                    <dx-select-box
+                            [items]="this.KEY.HEADER_CONFIG"
+                            [(value)]="popupData.FIELD_TYPE"
+                            [showClearButton]="true">
+                    </dx-select-box>
+                    <dxi-validation-rule
+                            type="required"
+                            message="FIELD_TYPE is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="LABELS_TRANSLATE">
+                    <dxi-validation-rule
+                            type="required"
+                            message="LABELS_TRANSLATE is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="TITLE">
+                    <dxi-validation-rule
+                            type="required"
+                            message="TITLE is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="TYPE">
+                    <dxi-validation-rule
+                            type="required"
+                            message="TYPE is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="LANG">
+                    <dxi-validation-rule
+                            type="required"
+                            message="LANG is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item dataField="VARIANT">
+                    <dxi-validation-rule
+                            type="required"
+                            message="LANG is required">
+                    </dxi-validation-rule>
+                </dxi-item>
+                <dxi-item
+                        itemType="button"
+                        validationGroup="myValGrp"
+                        [buttonOptions]="buttonOptions">
+                </dxi-item>
+            </dx-form>
+        </form>
+    </div>
+</dx-popup>
+
+<dx-data-grid
+        id="gridContainer"
+        [dataSource]="dataSource.value "
+        [allowColumnReordering]="true"
+        [showBorders]="true"
+        (onToolbarPreparing)="onToolbarPreparing($event)">
+
+    <dxi-column
+            dataField="ACTIVE"
+            class="all"
+            caption="Active"
+            cellTemplate="ACTIVE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'ACTIVE'" class="all">
+        <dx-form [formData]="condition.data" >
+            <dxi-item dataField="ACTIVE">
+                <div *dxTemplate>
+                    <dx-switch
+                            (onValueChanged)="changeData($event,condition.data, 'ACTIVE')"
+                            [(value)]="condition.data.ACTIVE"
+                            switchedOnText="YES"
+                            switchedOffText="NO">
+                    </dx-switch>
+                </div>
+                <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+        </dx-form>
+    </div>
+    <dxi-column
+            dataField="KEY"
+            caption="Key"
+            cellTemplate="KEY">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'KEY'">
+        <dx-select-box
+            [items]="this.KEY.HEADER_PTS_MODEL"
+            [value]="condition.data.KEY"
+            [showClearButton]="true"
+            (onValueChanged)="changeData($event,condition.data,'KEY')">
+        </dx-select-box>
+    </div>
+    <dxi-column
+            dataField="FIELD_TYPE"
+            caption="Field Type"
+            cellTemplate="FIELD_TYPE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'FIELD_TYPE'">
+        <dx-select-box
+            [items]="this.KEY.HEADER_CONFIG"
+            [(value)]="condition.data.FIELD_TYPE"
+            [showClearButton]="true"
+            (onValueChanged)="changeData($event,condition.data,'FIELD_TYPE')">
+        </dx-select-box>
+    </div>
+    <dxi-column
+            dataField="SEQUENCE"
+            class="all"
+            caption="Sequence"
+            cellTemplate="SEQUENCE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'SEQUENCE'" class="all">
+        <dx-form [formData]="condition.data"
+                 (onFieldDataChanged)="changeData($event,condition.data, 'TITLE')">
+            <dxi-item dataField="SEQUENCE">
+                <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+        </dx-form>
+    </div>
+    <dxi-column
+            dataField="TITLE"
+            class="all"
+            caption="Title"
+            cellTemplate="TITLE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'TITLE'" class="all">
+        <dx-form [formData]="condition.data"
+                 (onFieldDataChanged)="changeData($event,condition.data, 'TITLE')">
+            <dxi-item dataField="TITLE">
+                <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+        </dx-form>
+    </div>
+    <dxi-column
+            dataField="LABELS_TRANSLATE"
+            class="all"
+            caption="Lang"
+            cellTemplate="LABELS_TRANSLATE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'LABELS_TRANSLATE'" class="all">
+        <dx-form
+                [formData]="condition.data"
+                (onFieldDataChanged)="changeData($event,condition.data, 'LABELS_TRANSLATE')">
+            <dxi-item dataField="LABELS_TRANSLATE">
+                <dxo-label [visible]="false"></dxo-label>
+            </dxi-item>
+        </dx-form>
+    </div>
+    <dxi-column
+            dataField="TYPE"
+            class="all"
+            caption="Type"
+            cellTemplate="TYPE">
+    </dxi-column>
+    <div *dxTemplate="let condition of 'TYPE'" class="all">
+        <dx-select-box
+                [items]="type"
+                [value]="condition.data.TYPE"
+                (onValueChanged)="changeData($event,condition.data,'TYPE')">
+        </dx-select-box>
+    </div>
+    <dxi-column
+            dataField="DETAIL"
+            [width]="50"
+            class="all"
+            caption="Detail"
+            cellTemplate="DETAIL">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'DETAIL'" class="all">
+        <dx-button
+                class="button button--icon-only button--default"
+                icon="trash"
+                (click)="deleteDataRow(cellData)">
+        </dx-button>
+    </div>
+    <dxi-column dataField="VARIANT" [groupIndex]="0"></dxi-column>
+
+    <dxo-search-panel [visible]="true"></dxo-search-panel>
+    <dxo-paging [pageSize]="100"></dxo-paging>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping #expand [autoExpandAll]="true"></dxo-grouping>
+
+</dx-data-grid>
+<dx-button
+        text="Save change"
+        (onClick)="save('Update')">
+</dx-button>
+

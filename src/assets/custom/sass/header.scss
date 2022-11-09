@@ -1,0 +1,156 @@
+.header {
+  background-color: $black;
+  height: $header-height;
+  padding: 0 32px;
+  width: 100%;
+}
+
+.header__navigation {
+  height: 90px;
+
+  .header-navbar {
+    height: 100%;
+    padding: 0;
+
+    &__brand {
+      margin: 0 46px 0 0;
+      padding: 0;
+    }
+
+    &__logo {
+      height: 70px;
+      width: 130px;
+    }
+  }
+
+  .header-navbar__block {
+    li {
+      padding-top: 10px;
+    }
+
+    a {
+      color: $white;
+      font-size: 18px;
+      padding: 0 !important;
+    }
+
+    &--left {
+      flex-grow: 0;
+      margin-right: 80px;
+    }
+
+    &--right {
+      flex-grow: 0;
+      margin-right: 16px;
+    }
+  }
+
+  .header-tabs {
+    border: 0;
+
+    &__item {
+      display: table;
+      height: 90px;
+      margin-right: 40px;
+    }
+
+    &__link {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    &__link:hover {
+      border-color: transparent;
+      color: $color-raspberry-active;
+    }
+
+    &__link.active {
+      background: none;
+      border: 0;
+      border-bottom: 3px solid $color-ruby;
+      color: $color-ruby;
+      position: relative;
+      top: 1px;
+    }
+  }
+
+  .profile {
+    &.active {
+      cursor: pointer;
+    }
+
+    &__icon {
+
+    }
+    &__modal {
+      background: $black;
+      border: 1px solid $color-ruby;
+      color: $white;
+      padding: 15px;
+      position: absolute;
+      right: 0;
+      top: 90px;
+      width: 200px;
+    }
+
+  }
+
+  .modal__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+
+  .modal__item {
+    margin-bottom: 10px;
+    padding: 5px;
+
+    &:first-child {
+      border-bottom: 1px solid $white;
+      margin-bottom: 25px;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .modal__item--button {
+    border: 1px solid $white;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid $color-ruby;
+      color: $color-ruby;
+    }
+  }
+}
+
+.header__bookmarks {
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  justify-content: flex-end;
+
+  .bookmarks__list {
+    align-items: center;
+    color: $color-bookmarks;
+    display: flex;
+    font-size: 14px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline-block;
+      margin-left: 32px;
+    }
+  }
+}
+
+.header__hl {
+  background-color: $color-hl;
+  height: 1px;
+}

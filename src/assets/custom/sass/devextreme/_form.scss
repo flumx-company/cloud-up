@@ -1,0 +1,50 @@
+.form {
+  margin: auto;
+  padding-bottom: 30px;
+  width: 90%;
+
+  &__header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0;
+
+    &-title {
+      font-size: 1.25rem;
+      padding-left: 10px;
+      vertical-align: middle;
+    }
+  }
+
+  &__item {
+    max-width: 518px;
+  }
+
+  &__dx-form {
+    width: 100%;
+    label,
+    input,
+    .dx-field-item-label-text {
+      color: $color-grey-medium-dark;
+    }
+
+    input {
+      border-color: $color-grey-light;
+      border-radius: 4px;
+    }
+
+    label {
+      text-align: right;
+    }
+
+    .dx-field-item-required-mark {
+      color: $color-ruby;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+  }
+}

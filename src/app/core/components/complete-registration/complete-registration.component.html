@@ -1,0 +1,47 @@
+<div class="row registration">
+  <div class="col-lg-12" [hidden]="confirmed || error">
+    <h5 class="registration__title">
+      To complete the registration, please enter a password and click on the button below
+    </h5>
+    <form #f="ngForm" novalidate (ngSubmit)="onSubmit($event, f)" class="registration__form">
+      <div class="form-group">
+        <label for="password">Password*</label>
+        <input class="form-control" type="password" name="password" [(ngModel)]="model.password" required #password="ngModel">
+        <div *ngIf="!password.valid" class="alert alert-danger">
+          <div *ngIf="password.errors.required">
+            Password is required.
+          </div>
+        </div>
+        <br>
+        <label for="password">Confirm Password*</label>
+        <input class="form-control" type="password" name="confirmPassword" [(ngModel)]="model.confirmPassword" required #confirmPassword="ngModel">
+        <div *ngIf="!confirmPassword.valid" class="alert alert-danger">
+          <div *ngIf="confirmPassword.errors.required">
+            Password confirmation is required.
+          </div>
+        </div>
+        <div *ngIf="notEqual" class="alert alert-danger" style="margin-top:15px;">
+          Fields don't match
+        </div>
+      </div>
+      <button type="submit" class="button button--primary button--icon-and-text registration__btn" [disabled]="!f.valid">
+        <i class="" style="font-size:24px"></i>
+        Complete Registration
+      </button>
+    </form>
+  </div>
+  <div class="col-lg-12" [hidden]="!confirmed">
+    <h5 class="registration__title">
+      Your registration is completed now. Please click below to continue.
+    </h5>
+    <button class="button button--primary button--icon-and-text registration__btn" (click)="redirectToLogin($event)">
+      <i class="" style="font-size:24px"></i>
+      Login
+    </button>
+  </div>
+  <div class="col-lg-12" [hidden]="!error">
+    <h5 class="registration__title registration__title--error">
+      We're sorry, but an error occured. Please contact your system administrator.
+    </h5>
+  </div>
+</div>

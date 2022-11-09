@@ -1,0 +1,186 @@
+version: '3.6'
+
+services:
+  proxy:
+    image: nginx
+    volumes:
+      - ./nginx_dev.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+    - "80:80"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    depends_on:
+      - usermanager
+      - accountingsystemcoredata
+      - cec
+      - fileservice
+      - filesplitter
+      - isas
+      - oauthserver
+      - origincoredata
+      - originidentification
+      - fileinterface
+  usermanager:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/usermanager:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=usermanager
+      - spring.datasource.password=usermanager
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+  accountingsystemcoredata:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/accountingsystemcoredata:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=accountingsystemcoredata
+      - spring.datasource.password=accountingsystemcoredata
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  cec:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/cec:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=cec
+      - spring.datasource.password=cec
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  cloudfrontend:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/cloudfrontend:latest
+    restart: always
+    ports:
+      - "80"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  fileservice:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/fileservice:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=fileservice
+      - spring.datasource.password=fileservice
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  filesplitter:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/filesplitter:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=filesplitter
+      - spring.datasource.password=filesplitter
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  isas:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/isas:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=isas
+      - spring.datasource.password=isas
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  oauthserver:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/oauthserver:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=oauthserver
+      - spring.datasource.password=oauthserver
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  origincoredata:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/origincoredata:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=origincoredata
+      - spring.datasource.password=origincoredata
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  originidentification:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/originidentification:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=originidentification
+      - spring.datasource.password=originidentification
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  optimizationcontrolservice:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/optimizationcontrolservice:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    environment:
+      - spring.datasource.username=optimizationcontrolservice
+      - spring.datasource.password=optimizationcontrolservice
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  fileinterface:
+    image: hogit.hanseorga-ag.de:8084/hanseorga/fileinterface:latest
+    restart: always
+    env_file:
+      - local-staging.env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+#  openitemcoredata:
+#    image: hogit.hanseorga-ag.de:8084/hanseorga/openitemcoredata:latest
+#    restart: always
+#    env_file:
+#      - local-staging.env
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "200k"
+#        max-file: "10"

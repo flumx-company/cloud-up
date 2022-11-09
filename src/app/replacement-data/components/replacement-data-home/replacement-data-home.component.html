@@ -1,0 +1,80 @@
+<h1>{{ title }}</h1>
+<div>
+    <dx-data-grid id="dataGrid"
+                  class="datagrid"
+                  [dataSource]="dataSource"
+                  [hoverStateEnabled]="true"
+                  [showColumnLines]="false"
+                  [allowColumnResizing]="true"
+                  [allowColumnReordering]="true"
+                  [columnAutoWidth]="true"
+                  [showRowLines]="true"
+                  [showBorders]="true"
+                  [rowAlternationEnabled]="true"
+                  (onCellPrepared)="onCellPrepared($event)"
+                  (onRowValidating)="rowValidating($event)"
+                  (onToolbarPreparing)="onToolbarPreparing($event)"
+                  (onSelectionChanged)="onSelectionChanged()"
+                  (onEditorPreparing)="onEditorPreparing($event)"
+                  (onExporting)="onExporting($event)"
+                  (onExported)="onExported($event)">
+        <dxo-selection
+                selectAllMode="allPages"
+                showCheckBoxesMode="onClick"
+                mode="multiple"
+        ></dxo-selection>
+        <dxo-scrolling mode="virtual"></dxo-scrolling>
+        <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+        <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-sorting mode="multiple"></dxo-sorting>
+        <dxo-export [enabled]="true" fileName="replacement"></dxo-export>
+
+        <dxi-column dataField="replacementType" caption="Type" [setCellValue]="setReplacementType">
+            <dxi-validation-rule type="required" message="Type is required" ></dxi-validation-rule>
+            <dxo-lookup
+                    [dataSource]="types">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="accountingSystem" caption="Accounting System">
+            <dxi-validation-rule type="required" message="Accounting system is required"></dxi-validation-rule>
+            <dxo-lookup
+                    [dataSource]="accountingSystems">
+            </dxo-lookup>
+        </dxi-column>
+        <dxi-column dataField="key" caption="Key" [editorOptions]="{maxLength:'2'}">
+        </dxi-column>
+        <dxi-column dataField="evaluationGroup" caption="Evalution Group" [editorOptions]="{maxLength:'30'}">
+            <dxi-validation-rule type="required" message="Evaluation group is required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="result" caption="Result" [editorOptions]="{maxLength:'30'}">
+            <dxi-validation-rule type="required" message="Result is required"></dxi-validation-rule>
+        </dxi-column>
+        <dxi-column dataField="numberOfPlaces" caption="Number of places" dataType="number"
+                    [editorOptions]="{inputAttr:{maxLength:'2'}}"></dxi-column>
+
+        <dxi-column dataField="searchFeature" caption="Search Feature" [allowEditing]="false" ></dxi-column>
+        <dxi-column
+                dataField="id"
+                caption=""
+                [allowHeaderFiltering]="false"
+                [allowSorting]="false"
+                [allowFiltering]="false"
+                [allowEditing]="false"
+                cellTemplate="commandCellTemplate"
+                [width]="60"
+                [fixed]="true"
+                fixedPosition="right">
+        </dxi-column>
+        <div *dxTemplate="let cellData of 'commandCellTemplate'">
+            <div>
+                <dx-button class="button button--icon-only button--default" icon="info" (click)="showInfo(cellData.value, $event);"></dx-button>
+            </div>
+        </div>
+
+        <dxo-editing mode="row" [allowAdding]="true" [allowUpdating]="true" [allowDeleting]="true"></dxo-editing>
+    </dx-data-grid>
+</div>
+<app-info-popup id="infoPopup"></app-info-popup>

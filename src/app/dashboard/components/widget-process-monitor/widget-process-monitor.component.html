@@ -1,0 +1,56 @@
+<div class="widget widget--space-bottom proc-monitor">
+  <div class="widget__header">
+    <div class="widget__title">
+      <span>{{title}}</span>
+    </div>
+    <div class="widget__actions">
+      <ul>
+        <li><i class="material-icons">expand_less</i></li>
+        <li><i class="material-icons">unfold_less</i></li>
+        <li><i class="material-icons">drag_handle</i></li>
+        <li><i class="material-icons">clear</i></li>
+      </ul>
+    </div>
+  </div>
+  <div class="widget__body">
+    <dx-data-grid class="datagrid" [dataSource]="processMonitor" [showBorders]="false" [showColumnLines]="false"
+      [showRowLines]="true" [columnAutoWidth]="true">
+      <dxo-load-panel [enabled]="true"></dxo-load-panel>
+      <dxi-column caption="Record" dataField="HEADER.RECNO"></dxi-column>
+      <dxi-column caption="Receipt Date" dataField="HEADER.XBLDT" dataType="date" format="MMM dd, yyyy"></dxi-column>
+      <!-- <dxi-column caption="Status" dataField="HEADER.STATS"></dxi-column> -->
+        <dxi-column caption="Source" dataField="HEADER.SOURCE" cellTemplate="cellTemplate">
+        <div *dxTemplate="let data of 'cellTemplate'">
+          <div *ngIf="data.value == 'ME'">
+            <dx-button icon="user"></dx-button>
+          </div>
+          <div *ngIf="data.value == null || data.value != 'ME'">
+            <dx-button icon="orderedlist"></dx-button>
+          </div>
+          <!-- <div *ngIf="data.value == 'EI'">
+            <dx-button icon="mention"></dx-button>
+          </div> -->
+        </div>
+      </dxi-column>
+      <dxi-column caption="Exception" dataField="EXCEPTIONS[0].MESSAGES[0]" cellTemplate="cellTemplate1"></dxi-column>
+      <div *dxTemplate="let data of 'cellTemplate1'">
+        <div *ngIf="data.value.MSG_NUM == '100'">
+          <dx-button icon="clear" hint={{data.value.MESSAGE}}></dx-button>
+        </div>
+        <div *ngIf="data.value.MSG_NUM == null || data.value.MSG_NUM != '100'">
+          <dx-button icon="warning" hint= {{data.value.MESSAGE}}></dx-button>
+        </div>
+      </div>
+      <dxi-column caption="Vendor Name" dataField="HEADER.Vendor Name"></dxi-column>
+      <dxi-column cssClass="table-actions" [allowHeaderFiltering]="false" [allowSorting]="false"
+        [allowFiltering]="false" caption="" cellTemplate="commandCellTemplate" fixed="true" fixedPosition="right"
+        width="64px">
+      </dxi-column>
+      <div *dxTemplate="let cellData of 'commandCellTemplate'">
+        <a routerLink='/transactions/sapUi5' [queryParams]="{parameterName: cellData.data.HEADER.RECNO, ROUTING_PATTERN: 'detail' }">
+          <i class="material-icons table-actions__icon">arrow_forward</i>
+        </a>
+      </div>
+    </dx-data-grid>
+  </div>
+</div>

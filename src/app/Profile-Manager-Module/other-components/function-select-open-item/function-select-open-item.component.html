@@ -1,0 +1,82 @@
+<br>
+<dx-form class="form__dx-form"
+  [formData]="processingFunction.selectOpenItemConfiguration"
+  [showColonAfterLabel]="false"
+  [showValidationSummary]="true"
+  validationGroup="processingFunctionValidation"
+  (onFieldDataChanged)="onFieldDataChanged($event)">
+
+  <dxi-item itemType="group" caption="Selection Settings">
+    <dxi-item dataField="usePreviousSelectedOpenItems" [label]="{text: 'Use previous open item selections'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.usePreviousSelectedOpenItems, readOnly: readOnly}"></dxi-item>
+    <dxi-item cellTemplate="placeholderTemplate">
+      <div *dxTemplate="let data of 'placeholderTemplate'">
+        <hr />
+      </div>
+    </dxi-item>
+
+    <dxi-item dataField="useCharacteristicIdentificationResults" [label]="{text: 'Use results from characteristic identification'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.useCharacteristicIdentificationResults, readOnly: readOnly}"></dxi-item>
+    <dxi-item itemType="group" [visible]="processingFunction.selectOpenItemConfiguration!.useCharacteristicIdentificationResults">
+      <dxi-item cellTemplate="characteristicIdentificationConfigurationsTemplate">
+        <div *dxTemplate="let data of 'characteristicIdentificationConfigurationsTemplate'">
+          <app-remote-configuration
+            [columns]="['accountingSystemId', 'restrictionName']"
+            [(remoteConfigurations)]="processingFunction.selectOpenItemConfiguration!.characteristicIdentificationConfigurations"
+            [tenant]="tenant"
+            [readOnly]="readOnly"
+            [accountingSystems]="accountingSystems"
+            [restrictions]="restrictions">
+          </app-remote-configuration>
+        </div>
+      </dxi-item>
+      <dxi-item cellTemplate="placeholderTemplate">
+        <div *dxTemplate="let data of 'placeholderTemplate'">
+          <hr />
+        </div>
+      </dxi-item>
+    </dxi-item>
+
+    <dxi-item dataField="useOptimizationResults" [label]="{text: 'Use results from optimization'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.useOptimizationResults, readOnly: readOnly}"></dxi-item>
+    <dxi-item itemType="group" [visible]="processingFunction.selectOpenItemConfiguration!.useOptimizationResults">
+      <dxi-item cellTemplate="optimizationConfigurationsTemplate">
+        <div *dxTemplate="let data of 'optimizationConfigurationsTemplate'">
+          <app-remote-configuration
+            [columns]="['accountingSystemId', 'restrictionName']"
+            [(remoteConfigurations)]="processingFunction.selectOpenItemConfiguration!.optimizationConfigurations"
+            [tenant]="tenant"
+            [readOnly]="readOnly"
+            [accountingSystems]="accountingSystems"
+            [restrictions]="restrictions">
+          </app-remote-configuration>
+        </div>
+      </dxi-item>
+      <dxi-item cellTemplate="placeholderTemplate">
+        <div *dxTemplate="let data of 'placeholderTemplate'">
+          <hr />
+        </div>
+      </dxi-item>
+    </dxi-item>
+    
+    <dxi-item dataField="useFilter" [label]="{text: 'Use more filters'}" editorType="dxSwitch" [editorOptions]="{ value: processingFunction.useFilter, readOnly: readOnly}"></dxi-item>
+    <dxi-item itemType="group" [visible]="processingFunction.selectOpenItemConfiguration!.useFilter">
+      <dxi-item cellTemplate="filterConfigurationsTemplate">
+        <div *dxTemplate="let data of 'filterConfigurationsTemplate'">
+          <app-remote-configuration
+            id="filterConfigurationGrid"
+            [(remoteConfigurations)]="processingFunction.selectOpenItemConfiguration!.filterConfigurations"
+            [tenant]="tenant"
+            [readOnly]="readOnly"
+            [accountingSystems]="accountingSystems"
+            [restrictions]="restrictions"
+            [filters]="filters">
+          </app-remote-configuration>
+        </div>
+      </dxi-item>
+      <dxi-item cellTemplate="placeholderTemplate">
+        <div *dxTemplate="let data of 'placeholderTemplate'">
+          <hr />
+        </div>
+      </dxi-item>
+    </dxi-item>
+  </dxi-item>
+</dx-form>
+<br>

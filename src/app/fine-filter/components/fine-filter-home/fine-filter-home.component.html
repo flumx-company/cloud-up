@@ -1,0 +1,253 @@
+<br>
+<h2>Filters</h2>
+<br>
+<dx-data-grid
+  class="datagrid"
+  #fineFilterGrid
+  [dataSource]="fineFilterDataSource"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="false"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event)"
+  [masterDetail]="{ enabled: true, template: 'detail' }"
+  (onSelectionChanged)="selectionChanged($event)"
+  [customizeColumns]="customizeColumns">
+
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="fine_filters"></dxo-export>
+  <dxo-selection mode="none"></dxo-selection>
+  <dxo-paging [pageSize]="20"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+
+  <dxi-column caption="Name" dataField="filterId.name"></dxi-column>
+  <dxi-column caption="Active" dataField="active" cellTemplate="activeCellTemplate" [width]="150"></dxi-column>
+  <div *dxTemplate="let cellData of 'activeCellTemplate'">
+    <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+  </div>
+  <dxi-column caption="Filter type" dataField="filterType" [customizeText]="getFilterTypeDisplayName"></dxi-column>
+  <dxi-column
+    [allowHeaderFiltering]="false"
+    [allowSorting]="false"
+    [allowFiltering]="false"
+    dataField="filterId"
+    caption=""
+    cellTemplate="filterCommandCellTemplate"
+    [width]="200"
+    [fixed]="true"
+    fixedPosition="right">
+  </dxi-column>
+
+  <div *dxTemplate="let cellData of 'filterCommandCellTemplate'">
+    <div>
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editFilter(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeFilter(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="info" (click)="showFilterInfo(cellData.value, $event, false);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="fas fa-link" (click)="showUsageInfo(cellData.value, $event);" [ngClass]="getButtonBackground(cellData.value)"></dx-button>
+    </div>
+  </div>
+
+  <div *dxTemplate="let filter of 'detail'">
+    <dx-form class="form__dx-form" [formData]="filter.data" [showColonAfterLabel]="false" [showValidationSummary]="true">
+      <dxi-item itemType="group" caption="" [colCount]="2">
+        <dxi-item dataField="formatType" [label]="{text: 'Format Type'}" [editorOptions]="{readOnly: true, value: getFormatTypeDisplayName(filter.data.formatType)}" *ngIf="filter.data.filterType !== 'BUSINESSPARTNER'"></dxi-item>
+        <dxi-item dataField="accountingSystemType" [label]="{text: 'Accounting System Type'}" [editorOptions]="{readOnly: true, value: getAccountingSystemTypeDisplayName(filter.data.accountingSystemType)}" *ngIf="filter.data.filterType !== 'EXTRACTION' && filter.data.filterType !== 'REMITTANCE_ADVICE'"></dxi-item>
+        <dxi-item dataField="description" [label]="{text: 'Description'}" [editorOptions]="{readOnly: true}"></dxi-item>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Search Area" *ngIf="filter.data.filterType !== 'BUSINESSPARTNER'">
+        <div *dxTemplate>
+          <dx-data-grid
+            [dataSource]="filter.data.isasFields"
+            class="datagrid"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+
+            <dxi-column caption="Payment Information">
+              <dxi-column caption="Table" dataField="isasTable" cellTemplate="isasTableCellTemplate">
+                <div *dxTemplate="let cellData of 'isasTableCellTemplate'">
+                  {{getISASTableDisplayName({value: cellData.value})}}
+                  <p style="white-space: normal;">({{getISASTableDescription(cellData.value)}})</p>
+                </div>
+              </dxi-column>
+              <dxi-column caption="Field" dataField="isasField" cellTemplate="isasFieldCellTemplate">
+                <div *dxTemplate="let cellData of 'isasFieldCellTemplate'">
+                  {{getISASFieldDisplayName({value: cellData.value})}}
+                  <p style="white-space: normal;">({{getISASFieldDescription(cellData.value)}})</p>
+                </div>
+              </dxi-column>
+            </dxi-column>
+            <dxi-column
+              [allowHeaderFiltering]="false"
+              [allowSorting]="false"
+              [allowFiltering]="false"
+              dataField="id"
+              caption=""
+              cellTemplate="isasCommandCellTemplate"
+              [width]="60"
+              [fixed]="true"
+              fixedPosition="right">
+            </dxi-column>
+            <div *dxTemplate="let cellData of 'isasCommandCellTemplate'">
+              <div>
+                <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'isas', $event);"></dx-button>
+              </div>
+            </div>
+          </dx-data-grid>
+          <br />
+          <dx-data-grid
+            [dataSource]="filter.data.searchExpressions"
+            class="datagrid"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+
+            <dxo-sorting mode="multiple"></dxo-sorting>
+
+            <dxi-column caption="Type" dataField="searchType" [customizeText]="getSearchTypeDisplayName"></dxi-column>
+            <dxi-column caption="Regular Expression" dataField="regularExpression"></dxi-column>
+            <dxi-column caption="Pattern" dataField="replacementPattern"></dxi-column>
+            <dxi-column caption="Prefix" dataField="prefix"></dxi-column>
+            <dxi-column caption="Delimiter" dataField="separator"></dxi-column>
+            <dxi-column caption="Multiple Iteration" dataField="multipleRepetition" cellTemplate="multipleRepetitionCellTemplate"></dxi-column>
+            <div *dxTemplate="let cellData of 'multipleRepetitionCellTemplate'">
+              <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+            </div>
+            <dxi-column
+              [allowHeaderFiltering]="false"
+              [allowSorting]="false"
+              [allowFiltering]="false"
+              dataField="id"
+              caption=""
+              cellTemplate="searchCommandCellTemplate"
+              [width]="60"
+              [fixed]="true"
+              fixedPosition="right">
+            </dxi-column>
+            <div *dxTemplate="let cellData of 'searchCommandCellTemplate'">
+              <div>
+                <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'search', $event);"></dx-button>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Match Fields" *ngIf="filter.data.filterType !== 'EXTRACTION'">
+        <div *dxTemplate>
+          <dx-data-grid
+            [dataSource]="filter.data.matchFields"
+            class="datagrid"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+  
+            <dxo-sorting mode="multiple"></dxo-sorting>
+  
+            <dxi-column caption="Match Field" dataField="id" cellTemplate="matchFieldCellTemplate">
+              <div *dxTemplate="let cellData of 'matchFieldCellTemplate'">
+                {{getMatchFieldDisplayName(cellData.value, filter.data)}}
+                <p style="white-space: normal;">({{getMatchFieldDescription(cellData.value, filter.data)}})</p>
+              </div>
+            </dxi-column>
+            <dxi-column caption="Selected" dataField="selected" cellTemplate="switchCellTemplate"
+              [visible]="filter.data.filterType === 'MATCHING' || filter.data.filterType === 'REMITTANCE_ADVICE'"></dxi-column>
+            <dxi-column caption="Single Match Only" dataField="singleMatchOnly" cellTemplate="switchCellTemplate" [visible]="filter.data.filterType === 'BUSINESSPARTNER'"></dxi-column>
+            <div *dxTemplate="let cellData of 'switchCellTemplate'">
+              <dx-switch [value]="cellData.value" [readOnly]="true"></dx-switch>
+            </div>
+            <dxi-column
+              [allowHeaderFiltering]="false"
+              [allowSorting]="false"
+              [allowFiltering]="false"
+              dataField="id"
+              caption=""
+              cellTemplate="oiCommandCellTemplate"
+              [width]="60"
+              [fixed]="true"
+              fixedPosition="right">
+            </dxi-column>
+            <div *dxTemplate="let cellData of 'oiCommandCellTemplate'">
+              <div>
+                <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'oi', $event);"></dx-button>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </dxi-item>
+      <dxi-item itemType="group" caption="Validation" [colCount]="2">
+        <dxi-item dataField="validationUpperLimit" [label]="{text: 'Upper Limit'}" [editorOptions]="{readOnly: true}"></dxi-item>
+        <dxi-item dataField="validationLowerLimit" [label]="{text: 'Lower Limit'}" [editorOptions]="{readOnly: true}"></dxi-item>
+        <dxi-item cellTemplate="validationFunctionConfigurationsTemplate"></dxi-item>
+        <div *dxTemplate="let data of 'validationFunctionConfigurationsTemplate'">
+          <dx-data-grid
+            [dataSource]="filter.data.validationFunctionConfigurations"
+            class="datagrid"
+            [hoverStateEnabled]="true"
+            [showColumnLines]="false"
+            [allowColumnResizing]="true"
+            [allowColumnReordering]="true"
+            [columnAutoWidth]="true"
+            [showRowLines]="true"
+            [showBorders]="false"
+            [rowAlternationEnabled]="true"
+            [customizeColumns]="customizeColumns">
+  
+            <dxo-sorting mode="single"></dxo-sorting>
+  
+            <dxi-column caption="Position" dataField="index" [sortIndex]="0" sortOrder="asc" width="120" [customizeText]="customizeIndex"></dxi-column>
+            <dxi-column caption="Validation Function" dataField="validationFunction" [allowSorting]="false"></dxi-column>
+            <dxi-column caption="Validation Type" dataField="validationType" [customizeText]="getValidationTypeDisplayName"
+              [allowSorting]="false"></dxi-column>
+            <dxi-column
+              [allowHeaderFiltering]="false"
+              [allowSorting]="false"
+              [allowFiltering]="false"
+              dataField="id"
+              caption=""
+              cellTemplate="validationCommandCellTemplate"
+              [width]="60"
+              [fixed]="true"
+              fixedPosition="right">
+            </dxi-column>
+            <div *dxTemplate="let cellData of 'validationCommandCellTemplate'">
+              <div>
+                <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'validation', $event);"></dx-button>
+              </div>
+            </div>
+          </dx-data-grid>
+        </div>
+      </dxi-item>
+    </dx-form>
+  </div>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,11 @@
+<div class="dashboard-tab__bg"></div>
+<br>
+<div class="row">
+  <div class="app-tile col-lg-2" *ngFor="let dd of data">
+    <div class="app-tile__link" *ngFor="let d of dd.QUERY_PARAM">
+      <a routerLink='sapUi5'
+        [queryParams]="{parameterName: dd.QUERY_PARAM[0] | json, ROUTING_PATTERN: dd.ROUTING_PATTERN }"
+        class="app-tile__link_2">{{dd.HEADER}}</a>
+    </div>
+  </div>
+</div>

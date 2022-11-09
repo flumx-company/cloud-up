@@ -1,0 +1,159 @@
+<dx-data-grid
+  class="datagrid"
+  [dataSource]="currentFilter!.isasFields"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event, 'isas')"
+  [customizeColumns]="customizeColumns">
+  
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="search_area_payment_information"></dxo-export>
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+  
+  <dxi-column caption="Payment Information">
+    <dxi-column caption="Table" dataField="uuid" cellTemplate="isasTableCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'isasTableCellTemplate'">
+      <dx-select-box
+        [dataSource]="isasTableList" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'isasFields', 'isasTable')"
+        (onValueChanged)="changeValue(cellData.value, $event, 'isasFields', 'isasTable')" itemTemplate="tableItemTemplate" [hint]="getISASTableDescription(cellData.value)">
+        <div *dxTemplate="let data of 'tableItemTemplate'">
+          {{data.displayName}}
+          <p style="white-space: normal;">({{data.description}})</p>
+        </div>
+      </dx-select-box>
+    </div>
+  
+    <dxi-column caption="Field" dataField="uuid" cellTemplate="isasFieldCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'isasFieldCellTemplate'">
+      <dx-select-box
+        [dataSource]="getISASFieldList(cellData.value)" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'isasFields', 'isasField')"
+        (onValueChanged)="changeValue(cellData.value, $event, 'isasFields', 'isasField')" itemTemplate="fieldItemTemplate" [hint]="getISASFieldDescription(cellData.value)">
+        <div *dxTemplate="let data of 'fieldItemTemplate'">
+          {{data.displayName}}
+          <p style="white-space: normal;">({{data.description}})</p>
+        </div>
+      </dx-select-box>
+    </div>
+
+    <dxi-column
+      [allowHeaderFiltering]="false"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      dataField="uuid"
+      caption=""
+      cellTemplate="isasCommandCellTemplate"
+      [width]="100"
+      [fixed]="true"
+      fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'isasCommandCellTemplate'">
+      <div>
+        <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeISASField(cellData.value)"></dx-button>
+        <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'isas');"></dx-button>
+      </div>
+    </div>
+  </dxi-column>
+</dx-data-grid>
+<br>
+<dx-data-grid
+  #searchExprGrid
+  class="datagrid"
+  [dataSource]="currentFilter!.searchExpressions"
+  [hoverStateEnabled]="true"
+  [showColumnLines]="false"
+  [allowColumnResizing]="true"
+  [allowColumnReordering]="true"
+  [columnAutoWidth]="true"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [rowAlternationEnabled]="true"
+  (onToolbarPreparing)="onToolbarPreparing($event, 'search')"
+  [customizeColumns]="customizeColumns">
+  
+  <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+  <dxo-group-panel [visible]="true"></dxo-group-panel>
+  <dxo-filter-row [visible]="true"></dxo-filter-row>
+  <dxo-header-filter [visible]="true"></dxo-header-filter>
+  <dxo-sorting mode="multiple"></dxo-sorting>
+  <dxo-export [enabled]="true" fileName="search_area_search_expressions"></dxo-export>
+  <dxo-selection mode="single"></dxo-selection>
+  <dxo-paging [pageSize]="10"></dxo-paging>
+  <dxo-pager
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 20, 50]"
+    [showInfo]="true">
+  </dxo-pager>
+  
+  <dxi-column caption="Search Expressions">
+    <dxi-column caption="Type" dataField="uuid" cellTemplate="searchTypeCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'searchTypeCellTemplate'">
+      <dx-select-box [dataSource]="getSearchTypeList()" displayExpr="displayName" valueExpr="technicalName" [value]="getValue(cellData.value, 'searchExpressions', 'searchType')"
+        (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'searchType')" [readOnly]="currentFilter!.filterType === 'REMITTANCE_ADVICE'"></dx-select-box>
+    </div>
+  
+    <dxi-column caption="Regular Expression" dataField="uuid" cellTemplate="regularExpressionCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'regularExpressionCellTemplate'" [ngClass]="isInvalidRegEx(cellData.value)">
+      <dx-text-box [value]="getValue(cellData.value, 'searchExpressions', 'regularExpression')" (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'regularExpression')"
+        [maxLength]="255"></dx-text-box>
+    </div>
+  
+    <dxi-column caption="Pattern" dataField="uuid" cellTemplate="replacementPatternCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'replacementPatternCellTemplate'" [ngClass]="isInvalidPattern(cellData.value)">
+      <dx-text-box [value]="getValue(cellData.value, 'searchExpressions', 'replacementPattern')" (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'replacementPattern')"
+        [maxLength]="255"></dx-text-box>
+    </div>
+  
+    <dxi-column caption="Prefix" dataField="uuid" [visible]="currentFilter!.filterType !== 'REMITTANCE_ADVICE'" cellTemplate="prefixCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'prefixCellTemplate'" [ngClass]="isInvalidPrefix(cellData.value)">
+      <dx-text-box [value]="getValue(cellData.value, 'searchExpressions', 'prefix')" (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'prefix')"
+        [disabled]="isPrefixAndDelimiterDisabled(cellData.value)" [maxLength]="3"></dx-text-box>
+    </div>
+  
+    <dxi-column caption="Delimiter" dataField="uuid" [visible]="currentFilter!.filterType !== 'REMITTANCE_ADVICE'" cellTemplate="separatorCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'separatorCellTemplate'" [ngClass]="isInvalidDelimiter(cellData.value)">
+      <dx-text-box [value]="getValue(cellData.value, 'searchExpressions', 'separator')" (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'separator')"
+        [disabled]="isPrefixAndDelimiterDisabled(cellData.value)" [maxLength]="1"></dx-text-box>
+    </div>
+  
+    <dxi-column caption="Multiple Iteration" dataField="uuid" [visible]="currentFilter!.filterType !== 'REMITTANCE_ADVICE'" cellTemplate="multipleRepetitionCellTemplate"></dxi-column>
+    <div *dxTemplate="let cellData of 'multipleRepetitionCellTemplate'">
+      <dx-switch [value]="getValue(cellData.value, 'searchExpressions', 'multipleRepetition')" (onValueChanged)="changeValue(cellData.value, $event, 'searchExpressions', 'multipleRepetition')"
+        [disabled]="isMultipleRepetitionDisabled(cellData.value)"></dx-switch>
+    </div>
+  
+    <dxi-column
+      [allowHeaderFiltering]="false"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      dataField="uuid"
+      caption=""
+      cellTemplate="searchCommandCellTemplate"
+      [width]="100"
+      [fixed]="true"
+      fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'searchCommandCellTemplate'">
+      <div>
+        <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeSearchExpression(cellData.value)"></dx-button>
+        <dx-button class="button button--icon-only button--default" icon="info" (click)="showSettingInfo(cellData.value, 'search');"></dx-button>
+      </div>
+    </div>
+  </dxi-column>
+</dx-data-grid>
+<app-info-popup id="infoPopup"></app-info-popup>

@@ -1,0 +1,89 @@
+<br>
+<h2>Company Code</h2>
+<dx-data-grid
+    #conditionGrid
+    class="datagrid"
+    [dataSource]="dataSource"
+    [hoverStateEnabled]="true"
+    [showColumnLines]="false"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    [columnAutoWidth]="true"
+    [showRowLines]="true"
+    [showBorders]="false"
+    [rowAlternationEnabled]="true"
+    (onOptionChanged)="sortingValue($event)"
+    (onToolbarPreparing)="onToolbarPreparingCustom($event)"
+    [masterDetail]="{ enabled: true, template: 'detail' }"
+    [customizeColumns]="customizeColumns"
+    (onExporting)="onExporting($event)"
+    (onExported)="onExported($event)">
+
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-paging [pageSize]="100"></dxo-paging>
+    <dxo-pager
+            [showPageSizeSelector]="true"
+            [allowedPageSizes]="[5, 10, 20, 50]"
+            [showInfo]="true">
+    </dxo-pager>
+    <dxo-remote-operations [paging]="true"></dxo-remote-operations>
+
+    <dxi-column caption="Logical System" dataField="MASTER.AWSYS"></dxi-column>
+    <dxi-column caption="Company Code" dataField="MASTER.BUKRS"></dxi-column>
+    <dxi-column caption="Name of Company Code or Company" dataField="MASTER.BUTXT"></dxi-column>
+    <dxi-column caption="Country Key" dataField="MASTER.LAND1"></dxi-column>
+    <dxi-column caption="Currency Key" dataField="MASTER.WAERS"></dxi-column>
+    <dxi-column caption="Language Key" dataField="MASTER.SPRAS"></dxi-column>
+
+    <dxi-column
+            [allowHeaderFiltering]="false"
+            [allowSorting]="false"
+            [allowFiltering]="false"
+            dataField="entityId"
+            caption=""
+            cellTemplate="commandCellTemplate"
+            [fixed]="true"
+            fixedPosition="right">
+    </dxi-column>
+
+    <div *dxTemplate="let cellData of 'commandCellTemplate'">
+        <div>
+            <dx-button class="button button--icon-only button--default"
+                       icon="edit"
+                       (click)="edit(cellData.key, $event);">
+            </dx-button>
+            <dx-button class="button button--icon-only button--default"
+                       icon="trash"
+                       (click)="remove(cellData.key, $event);">
+            </dx-button>
+        </div>
+    </div>
+
+    <div *dxTemplate="let condition of 'detail'">
+        <p>Description: {{condition.data.description}}</p>
+        <dx-data-grid
+                class="datagrid"
+                [dataSource]="condition.data.two"
+                [hoverStateEnabled]="true"
+                [showColumnLines]="false"
+                [allowColumnResizing]="true"
+                [columnAutoWidth]="true"
+                [showRowLines]="true"
+                [showBorders]="true"
+                [rowAlternationEnabled]="true"
+                [customizeColumns]="customizeColumns">
+
+            <dxo-sorting mode="none"></dxo-sorting>
+            <dxi-column caption="OBJECT" dataField="OBJECT"></dxi-column>
+            <dxi-column caption="OFFSET" dataField="OFFSET"></dxi-column>
+            <dxi-column caption="INSTANCE" dataField="INSTANCE"></dxi-column>
+            <dxi-column caption="ARHIVEKEY" dataField="ARHIVEKEY"></dxi-column>
+            <dxi-column caption="SESSION" dataField="SESSION"></dxi-column>
+            <dxi-column caption="TENANT_ID" dataField="TENANT_ID"></dxi-column>
+        </dx-data-grid>
+    </div>
+</dx-data-grid>

@@ -1,0 +1,196 @@
+<h1 [hidden]="viewMode === 'edit'">Open Items</h1>
+
+<div [@showHide]="viewMode === 'edit'" (@showHide.done)="animationDone($event)" [hidden]="editHidden">
+  <app-open-item-core-data-edit [current-object]='currentItem' [backup-current-object]="backupCurrentItem"></app-open-item-core-data-edit>
+</div>
+
+<dx-accordion
+  #accordion
+  [hidden]="searchHidden"
+  [dataSource]="accordionSource"
+  [collapsible]="true"
+  [multiple]="false"
+  [animationDuration]="300"
+  [selectedIndex]= "-1">
+
+  <div *dxTemplate="let i of 'item'">
+    <dx-form class="form__dx-form" id="form" [(formData)]="searchObject" [showColonAfterLabel]="false">
+        
+      <dxi-item itemType="group" caption="General" [colCount]="3">
+
+        <dxi-item dataField="matched" [label]="{text: 'Matched'}" editorType="dxSelectBox" [editorOptions]="{ items: matchedOptions, displayExpr:'optionName' }"></dxi-item>
+        <dxi-item itemType="empty"></dxi-item>
+        <dxi-item itemType="empty"></dxi-item>
+        <dxi-item dataField="accountingSystemId"
+                  [label]="{text: 'Accounting system'}"
+                  editorType="dxSelectBox"
+                  [editorOptions]="{ items: accountingSystems, displayExpr: 'name', valueExpr: 'name', showClearButton: true }"></dxi-item>
+        <dxi-item dataField="companyId" [label]="{text: 'Company code'}" editorType="dxSelectBox" [editorOptions]="{ items: companyCodes, showClearButton: true }"></dxi-item>
+        <dxi-item dataField="accountType" [label]="{text: 'Account type'}" editorType="dxSelectBox" [editorOptions]="{ items: accountTypes, showClearButton: true }"></dxi-item>
+      </dxi-item>
+
+      <dxi-item itemType="group" caption="Document" [colCount]="3">
+        <dxi-item [label]="{text: 'Accounts'}" cellTemplate="accountsTemplate">
+          <div *dxTemplate="let d of 'accountsTemplate'">
+            <dx-drop-down-box [(value)]="selectedAccounts"
+                              placeholder="Select a value..."
+                              [showClearButton]="true"
+                              [dataSource]="accounts">
+
+              <div *dxTemplate="let data of 'content'">
+                <dx-data-grid class="datagrid"
+                              [dataSource]="accounts"
+                              [selection]="{ mode: 'multiple' }"
+                              [hoverStateEnabled]="true"
+                              [paging]="{ enabled: true, pageSize: 10 }"
+                              [filterRow]="{ visible: true }"
+                              [scrolling]="{ mode: 'infinite' }"
+                              [height]="265"
+                              [(selectedRowKeys)]="selectedAccounts"
+                              [customizeColumns]="customizeColumns"
+                              (onContentReady)="resizeSelectColumn($event)">
+                  <dxi-column caption="Account" [calculateDisplayValue]="calculateAccountValue" alignment="right"></dxi-column>
+                </dx-data-grid>
+              </div>
+            </dx-drop-down-box>
+          </div>
+        </dxi-item>
+        <dxi-item dataField="documentNumbersString" [label]="{text: 'Document numbers'}"></dxi-item>
+        <dxi-item itemType="empty"></dxi-item>
+        <dxi-item dataField="dateField" [label]="{text: 'Date field'}" editorType="dxSelectBox"
+                  [editorOptions]="{ items: dateFields, showClearButton: true, displayExpr: 'displayName', valueExpr: 'technicalName'}"></dxi-item>
+        <dxi-item dataField="dateFrom" [label]="{text: 'From'}" editorType="dxDateBox" [editorOptions]="{ showClearButton: true, type:'date' }"></dxi-item>
+        <dxi-item dataField="dateTo" [label]="{text: 'To'}" editorType="dxDateBox" [editorOptions]="{ showClearButton: true }"></dxi-item>
+        <dxi-item dataField="amountField" [label]="{text: 'Amount field'}" editorType="dxSelectBox"
+                  [editorOptions]="{ items: amountFields, showClearButton: true, displayExpr: 'displayName', valueExpr: 'technicalName'}"></dxi-item>
+        <dxi-item dataField="amountCurrency" [label]="{text: 'Currency'}" editorType="dxSelectBox" [editorOptions]="{ items: currencies, showClearButton: true }"></dxi-item>
+        <dxi-item dataField="amount" [label]="{text: 'Amount'}" editorType="dxNumberBox" [editorOptions]="{ mode: 'number' }"></dxi-item>
+        <dxi-item dataField="referenceField1" [label]="{text: 'Reference1 field'}" editorType="dxSelectBox" [editorOptions]="{ items: referenceFields, displayExpr:'fieldName', showClearButton: true}"></dxi-item>
+        <dxi-item dataField="referenceField1Value" [label]="{text: 'Value'}"></dxi-item>
+        <dxi-item itemType="empty"></dxi-item>
+        <dxi-item dataField="referenceField2" [label]="{text: 'Reference2 field'}" editorType="dxSelectBox" [editorOptions]="{ items: referenceFields, displayExpr:'fieldName', showClearButton: true }"></dxi-item>
+        <dxi-item dataField="referenceField2Value" [label]="{text: 'Value'}"></dxi-item>
+        <dxi-item itemType="empty"></dxi-item>
+        <dxi-item dataField="referenceField3" [label]="{text: 'Reference3 field'}" editorType="dxSelectBox" [editorOptions]="{ items: referenceFields, displayExpr:'fieldName', showClearButton: true }"></dxi-item>
+        <dxi-item dataField="referenceField3Value" [label]="{text: 'Value'}"></dxi-item>
+      </dxi-item>
+    </dx-form>
+    <br>
+    <div class="form__footer">
+      <dx-button class="button button--primary button--icon-and-text" text="Search" icon="search" (onClick)="searchOpenItems($event)"></dx-button>
+    </div>
+  </div>
+</dx-accordion>
+
+<br>
+<br>
+
+<div [@showHide]="viewMode === 'master'" (@showHide.done)="animationDone($event)" [hidden]="masterHidden">
+  <dx-data-grid
+    id="dataGrid"
+    class="datagrid"
+    [dataSource]="openItems"
+    [hoverStateEnabled]="true"
+    [showColumnLines]="false"
+    [allowColumnResizing]="true"
+    [allowColumnReordering]="true"
+    [columnAutoWidth]="true"
+    [showRowLines]="true"
+    [showBorders]="false"
+    [rowAlternationEnabled]="true"
+    (onContentReady)="onContentReady($event)"
+    [customizeColumns]="customizeColumns">
+
+    <dxo-column-chooser [enabled]="true"></dxo-column-chooser>
+    <dxo-column-fixing [enabled]="true"></dxo-column-fixing>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-sorting mode="multiple"></dxo-sorting>
+    <dxo-export [enabled]="true" fileName="open-items"></dxo-export>
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-pager
+      [showPageSizeSelector]="true"
+      [allowedPageSizes]="[5, 10, 20, 50]"
+      [showInfo]="true">
+    </dxo-pager>
+
+    <dxi-column dataField="id" caption="Id" [visible]=false></dxi-column>
+    <dxi-column dataField="accountingSystemId" caption="Accounting system id"></dxi-column>
+    <dxi-column dataField="systemId" caption="System id"></dxi-column>
+    <dxi-column dataField="clientId" caption="Client id"></dxi-column>
+    <dxi-column dataField="companyId" caption="Company id"></dxi-column>
+    <dxi-column dataField="businessArea" caption="Business area"></dxi-column>
+    <dxi-column dataField="fiscalYear" caption="Fiscal year" dataType=date></dxi-column>
+    <dxi-column dataField="documentNumber" caption="Document number"></dxi-column>
+    <dxi-column dataField="lineItem" caption="Line item"></dxi-column>
+    <dxi-column dataField="accountType" caption="Account type"></dxi-column>
+    <dxi-column dataField="account" caption="Account"></dxi-column>
+    <dxi-column dataField="name" caption="Name" [visible]=false></dxi-column>
+    <dxi-column dataField="taxNumber1" caption="Tax number 1" [visible]=false></dxi-column>
+    <dxi-column dataField="taxNumber2" caption="Tax number 2" [visible]=false></dxi-column>
+    <dxi-column dataField="vatRegistrationNumber" caption="Vat registration number" [visible]=false></dxi-column>
+    <dxi-column dataField="customerIdOld" caption="Customer id old" [visible]=false></dxi-column>
+    <dxi-column dataField="buyingGroup" caption="Buying group" [visible]=false></dxi-column>
+    <dxi-column dataField="documentDate" caption="Document date" dataType=date></dxi-column>
+    <dxi-column dataField="postingDate" caption="Posting date" dataType=date></dxi-column>
+    <dxi-column dataField="postingPeriod" caption="Posting period"></dxi-column>
+    <dxi-column dataField="reference" caption="Reference"></dxi-column>
+    <dxi-column dataField="referenceKey" caption="Reference key" [visible]=false></dxi-column>
+    <dxi-column dataField="ledgerGroup" caption="Ledger group" [visible]=false></dxi-column>
+    <dxi-column dataField="ledger" caption="Ledger" [visible]=false></dxi-column>
+    <dxi-column dataField="documentCurrency" caption="Document currency"></dxi-column>
+    <dxi-column dataField="localCurrency" caption="Local currency"></dxi-column>
+    <dxi-column dataField="documentHeaderText" caption="Document header text" [visible]=false></dxi-column>
+    <dxi-column dataField="documentHeaderReference1" caption="Document header reference 1" [visible]=false></dxi-column>
+    <dxi-column dataField="documentHeaderReference2" caption="Document header reference 2" [visible]=false></dxi-column>
+    <dxi-column dataField="documentAmount" caption="Document amount" alignment="right"></dxi-column>
+    <dxi-column dataField="documentAmountEligibleCashDiscount" caption="Document amount eligible cash discount" [visible]=false alignment="right"></dxi-column>
+    <dxi-column dataField="documentAmountCashDiscount" caption="Document amount cash discount" [visible]=false alignment="right"></dxi-column>
+    <dxi-column dataField="localAmount" caption="Local amount" alignment="right"></dxi-column>
+    <dxi-column dataField="baselineDate" caption="Baseline date" dataType=date></dxi-column>
+    <dxi-column dataField="cashDiscountDays1" caption="Cash discount days 1" [visible]=false></dxi-column>
+    <dxi-column dataField="cashDiscountPercent1" caption="Cash discount percent 1" [visible]=false></dxi-column>
+    <dxi-column dataField="cashDiscountDays2" caption="Cash discount days 2" [visible]=false></dxi-column>
+    <dxi-column dataField="cashDiscountPercent2" caption="Cash discount percent 2" [visible]=false></dxi-column>
+    <dxi-column dataField="cashDiscountDays3" caption="Cash discount days 3" [visible]=false></dxi-column>
+    <dxi-column dataField="netPaymentDate" caption="Net payment date" dataType=date [visible]=false></dxi-column>
+    <dxi-column dataField="fixedPaymentTerms" caption="Fixed payment terms" [visible]=false></dxi-column>
+    <dxi-column dataField="paymentBlock" caption="Payment block" [visible]=false></dxi-column>
+    <dxi-column dataField="taxCode" caption="Tax code" [visible]=false></dxi-column>
+    <dxi-column dataField="postingKey" caption="Posting key" [visible]=false></dxi-column>
+    <dxi-column dataField="specialGlIndicator" caption="Special gl indicator" [visible]=false></dxi-column>
+    <dxi-column dataField="pspElement" caption="Psp element" [visible]=false></dxi-column>
+    <dxi-column dataField="profitCenter" caption="Profit center" [visible]=false></dxi-column>
+    <dxi-column dataField="costCenter" caption="Cost center" [visible]=false></dxi-column>
+    <dxi-column dataField="paymentReference" caption="Payment reference" [visible]=false></dxi-column>
+    <dxi-column dataField="assignment" caption="Assignment" [visible]=false></dxi-column>
+    <dxi-column dataField="billingDocument" caption="Billing document" [visible]=false></dxi-column>
+    <dxi-column dataField="reference1" caption="Reference 1"></dxi-column>
+    <dxi-column dataField="reference2" caption="Reference 2"></dxi-column>
+    <dxi-column dataField="reference3" caption="Reference 3"></dxi-column>
+    <dxi-column dataField="orderNumber" caption="Order number"></dxi-column>
+    <dxi-column dataField="contract" caption="Contract" [visible]=false></dxi-column>
+    <dxi-column dataField="contractType" caption="Contract type" [visible]=false></dxi-column>
+    <dxi-column dataField="invoiceListNumber" caption="Invoice list number" [visible]=false></dxi-column>
+    <dxi-column dataField="branchAccountNumber" caption="Branch account number" [visible]=false></dxi-column>
+    <dxi-column dataField="saleDocumentNumber" caption="Sale document number" [visible]=false></dxi-column>
+    <dxi-column dataField="documentNumberInvoiceReference" caption="Document number invoice reference" [visible]=false></dxi-column>
+    <dxi-column dataField="positionText" caption="Position text" [visible]=false></dxi-column>
+    <dxi-column
+      [allowHeaderFiltering]="false"
+      [allowSorting]="false"
+      [allowFiltering]="false"
+      dataField="id"
+      caption=""
+      cellTemplate="deleteTemplate"
+      [width]="100"
+      [fixed]="true"
+      fixedPosition="right">
+    </dxi-column>
+    <div *dxTemplate="let cellData of 'deleteTemplate'">
+      <dx-button class="button button--icon-only button--default" icon="edit" (click)="editItem(cellData.value, $event);"></dx-button>
+      <dx-button class="button button--icon-only button--default" icon="trash" (click)="removeItem(cellData.value, $event);"></dx-button>
+    </div>
+  </dx-data-grid>
+</div>

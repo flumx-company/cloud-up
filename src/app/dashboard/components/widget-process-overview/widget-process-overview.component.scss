@@ -1,0 +1,50 @@
+@import './src/assets/custom/sass/variables';
+
+.tasks {
+  background-color: transparent;
+  height: 230px;
+  padding: 0;
+
+  &__title {
+    color: $white;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  &__list {
+    height: 80px;
+  }
+
+  .widget__header {
+    margin-bottom: 0;
+    padding-bottom: 20px;
+  }
+}
+
+.task {
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+
+  &--last {
+    border-right: 0;
+  }
+
+  &__kpi {
+    color: $white;
+    font-size: 40px;
+    line-height: 40px;
+    margin-bottom: 3px;
+
+    &--critical {
+      color: $color-ruby;
+    }
+  }
+
+  &__title {
+    color: $white;
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

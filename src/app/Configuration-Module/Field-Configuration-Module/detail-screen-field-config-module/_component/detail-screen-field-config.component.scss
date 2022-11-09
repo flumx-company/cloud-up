@@ -1,0 +1,41 @@
+.dx-datagrid-rowsview .dx-row {
+    padding: 0 !important;
+}
+
+.all {
+    width: 100%;
+    height: 100%;
+}
+
+::ng-deep {
+    .detail-content .dx-datagrid-content .dx-datagrid-table .dx-row.dx-header-row  td .dx-datagrid-text-content{
+        text-align: center;
+        width: 100%;
+    }
+    .dx-datagrid-content .dx-datagrid-table .dx-row.dx-header-row  td[aria-colindex="12"]{
+        border-left: 1px solid transparent!important;
+        border-right: 1px solid white!important;
+        //background: red!important;
+    }
+    .description .datagrid .dx-header-row td{
+        padding: 5px 5px!important;
+    }
+    //.txt .dx-checkbox-checked .dx-checkbox-icon:before{
+    //    content: 'X';
+    //}
+}
+::ng-deep .dx-template-wrapper{
+    overflow-y: auto;
+}
+
+::ng-deep #gridContainer .dx-popup-wrapper > .dx-overlay-content{
+    width: 131px!important;
+}
+.description{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.description .datagrid{
+    width: 100%!important;
+}

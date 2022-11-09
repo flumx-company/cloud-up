@@ -1,0 +1,40 @@
+<!-- <br>
+<h2>Operational</h2>
+<br>
+<br>
+<dx-accordion [dataSource]="accordionLive" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <div class="dx-field">
+            <dx-button type="default" text="GET" (onClick)="fetchDataLive()" width="100%"></dx-button>
+        </div>
+    </div>
+</dx-accordion>
+<br>
+<dx-accordion [dataSource]="accordionWork" [animationDuration]="300" [collapsible]="true" [multiple]="true"
+    selectedIndex="-1">
+    <div *dxTemplate="let item of 'item'">
+        <div class="dx-field">
+            <dx-button type="default" text="GET" (onClick)="fetchDataReady()" width="100%"></dx-button>
+        </div>
+    </div>
+</dx-accordion>
+
+<dx-popup title="Popup Title" [(visible)]="isPopupVisible" [width]="300" [height]="250">
+    <div *dxTemplate="let data of 'content'">
+        <p>Message</p>
+        {{message}}
+    </div>
+</dx-popup> -->
+<div class="dashboard-tab__bg">
+    <iframe
+        [class.thumbnail]="thumbnail"
+        [src]="safeSrc" width="100%"
+        height="100%"
+        frameborder="0"
+        webkitallowfullscreen
+        mozallowfullscreen
+        allowfullscreen
+        style="position: absolute;">
+    </iframe>
+</div>

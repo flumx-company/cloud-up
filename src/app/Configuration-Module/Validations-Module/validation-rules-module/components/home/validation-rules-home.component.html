@@ -1,0 +1,147 @@
+<h1>Validation Rules</h1>
+<div>
+    <!--<dx-data-grid-->
+        <!--class="datagrid"-->
+        <!--[dataSource]="dataRecord.value"-->
+        <!--[hoverStateEnabled]="true"-->
+        <!--[showColumnLines]="false"-->
+        <!--[allowColumnResizing]="true"-->
+        <!--[allowColumnReordering]="true"-->
+        <!--[columnAutoWidth]="true"-->
+        <!--[showRowLines]="true"-->
+        <!--[showBorders]="false"-->
+        <!--[rowAlternationEnabled]="true"-->
+        <!--[masterDetail]="{ enabled: true, template: 'detail' }"-->
+        <!--(onOptionChanged)="sortingValue($event)"-->
+        <!--(onToolbarPreparing)="onToolbarPreparingCustom($event)"-->
+        <!--[customizeColumns]="customizeColumns">-->
+        <!--<dxo-editing-->
+            <!--mode="form"-->
+            <!--[useIcons]="true">-->
+            <!--<dxo-form>-->
+                <!--<dxi-item-->
+                    <!--dataField="TYPE"-->
+                    <!--caption="Record Type">-->
+                <!--</dxi-item>-->
+                <!--<dxi-item-->
+                    <!--dataField="DESCRIPTIONS"-->
+                    <!--caption="Description">-->
+                <!--</dxi-item>-->
+            <!--</dxo-form>-->
+        <!--</dxo-editing>-->
+        <!--<dxo-column-chooser [enabled]="true"></dxo-column-chooser>-->
+        <!--<dxo-column-fixing [enabled]="true"></dxo-column-fixing>-->
+        <!--<dxo-group-panel [visible]="true"></dxo-group-panel>-->
+        <!--<dxo-filter-row [visible]="true"></dxo-filter-row>-->
+        <!--<dxo-header-filter [visible]="true"></dxo-header-filter>-->
+        <!--<dxo-sorting mode="multiple"></dxo-sorting>-->
+        <!--<dxo-paging-->
+            <!--[enabled]="true"-->
+            <!--[pageSize]="5">-->
+        <!--</dxo-paging>-->
+        <!--<dxo-pager-->
+            <!--[showPageSizeSelector]="true"-->
+            <!--[allowedPageSizes]="[5, 10, 20]"-->
+            <!--[showInfo]="true">-->
+        <!--</dxo-pager>-->
+        <!--<dxo-remote-operations [paging]="true"></dxo-remote-operations>-->
+        <!--<dxi-column [width]="100"></dxi-column>-->
+        <!--<dxi-column-->
+             <!--dataField="REC_TYPE"-->
+             <!--caption="Record Type">-->
+        <!--</dxi-column>-->
+        <!--<dxi-column-->
+             <!--dataField="CLIENT_TYPE"-->
+             <!--caption="Client">-->
+        <!--</dxi-column>-->
+        <!--<dxi-column-->
+             <!--[allowHeaderFiltering]="false"-->
+             <!--[allowSorting]="false"-->
+             <!--[allowFiltering]="false"-->
+             <!--cellTemplate="CommandCellTemplate"-->
+             <!--[fixed]="true"-->
+             <!--fixedPosition="right">-->
+        <!--</dxi-column>-->
+        <!--<div *dxTemplate="let cellData of 'CommandCellTemplate'">-->
+            <!--<div>-->
+                <!--<dx-button-->
+                    <!--*ngIf="buttonAdd(cellData)"-->
+                    <!--class="button button&#45;&#45;icon-only button&#45;&#45;default"-->
+                    <!--icon="trash"-->
+                    <!--(click)="click_in_Icon(cellData, 'delete');">-->
+                <!--</dx-button>-->
+                <!--<dx-button-->
+                    <!--*ngIf="buttonAdd(cellData)"-->
+                    <!--class="button button&#45;&#45;icon-only button&#45;&#45;default"-->
+                    <!--icon="edit"-->
+                    <!--(click)="click_in_Icon(cellData, 'edit');">-->
+                <!--</dx-button>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div *dxTemplate="let condition of 'detail'">-->
+            <dx-data-grid
+                class="datagrid"
+                [dataSource]="dataRecord.value"
+                [hoverStateEnabled]="true"
+                [showColumnLines]="false"
+                [allowColumnResizing]="true"
+                [columnAutoWidth]="true"
+                [showRowLines]="true"
+                [showBorders]="true"
+                (onOptionChanged)="sortingValue($event)"
+                (onToolbarPreparing)="onToolbarPreparingCustom($event)"
+                [rowAlternationEnabled]="true"
+                [customizeColumns]="customizeColumns">
+                <dxo-sorting mode="none"></dxo-sorting>
+
+                <dxi-column dataField="SEQ" caption="Sequence" ></dxi-column>
+                <dxi-column dataField="CHECK_TYPE" caption="Check Type"></dxi-column>
+                <dxi-column dataField="ABORT_POST" caption="Abort post" cellTemplate="cellTemplate"></dxi-column>
+                <div *dxTemplate="let cell of 'cellTemplate'">
+                    <dx-switch
+                         [(value)]="cell.value"
+                         [disabled]="true"
+                         switchedOnText="YES"
+                         switchedOffText="NO">
+                    </dx-switch>
+                </div>
+                <dxi-column dataField="MESSAGE" caption="Message"></dxi-column>
+                <dxi-column dataField="GO_ON" caption="Go On"  cellTemplate="cellTemplate1"></dxi-column>
+                <div *dxTemplate="let cell of 'cellTemplate1'">
+                    <dx-switch
+                         [(value)]="cell.value"
+                         [disabled]="true"
+                         switchedOnText="YES"
+                         switchedOffText="NO">
+                    </dx-switch>
+                </div>
+                <dxi-column dataField="WEBHOOK" caption="Webhook" ></dxi-column>
+                <dxi-column
+                        [allowHeaderFiltering]="false"
+                        [allowSorting]="false"
+                        [allowFiltering]="false"
+                        cellTemplate="CommandCellTemplate"
+                        [fixed]="true"
+                        fixedPosition="right">
+                </dxi-column>
+                <div *dxTemplate="let cellData of 'CommandCellTemplate'">
+                    <div>
+                        <dx-button
+                                *ngIf="buttonAdd(cellData)"
+                                class="button button--icon-only button--default"
+                                icon="trash"
+                                (click)="click_in_Icon(cellData, 'delete');">
+                        </dx-button>
+                        <dx-button
+                                *ngIf="buttonAdd(cellData)"
+                                class="button button--icon-only button--default"
+                                icon="edit"
+                                (click)="click_in_Icon(cellData, 'edit');">
+                        </dx-button>
+                    </div>
+                </div>
+            </dx-data-grid>
+        <!--</div>-->
+    <!--</dx-data-grid>-->
+</div>
+<app-info-popup id="infoPopup"></app-info-popup>
